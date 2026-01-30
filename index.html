@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Personal Records - Elite Training</title>
+    
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
+    <meta name="apple-mobile-web-app-title" content="Records">
+
     <style>
         :root { 
             --primary: #ffffff; 
@@ -26,7 +31,6 @@
 
         .container { max-width: 500px; margin: auto; }
 
-        /* ANIMAZIONI DI ENTRATA */
         @keyframes fadeInDown {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -56,7 +60,6 @@
             font-family: 'Arial Black', sans-serif;
         }
 
-        /* LISTA CLIENTI */
         .client-grid { 
             display: flex; 
             flex-direction: column; 
@@ -81,7 +84,6 @@
         .profile-img { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
         .profile-img-small { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
 
-        /* VISTA SCHEDA */
         #workout-view { 
             display: none; 
             animation: fadeInUp 0.5s ease-out;
@@ -91,7 +93,6 @@
             background: #1f2937; border: none; color: white; 
             padding: 12px 24px; border-radius: 50px; cursor: pointer; margin-bottom: 20px;
             font-size: 0.9rem; text-transform: uppercase; font-weight: bold;
-            transition: background 0.3s;
         }
 
         .client-header-inline {
@@ -99,14 +100,12 @@
             margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #1f2937;
         }
 
-        /* ACCORDION ANIMATO */
         .accordion { 
             margin-bottom: 10px; 
             border-radius: 14px; 
             overflow: hidden; 
             background: var(--card-bg); 
             border: 1px solid #1f2937; 
-            transition: border-color 0.3s;
         }
         
         .accordion-header { 
@@ -115,13 +114,9 @@
             cursor: pointer; font-weight: 800; 
             color: #ffffff;
             text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;
-            transition: background 0.3s;
         }
 
-        .accordion-header span {
-            transition: transform 0.3s ease;
-            font-size: 1.4rem;
-        }
+        .accordion-header span { transition: transform 0.3s ease; font-size: 1.4rem; }
 
         .accordion-content { 
             max-height: 0; 
@@ -130,12 +125,9 @@
             background: #05070a; 
         }
 
-        .active .accordion-content { 
-            max-height: 800px; /* Valore alto per permettere l'espansione */
-        }
-
+        .active .accordion-content { max-height: 800px; }
         .active .accordion-header { background: #1f2937; color: var(--accent); }
-        .active .accordion-header span { transform: rotate(45deg); color: var(--accent); } /* Ruota il + facendolo diventare x */
+        .active .accordion-header span { transform: rotate(45deg); color: var(--accent); }
         
         .exercise-row { 
             display: flex; justify-content: space-between; 
@@ -144,8 +136,6 @@
         
         .ex-name { color: #e5e7eb; font-size: 0.95rem; }
         .ex-weight { color: var(--accent); font-weight: 900; font-size: 1.2rem; }
-
-        .active .accordion-content div:last-child { border-bottom: none; }
     </style>
 </head>
 <body>
@@ -190,7 +180,7 @@
             "Back/Shoulder": [{ex:"Latpull down", w:"75kg"}, {ex:"Seated Row", w:"60kg"}, {ex:"Single arm row", w:"15kg"}],
             "Chest": [{ex:"Bench Press", w:"20kg"}, {ex:"Floor press", w:"15kg"}, {ex:"Inclined Smith", w:"15kg"}],
             "Arms": [{ex:"EZ bar curls", w:"25kg"}, {ex:"Tricep pushdown", w:"20kg"}],
-            "Legs": [{ex:"Leg extensions", w:"35kg"}, {ex:"Leg curls", w:"40kg"}, {ex:"Walking lunges", w:"20kg"}, {ex:"Glute Bridges DB", w:"20kg"}],
+            "Legs": [{ex:"Leg extensions", w:"35kg"}, {ex:"Leg curls", w:"40kg"}, {ex:"Walking lunges", w:"20kg"}],
             "Functional": [{ex:"Cable crunches", w:"15kg"}, {ex:"KB swings", w:"6kg"}]
         }
     };
@@ -217,9 +207,7 @@
 
     function showWorkout(name) {
         document.getElementById('home-view').style.display = 'none';
-        const workoutView = document.getElementById('workout-view');
-        workoutView.style.display = 'block';
-        
+        document.getElementById('workout-view').style.display = 'block';
         document.getElementById('page-title').style.display = 'none';
         document.getElementById('client-name-display').innerText = name;
         document.getElementById('client-photo-detail').src = photos[name];
