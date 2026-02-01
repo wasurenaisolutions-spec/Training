@@ -10,46 +10,28 @@
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-black); color: var(--text-main); margin: 0; padding: 15px; overflow-x: hidden; }
         .container { max-width: 500px; margin: 0 auto; }
 
-        /* LOGO CENTRALE */
-        .header-main { 
-            text-align: center; 
-            padding: 15px 0 30px 0; 
-        }
-        .logo { 
-            max-width: 180px; 
-            height: auto; 
-            display: inline-block;
-            filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.1));
-        }
+        .header-main { text-align: center; padding: 15px 0 30px 0; }
+        .logo { max-width: 180px; height: auto; display: inline-block; }
 
-        /* TITOLO SEZIONE A SINISTRA */
-        .section-header {
-            text-align: left;
-            padding: 0 0 12px 5px;
-        }
-        #page-title { 
-            font-family: 'Oswald', sans-serif; 
-            font-size: 1rem; 
-            font-weight: 400; 
-            font-style: italic; 
-            text-transform: uppercase; 
-            letter-spacing: 2px; 
-            color: var(--primary);
-            margin: 0;
-            opacity: 0.7;
-        }
+        .section-header { text-align: left; padding: 0 0 12px 5px; }
+        #page-title { font-family: 'Oswald', sans-serif; font-size: 1rem; font-weight: 400; font-style: italic; text-transform: uppercase; letter-spacing: 2px; color: var(--primary); margin: 0; opacity: 0.7; }
 
         .client-grid { display: flex; flex-direction: column; gap: 10px; }
-        .client-card { background: var(--card-bg); padding: 18px; border-radius: 12px; cursor: pointer; border: 1px solid #1f2937; display: flex; align-items: center; gap: 15px; transition: transform 0.2s; }
-        .client-card:active { transform: scale(0.98); }
-        .profile-img { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
+        .client-card { background: var(--card-bg); padding: 18px; border-radius: 12px; cursor: pointer; border: 1px solid #1f2937; display: flex; align-items: center; gap: 15px; position: relative; }
+        
+        /* Contenitore Foto + Badge Home */
+        .img-container { position: relative; width: 55px; height: 55px; }
+        .profile-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
+        .badge-home { position: absolute; bottom: -5px; right: -5px; width: 22px; height: 22px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+
         .profile-img-small { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
+        .badge-inline { width: 18px; height: 18px; vertical-align: middle; margin-left: 8px; }
 
         #workout-view { display: none; }
         .back-btn { background: transparent; border: 1px solid #374151; color: var(--text-dim); padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-bottom: 20px; font-size: 0.75rem; text-transform: uppercase; font-family: 'Oswald', sans-serif; }
         
         .client-header-inline { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #1f2937; }
-        .client-header-inline h1 { font-family: 'Oswald', sans-serif; font-size: 1.8rem; font-style: italic; text-transform: uppercase; margin: 0; letter-spacing: 1px; }
+        .client-header-inline h1 { font-family: 'Oswald', sans-serif; font-size: 1.8rem; font-style: italic; text-transform: uppercase; margin: 0; letter-spacing: 1px; display: flex; align-items: center; }
 
         .accordion { margin-bottom: 10px; border-radius: 10px; overflow: hidden; background: var(--card-bg); border: 1px solid #1f2937; }
         .accordion-header { padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-family: 'Oswald', sans-serif; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; }
@@ -59,15 +41,15 @@
 
         .exercise-row { padding: 18px 20px; border-bottom: 1px solid #1f2937; }
         .ex-main-info { display: flex; justify-content: space-between; align-items: center; }
-        .ex-name { color: #f3f4f6; font-size: 0.95rem; font-weight: 500; max-width: 60%; line-height: 1.3; }
+        .ex-name { color: #f3f4f6; font-size: 0.95rem; font-weight: 500; max-width: 60%; }
         .ex-actions { display: flex; align-items: center; gap: 15px; }
         .ex-weight { font-family: 'Oswald', sans-serif; color: var(--accent); font-weight: 700; font-size: 1.4rem; font-style: italic; }
         
-        .upgrade-btn { background: #111827; border: 1px solid #4b5563; color: var(--text-dim); padding: 6px 12px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .upgrade-btn { background: #111827; border: 1px solid #4b5563; color: var(--text-dim); padding: 6px 12px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; cursor: pointer; }
         .upgrade-btn.sent { background: var(--success); border-color: var(--success); color: white; }
         
-        .ex-notes { color: var(--text-dim); font-size: 0.8rem; margin-top: 8px; font-style: italic; line-height: 1.4; border-left: 2px solid var(--accent); padding-left: 10px; margin-left: 2px; }
-        .upgrade-badge { background: var(--danger); color: white; font-size: 0.65rem; padding: 3px 10px; border-radius: 4px; font-weight: 900; margin-top: 8px; display: inline-block; text-transform: uppercase; letter-spacing: 1px; }
+        .ex-notes { color: var(--text-dim); font-size: 0.8rem; margin-top: 8px; font-style: italic; border-left: 2px solid var(--accent); padding-left: 10px; }
+        .upgrade-badge { background: var(--danger); color: white; font-size: 0.65rem; padding: 3px 10px; border-radius: 4px; font-weight: 900; margin-top: 8px; display: inline-block; text-transform: uppercase; }
         
         #loader { text-align: center; padding: 80px; color: var(--accent); font-family: 'Oswald', sans-serif; font-style: italic; letter-spacing: 3px; font-size: 1.2rem; }
     </style>
@@ -75,22 +57,20 @@
 <body>
 <div class="container">
     <div class="header-main">
-        <img src="https://i.postimg.cc/Gt2531hd/Title-(Return-Address-Labels)-(Stickers-(Square))-(Stickers-(Rectangle)-(Landscape)).png" alt="Elite Training Logo" class="logo">
+        <img src="https://i.postimg.cc/Gt2531hd/Title-(Return-Address-Labels)-(Stickers-(Square))-(Stickers-(Rectangle)-(Landscape)).png" alt="Logo" class="logo">
     </div>
-
     <div id="loader">LOADING DATA...</div>
-
     <div id="home-view" style="display:none;">
-        <div class="section-header">
-            <h2 id="page-title">Personal Records</h2>
-        </div>
+        <div class="section-header"><h2 id="page-title">Personal Records</h2></div>
         <div class="client-grid" id="client-list"></div>
     </div>
-
     <div id="workout-view">
         <button class="back-btn" onclick="showHome()">← BACK</button>
         <div class="client-header-inline">
-            <img id="client-photo-detail" src="" class="profile-img-small">
+            <div style="position:relative;">
+                <img id="client-photo-detail" src="" class="profile-img-small">
+                <div id="badge-detail-container"></div>
+            </div>
             <h1 id="client-name-display"></h1>
         </div>
         <div id="workout-accordion-container"></div>
@@ -100,7 +80,11 @@
 <script>
     const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=0&single=true&output=csv';
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbx_3oQAL4pYFTR2Fbi84U4ufsBxJsb70c5oUxWx-dGaaY7wOHMg2u2WB3NTO2CugRJN/exec';
+    
+    // CONFIGURAZIONE FOTO E BADGE
     const photos = { "Kuki": "https://i.postimg.cc/XvBNJTXb/Kuki.jpg", "Lovro": "https://i.postimg.cc/XqHt9YDD/Lovro.jpg", "Mihael": "https://i.postimg.cc/X7PTJX5X/Mihael.jpg" };
+    const badges = { "Kuki": "https://i.postimg.cc/tR6FZvfB/Plank.png", "Mihael": "https://i.postimg.cc/L8SdK7Km/Wallsit.png" }; // Aggiungi qui altri badge in futuro
+
     let data = {};
 
     async function loadData() {
@@ -141,7 +125,14 @@
             const card = document.createElement('div');
             card.className = 'client-card';
             card.onclick = () => showWorkout(name);
-            card.innerHTML = `<img src="${photos[name] || ''}" class="profile-img"><div style="font-family:'Oswald',sans-serif;font-weight:700;font-size:1.3rem;text-transform:uppercase;font-style:italic;letter-spacing:1px;">${name}</div>`;
+            const badgeImg = badges[name] ? `<img src="${badges[name]}" class="badge-home">` : '';
+            card.innerHTML = `
+                <div class="img-container">
+                    <img src="${photos[name] || ''}" class="profile-img">
+                    ${badgeImg}
+                </div>
+                <div style="font-family:'Oswald',sans-serif;font-weight:700;font-size:1.3rem;text-transform:uppercase;font-style:italic;">${name}</div>
+            `;
             list.appendChild(card);
         });
     }
@@ -158,8 +149,11 @@
     function showWorkout(name) {
         document.getElementById('home-view').style.display = 'none';
         document.getElementById('workout-view').style.display = 'block';
-        document.getElementById('client-name-display').innerText = name;
+        
+        const badgeImgInline = badges[name] ? `<img src="${badges[name]}" class="badge-inline">` : '';
+        document.getElementById('client-name-display').innerHTML = name + badgeImgInline;
         document.getElementById('client-photo-detail').src = photos[name] || '';
+        
         const container = document.getElementById('workout-accordion-container');
         container.innerHTML = '';
         for (const [area, exercises] of Object.entries(data[name])) {
