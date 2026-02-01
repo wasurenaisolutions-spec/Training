@@ -4,152 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Personal Records - Elite Training</title>
-    
     <link rel="icon" type="image/png" href="favicon.png?v=2">
     <link rel="apple-touch-icon" href="favicon.png?v=2">
     <meta name="apple-mobile-web-app-title" content="Records">
-
     <style>
-        :root { 
-            --primary: #ffffff; 
-            --accent: #facc15;  
-            --bg-black: #000000; 
-            --card-bg: #111827; 
-            --text-main: #ffffff;
-            --text-dim: #9ca3af;
-        }
-        
-        body { 
-            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif; 
-            background-color: var(--bg-black); 
-            color: var(--text-main); 
-            margin: 0; 
-            padding: 15px;
-            -webkit-tap-highlight-color: transparent;
-            overflow-x: hidden;
-        }
-
+        :root { --primary: #ffffff; --accent: #facc15; --bg-black: #000000; --card-bg: #111827; --text-main: #ffffff; --text-dim: #9ca3af; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-black); color: var(--text-main); margin: 0; padding: 15px; overflow-x: hidden; }
         .container { max-width: 500px; margin: auto; }
-
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .header { 
-            text-align: center; 
-            padding: 10px 0 30px 0; 
-            animation: fadeInDown 0.8s ease-out;
-        }
-
+        .header { text-align: center; padding: 10px 0 30px 0; }
         .logo { max-width: 220px; height: auto; margin-bottom: 20px; }
-
-        #page-title { 
-            color: #ffffff;
-            font-size: 2.5rem; 
-            font-weight: 900; 
-            text-transform: uppercase;
-            letter-spacing: -1.5px;
-            line-height: 1;
-            margin: 10px 0;
-            font-family: 'Arial Black', sans-serif;
-        }
-
-        .client-grid { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 12px; 
-            animation: fadeInUp 0.8s ease-out;
-        }
-        
-        .client-card { 
-            background: var(--card-bg); 
-            padding: 22px; 
-            border-radius: 18px; 
-            cursor: pointer; 
-            border: 1px solid #1f2937;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .client-card:active { transform: scale(0.96); background: #1f2937; }
-        
+        #page-title { font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: -1.5px; margin: 10px 0; font-family: 'Arial Black', sans-serif; }
+        .client-grid { display: flex; flex-direction: column; gap: 12px; }
+        .client-card { background: var(--card-bg); padding: 22px; border-radius: 18px; cursor: pointer; border: 1px solid #1f2937; display: flex; align-items: center; gap: 20px; transition: all 0.3s ease; }
         .profile-img { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
         .profile-img-small { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
-
-        #workout-view { 
-            display: none; 
-            animation: fadeInUp 0.5s ease-out;
-        }
-        
-        .back-btn { 
-            background: #1f2937; border: none; color: white; 
-            padding: 12px 24px; border-radius: 50px; cursor: pointer; margin-bottom: 20px;
-            font-size: 0.9rem; text-transform: uppercase; font-weight: bold;
-        }
-
-        .client-header-inline {
-            display: flex; align-items: center; gap: 15px;
-            margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #1f2937;
-        }
-
-        .accordion { 
-            margin-bottom: 10px; 
-            border-radius: 14px; 
-            overflow: hidden; 
-            background: var(--card-bg); 
-            border: 1px solid #1f2937; 
-        }
-        
-        .accordion-header { 
-            padding: 20px; 
-            display: flex; justify-content: space-between; align-items: center; 
-            cursor: pointer; font-weight: 800; 
-            color: #ffffff;
-            text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;
-        }
-
-        .accordion-header span { transition: transform 0.3s ease; font-size: 1.4rem; }
-
-        .accordion-content { 
-            max-height: 0; 
-            overflow: hidden; 
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            background: #05070a; 
-        }
-
-        .active .accordion-content { max-height: 800px; }
+        #workout-view { display: none; }
+        .back-btn { background: #1f2937; border: none; color: white; padding: 12px 24px; border-radius: 50px; cursor: pointer; margin-bottom: 20px; font-weight: bold; }
+        .client-header-inline { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; border-bottom: 1px solid #1f2937; padding-bottom: 15px; }
+        .accordion { margin-bottom: 10px; border-radius: 14px; overflow: hidden; background: var(--card-bg); border: 1px solid #1f2937; }
+        .accordion-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 800; text-transform: uppercase; font-size: 0.9rem; }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; background: #05070a; }
+        .active .accordion-content { max-height: 1000px; }
         .active .accordion-header { background: #1f2937; color: var(--accent); }
-        .active .accordion-header span { transform: rotate(45deg); color: var(--accent); }
-        
-        .exercise-row { 
-            display: flex; justify-content: space-between; 
-            padding: 15px 20px; border-bottom: 1px solid #1f2937; 
-        }
-        
-        .ex-name { color: #e5e7eb; font-size: 0.95rem; }
+        .exercise-row { padding: 15px 20px; border-bottom: 1px solid #1f2937; }
+        .ex-main-info { display: flex; justify-content: space-between; align-items: center; }
+        .ex-name { color: #e5e7eb; font-size: 0.95rem; font-weight: bold; }
         .ex-weight { color: var(--accent); font-weight: 900; font-size: 1.2rem; }
+        .ex-notes { color: var(--text-dim); font-size: 0.8rem; margin-top: 5px; font-style: italic; }
+        #loader { text-align: center; padding: 50px; color: var(--accent); }
     </style>
 </head>
 <body>
-
 <div class="container">
     <div class="header">
         <img src="https://i.postimg.cc/Gt2531hd/Title-(Return-Address-Labels)-(Stickers-(Square))-(Stickers-(Rectangle)-(Landscape)).png" alt="Logo" class="logo">
         <h1 id="page-title">Personal Records</h1>
     </div>
-
-    <div id="home-view">
-        <div class="client-grid" id="client-list"></div>
-    </div>
-
+    <div id="loader">CARICAMENTO DATI...</div>
+    <div id="home-view" style="display:none;"><div class="client-grid" id="client-list"></div></div>
     <div id="workout-view">
         <button class="back-btn" onclick="showHome()">← Back</button>
         <div class="client-header-inline">
@@ -159,48 +51,52 @@
         <div id="workout-accordion-container"></div>
     </div>
 </div>
-
 <script>
-    const data = {
-        "Kuki": {
-            "Back/Shoulder": [{ex:"Lat pull down (Ergo Grip)", w:"55kg"}, {ex:"Seated row", w:"50kg"}, {ex:"Shoulder press (DB)", w:"5kg"}],
-            "Chest": [{ex:"Chest press floor", w:"10kg"}, {ex:"Incline Chest press", w:"7,5kg"}, {ex:"Chest fly floor", w:"5kg"}],
-            "Arms": [{ex:"EZ bar Curls", w:"20kg"}, {ex:"Tricep pushdown", w:"15kg"}, {ex:"DB curls", w:"7,5kg"}],
-            "Legs": [{ex:"Leg extensions", w:"20kg"}, {ex:"Leg curls", w:"15kg"}, {ex:"Glute bridges", w:"15kg"}, {ex:"Sandbag squats", w:"10kg"}],
-            "Functional": [{ex:"KB swings", w:"4kg"}, {ex:"Wallsit with ball", w:"4kg"}]
-        },
-        "Lovro": {
-            "Back/Shoulder": [{ex:"Lat pull down", w:"60kg"}, {ex:"Seated row", w:"60kg"}, {ex:"Shoulder press (DB)", w:"7,5kg"}, {ex:"Shoulder shrugs (DB)", w:"10kg"}],
-            "Chest": [{ex:"Chest press floor", w:"10kg"}, {ex:"Incline press", w:"7,5kg"}],
-            "Arms": [{ex:"EZ bar curls", w:"20kg"}, {ex:"Tricep pushdown", w:"20kg"}],
-            "Legs": [{ex:"Leg extensions", w:"15kg"}, {ex:"Leg curls", w:"15kg"}, {ex:"Glute bridges", w:"20kg"}],
-            "Functional": [{ex:"KB swings", w:"4kg"}]
-        },
-        "Mihael": {
-            "Back/Shoulder": [{ex:"Latpull down", w:"75kg"}, {ex:"Seated Row", w:"60kg"}, {ex:"Single arm row", w:"15kg"}],
-            "Chest": [{ex:"Bench Press", w:"20kg"}, {ex:"Floor press", w:"15kg"}, {ex:"Inclined Smith", w:"15kg"}],
-            "Arms": [{ex:"EZ bar curls", w:"25kg"}, {ex:"Tricep pushdown", w:"20kg"}],
-            "Legs": [{ex:"Leg extensions", w:"35kg"}, {ex:"Leg curls", w:"40kg"}, {ex:"Walking lunges", w:"20kg"}],
-            "Functional": [{ex:"Cable crunches", w:"15kg"}, {ex:"KB swings", w:"6kg"}]
+    const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=0&single=true&output=csv'; 
+    const photos = { "Kuki": "https://i.postimg.cc/XvBNJTXb/Kuki.jpg", "Lovro": "https://i.postimg.cc/XqHt9YDD/Lovro.jpg", "Mihael": "https://i.postimg.cc/X7PTJX5X/Mihael.jpg" };
+    let data = {};
+
+    async function loadData() {
+        try {
+            const response = await fetch(csvUrl + '&t=' + new Date().getTime()); // Forza aggiornamento cache
+            const csvText = await response.text();
+            parseCSV(csvText);
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('home-view').style.display = 'block';
+            renderClientList();
+        } catch (error) {
+            document.getElementById('loader').innerText = "Errore caricamento.";
         }
-    };
+    }
 
-    const photos = {
-        "Kuki": "https://i.postimg.cc/XvBNJTXb/Kuki.jpg", 
-        "Lovro": "https://i.postimg.cc/XqHt9YDD/Lovro.jpg",
-        "Mihael": "https://i.postimg.cc/X7PTJX5X/Mihael.jpg"
-    };
+    function parseCSV(text) {
+        const lines = text.split(/\r?\n/);
+        data = {};
+        for (let i = 1; i < lines.length; i++) {
+            const columns = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); // Gestisce virgole nelle note
+            if (columns.length >= 4) {
+                const name = columns[0].trim().replace(/^"|"$/g, '');
+                const area = columns[1].trim().replace(/^"|"$/g, '');
+                const ex = columns[2].trim().replace(/^"|"$/g, '');
+                const load = columns[3].trim().replace(/^"|"$/g, '');
+                const notes = columns[4] ? columns[4].trim().replace(/^"|"$/g, '') : '';
 
-    function init() {
+                if (!name) continue;
+                if (!data[name]) data[name] = {};
+                if (!data[name][area]) data[name][area] = [];
+                data[name][area].push({ ex, load, notes });
+            }
+        }
+    }
+
+    function renderClientList() {
         const list = document.getElementById('client-list');
+        list.innerHTML = '';
         Object.keys(data).forEach(name => {
             const card = document.createElement('div');
             card.className = 'client-card';
             card.onclick = () => showWorkout(name);
-            card.innerHTML = `
-                <img src="${photos[name]}" class="profile-img">
-                <div style="font-weight:900; font-size: 1.4rem; text-transform: uppercase;">${name}</div>
-            `;
+            card.innerHTML = `<img src="${photos[name] || 'https://via.placeholder.com/65'}" class="profile-img"><div style="font-weight:900; font-size: 1.4rem; text-transform: uppercase;">${name}</div>`;
             list.appendChild(card);
         });
     }
@@ -210,40 +106,28 @@
         document.getElementById('workout-view').style.display = 'block';
         document.getElementById('page-title').style.display = 'none';
         document.getElementById('client-name-display').innerText = name;
-        document.getElementById('client-photo-detail').src = photos[name];
-        
+        document.getElementById('client-photo-detail').src = photos[name] || 'https://via.placeholder.com/45';
         const container = document.getElementById('workout-accordion-container');
         container.innerHTML = '';
-        
         for (const [area, exercises] of Object.entries(data[name])) {
             const acc = document.createElement('div');
             acc.className = 'accordion';
             acc.innerHTML = `
-                <div class="accordion-header" onclick="this.parentElement.classList.toggle('active')">
-                    ${area} <span>+</span>
-                </div>
+                <div class="accordion-header" onclick="this.parentElement.classList.toggle('active')">${area} <span>+</span></div>
                 <div class="accordion-content">
                     ${exercises.map(e => `
                         <div class="exercise-row">
-                            <span class="ex-name">${e.ex}</span>
-                            <span class="ex-weight">${e.w}</span>
+                            <div class="ex-main-info"><span class="ex-name">${e.ex}</span><span class="ex-weight">${e.load}</span></div>
+                            ${e.notes ? `<div class="ex-notes">${e.notes}</div>` : ''}
                         </div>
                     `).join('')}
-                </div>
-            `;
+                </div>`;
             container.appendChild(acc);
         }
-        window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    function showHome() {
-        document.getElementById('home-view').style.display = 'block';
-        document.getElementById('workout-view').style.display = 'none';
-        document.getElementById('page-title').style.display = 'block';
-    }
-
-    init();
+    function showHome() { document.getElementById('home-view').style.display = 'block'; document.getElementById('workout-view').style.display = 'none'; document.getElementById('page-title').style.display = 'block'; }
+    loadData();
 </script>
-
 </body>
 </html>
