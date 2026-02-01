@@ -17,21 +17,57 @@
         #page-title { font-family: 'Oswald', sans-serif; font-size: 1rem; font-weight: 400; font-style: italic; text-transform: uppercase; letter-spacing: 2px; color: var(--primary); margin: 0; opacity: 0.7; }
 
         .client-grid { display: flex; flex-direction: column; gap: 10px; }
-        .client-card { background: var(--card-bg); padding: 18px; border-radius: 12px; cursor: pointer; border: 1px solid #1f2937; display: flex; align-items: center; gap: 15px; position: relative; }
         
-        /* Contenitore Foto + Badge Home */
-        .img-container { position: relative; width: 55px; height: 55px; }
-        .profile-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
-        .badge-home { position: absolute; bottom: -5px; right: -5px; width: 22px; height: 22px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+        /* SCHEDA CLIENTE HOME */
+        .client-card { 
+            background: var(--card-bg); 
+            padding: 15px 18px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            border: 1px solid #1f2937; 
+            display: flex; 
+            align-items: center; 
+            justify-content: flex-start; /* Allinea a sinistra */
+            gap: 15px; 
+            position: relative; 
+        }
 
-        .profile-img-small { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
-        .badge-inline { width: 18px; height: 18px; vertical-align: middle; margin-left: 8px; }
+        .profile-img { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); flex-shrink: 0; }
+        
+        .client-info-wrapper { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+        
+        .client-name-home { 
+            font-family: 'Oswald', sans-serif; 
+            font-weight: 700; 
+            font-size: 1.4rem; 
+            text-transform: uppercase; 
+            font-style: italic; 
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
 
+        /* SLOT PER I BADGES NELLA SCHEDA */
+        .badge-slot-home { 
+            display: flex; 
+            gap: 8px; 
+            margin-left: auto; /* Spinge i badge a destra */
+            align-items: center;
+        }
+
+        .badge-img-large { 
+            width: 42px; /* Molto più grande come richiesto */
+            height: 42px; 
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        /* STILI SCHEDA SINGOLA */
         #workout-view { display: none; }
         .back-btn { background: transparent; border: 1px solid #374151; color: var(--text-dim); padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-bottom: 20px; font-size: 0.75rem; text-transform: uppercase; font-family: 'Oswald', sans-serif; }
         
         .client-header-inline { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #1f2937; }
-        .client-header-inline h1 { font-family: 'Oswald', sans-serif; font-size: 1.8rem; font-style: italic; text-transform: uppercase; margin: 0; letter-spacing: 1px; display: flex; align-items: center; }
+        .profile-img-small { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
+        .client-header-inline h1 { font-family: 'Oswald', sans-serif; font-size: 1.8rem; font-style: italic; text-transform: uppercase; margin: 0; letter-spacing: 1px; display: flex; align-items: center; width: 100%; justify-content: space-between; }
 
         .accordion { margin-bottom: 10px; border-radius: 10px; overflow: hidden; background: var(--card-bg); border: 1px solid #1f2937; }
         .accordion-header { padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-family: 'Oswald', sans-serif; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; }
@@ -67,10 +103,7 @@
     <div id="workout-view">
         <button class="back-btn" onclick="showHome()">← BACK</button>
         <div class="client-header-inline">
-            <div style="position:relative;">
-                <img id="client-photo-detail" src="" class="profile-img-small">
-                <div id="badge-detail-container"></div>
-            </div>
+            <img id="client-photo-detail" src="" class="profile-img-small">
             <h1 id="client-name-display"></h1>
         </div>
         <div id="workout-accordion-container"></div>
@@ -81,9 +114,13 @@
     const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=0&single=true&output=csv';
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbx_3oQAL4pYFTR2Fbi84U4ufsBxJsb70c5oUxWx-dGaaY7wOHMg2u2WB3NTO2CugRJN/exec';
     
-    // CONFIGURAZIONE FOTO E BADGE
     const photos = { "Kuki": "https://i.postimg.cc/XvBNJTXb/Kuki.jpg", "Lovro": "https://i.postimg.cc/XqHt9YDD/Lovro.jpg", "Mihael": "https://i.postimg.cc/X7PTJX5X/Mihael.jpg" };
-    const badges = { "Kuki": "https://i.postimg.cc/tR6FZvfB/Plank.png", "Mihael": "https://i.postimg.cc/L8SdK7Km/Wallsit.png" }; // Aggiungi qui altri badge in futuro
+    
+    // Gestisce array di badge per ogni utente
+    const badges = { 
+        "Kuki": ["https://i.postimg.cc/tR6FZvfB/Plank.png"], 
+        "Mihael": ["https://i.postimg.cc/L8SdK7Km/Wallsit.png"] 
+    };
 
     let data = {};
 
@@ -125,13 +162,16 @@
             const card = document.createElement('div');
             card.className = 'client-card';
             card.onclick = () => showWorkout(name);
-            const badgeImg = badges[name] ? `<img src="${badges[name]}" class="badge-home">` : '';
+            
+            // Genera HTML per i badge (possono essercene più di uno)
+            const badgeHTML = (badges[name] || []).map(b => `<img src="${b}" class="badge-img-large">`).join('');
+            
             card.innerHTML = `
-                <div class="img-container">
-                    <img src="${photos[name] || ''}" class="profile-img">
-                    ${badgeImg}
+                <img src="${photos[name] || ''}" class="profile-img">
+                <div class="client-info-wrapper">
+                    <div class="client-name-home">${name}</div>
+                    <div class="badge-slot-home">${badgeHTML}</div>
                 </div>
-                <div style="font-family:'Oswald',sans-serif;font-weight:700;font-size:1.3rem;text-transform:uppercase;font-style:italic;">${name}</div>
             `;
             list.appendChild(card);
         });
@@ -150,8 +190,12 @@
         document.getElementById('home-view').style.display = 'none';
         document.getElementById('workout-view').style.display = 'block';
         
-        const badgeImgInline = badges[name] ? `<img src="${badges[name]}" class="badge-inline">` : '';
-        document.getElementById('client-name-display').innerHTML = name + badgeImgInline;
+        const badgeHTMLInline = (badges[name] || []).map(b => `<img src="${b}" class="badge-img-large" style="width:35px; height:35px;">`).join('');
+        
+        document.getElementById('client-name-display').innerHTML = `
+            <span>${name}</span>
+            <div class="badge-slot-home" style="margin-left:15px;">${badgeHTMLInline}</div>
+        `;
         document.getElementById('client-photo-detail').src = photos[name] || '';
         
         const container = document.getElementById('workout-accordion-container');
