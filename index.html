@@ -4,18 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Personal Records - Elite Training</title>
-    <link rel="icon" type="image/png" href="favicon.png?v=2">
-    <link rel="apple-touch-icon" href="favicon.png?v=2">
-    <meta name="apple-mobile-web-app-title" content="Records">
     <style>
-        :root { --primary: #ffffff; --accent: #facc15; --bg-black: #000000; --card-bg: #111827; --text-main: #ffffff; --text-dim: #9ca3af; }
+        :root { --primary: #ffffff; --accent: #facc15; --bg-black: #000000; --card-bg: #111827; --text-main: #ffffff; --text-dim: #9ca3af; --danger: #ef4444; --success: #22c55e; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-black); color: var(--text-main); margin: 0; padding: 15px; overflow-x: hidden; }
         .container { max-width: 500px; margin: auto; }
         .header { text-align: center; padding: 10px 0 30px 0; }
         .logo { max-width: 220px; height: auto; margin-bottom: 20px; }
-        #page-title { font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: -1.5px; margin: 10px 0; font-family: 'Arial Black', sans-serif; }
+        #page-title { font-size: 2.2rem; font-weight: 900; text-transform: uppercase; letter-spacing: -1.5px; margin: 10px 0; font-family: 'Arial Black', sans-serif; }
         .client-grid { display: flex; flex-direction: column; gap: 12px; }
-        .client-card { background: var(--card-bg); padding: 22px; border-radius: 18px; cursor: pointer; border: 1px solid #1f2937; display: flex; align-items: center; gap: 20px; transition: all 0.3s ease; }
+        .client-card { background: var(--card-bg); padding: 22px; border-radius: 18px; cursor: pointer; border: 1px solid #1f2937; display: flex; align-items: center; gap: 20px; }
         .profile-img { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
         .profile-img-small { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
         #workout-view { display: none; }
@@ -24,23 +21,27 @@
         .accordion { margin-bottom: 10px; border-radius: 14px; overflow: hidden; background: var(--card-bg); border: 1px solid #1f2937; }
         .accordion-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 800; text-transform: uppercase; font-size: 0.9rem; }
         .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; background: #05070a; }
-        .active .accordion-content { max-height: 1000px; }
+        .active .accordion-content { max-height: 1200px; }
         .active .accordion-header { background: #1f2937; color: var(--accent); }
         .exercise-row { padding: 15px 20px; border-bottom: 1px solid #1f2937; }
         .ex-main-info { display: flex; justify-content: space-between; align-items: center; }
-        .ex-name { color: #e5e7eb; font-size: 0.95rem; font-weight: bold; }
+        .ex-name { color: #e5e7eb; font-size: 0.95rem; font-weight: bold; max-width: 60%; }
+        .ex-actions { display: flex; align-items: center; gap: 10px; }
         .ex-weight { color: var(--accent); font-weight: 900; font-size: 1.2rem; }
+        .upgrade-btn { background: #1f2937; border: 1px solid var(--accent); color: var(--accent); padding: 5px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: bold; cursor: pointer; transition: all 0.3s; }
+        .upgrade-btn.sent { background: var(--success); border-color: var(--success); color: white; }
         .ex-notes { color: var(--text-dim); font-size: 0.8rem; margin-top: 5px; font-style: italic; }
-        #loader { text-align: center; padding: 50px; color: var(--accent); }
+        .upgrade-badge { background: var(--danger); color: white; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; margin-top: 4px; display: inline-block; }
+        #loader { text-align: center; padding: 50px; color: var(--accent); font-weight: bold; }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
         <img src="https://i.postimg.cc/Gt2531hd/Title-(Return-Address-Labels)-(Stickers-(Square))-(Stickers-(Rectangle)-(Landscape)).png" alt="Logo" class="logo">
-        <h1 id="page-title">Personal Records</h1>
+        <h1 id="page-title">Records</h1>
     </div>
-    <div id="loader">CARICAMENTO DATI...</div>
+    <div id="loader">SINCRONIZZAZIONE...</div>
     <div id="home-view" style="display:none;"><div class="client-grid" id="client-list"></div></div>
     <div id="workout-view">
         <button class="back-btn" onclick="showHome()">← Back</button>
@@ -51,40 +52,42 @@
         <div id="workout-accordion-container"></div>
     </div>
 </div>
+
 <script>
-    const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=0&single=true&output=csv'; 
+    const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=0&single=true&output=csv';
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbx_3oQAL4pYFTR2Fbi84U4ufsBxJsb70c5oUxWx-dGaaY7wOHMg2u2WB3NTO2CugRJN/exec';
+    
     const photos = { "Kuki": "https://i.postimg.cc/XvBNJTXb/Kuki.jpg", "Lovro": "https://i.postimg.cc/XqHt9YDD/Lovro.jpg", "Mihael": "https://i.postimg.cc/X7PTJX5X/Mihael.jpg" };
     let data = {};
 
     async function loadData() {
         try {
-            const response = await fetch(csvUrl + '&t=' + new Date().getTime()); // Forza aggiornamento cache
+            const response = await fetch(csvUrl + '&cache=' + new Date().getTime());
             const csvText = await response.text();
             parseCSV(csvText);
             document.getElementById('loader').style.display = 'none';
             document.getElementById('home-view').style.display = 'block';
             renderClientList();
-        } catch (error) {
-            document.getElementById('loader').innerText = "Errore caricamento.";
-        }
+        } catch (error) { document.getElementById('loader').innerText = "Errore di rete."; }
     }
 
     function parseCSV(text) {
         const lines = text.split(/\r?\n/);
         data = {};
         for (let i = 1; i < lines.length; i++) {
-            const columns = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); // Gestisce virgole nelle note
+            const columns = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
             if (columns.length >= 4) {
                 const name = columns[0].trim().replace(/^"|"$/g, '');
                 const area = columns[1].trim().replace(/^"|"$/g, '');
                 const ex = columns[2].trim().replace(/^"|"$/g, '');
                 const load = columns[3].trim().replace(/^"|"$/g, '');
                 const notes = columns[4] ? columns[4].trim().replace(/^"|"$/g, '') : '';
+                const upgradeFlag = columns[5] ? columns[5].trim().toUpperCase() === 'TRUE' : false;
 
                 if (!name) continue;
                 if (!data[name]) data[name] = {};
                 if (!data[name][area]) data[name][area] = [];
-                data[name][area].push({ ex, load, notes });
+                data[name][area].push({ ex, load, notes, upgradeFlag });
             }
         }
     }
@@ -96,9 +99,23 @@
             const card = document.createElement('div');
             card.className = 'client-card';
             card.onclick = () => showWorkout(name);
-            card.innerHTML = `<img src="${photos[name] || 'https://via.placeholder.com/65'}" class="profile-img"><div style="font-weight:900; font-size: 1.4rem; text-transform: uppercase;">${name}</div>`;
+            card.innerHTML = `<img src="${photos[name] || ''}" class="profile-img"><div style="font-weight:900; font-size: 1.4rem; text-transform: uppercase;">${name}</div>`;
             list.appendChild(card);
         });
+    }
+
+    async function requestUpgrade(btn, cliente, esercizio) {
+        if (btn.classList.contains('sent')) return;
+        btn.innerText = "...";
+        try {
+            await fetch(scriptUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({ cliente, esercizio })
+            });
+            btn.innerText = "✓ Inviato";
+            btn.classList.add('sent');
+        } catch (e) { btn.innerText = "Errore"; }
     }
 
     function showWorkout(name) {
@@ -106,7 +123,7 @@
         document.getElementById('workout-view').style.display = 'block';
         document.getElementById('page-title').style.display = 'none';
         document.getElementById('client-name-display').innerText = name;
-        document.getElementById('client-photo-detail').src = photos[name] || 'https://via.placeholder.com/45';
+        document.getElementById('client-photo-detail').src = photos[name] || '';
         const container = document.getElementById('workout-accordion-container');
         container.innerHTML = '';
         for (const [area, exercises] of Object.entries(data[name])) {
@@ -117,7 +134,16 @@
                 <div class="accordion-content">
                     ${exercises.map(e => `
                         <div class="exercise-row">
-                            <div class="ex-main-info"><span class="ex-name">${e.ex}</span><span class="ex-weight">${e.load}</span></div>
+                            <div class="ex-main-info">
+                                <span class="ex-name">${e.ex}</span>
+                                <div class="ex-actions">
+                                    <span class="ex-weight">${e.load}</span>
+                                    <button class="upgrade-btn ${e.upgradeFlag ? 'sent' : ''}" onclick="requestUpgrade(this, '${name}', '${e.ex.replace(/'/g, "\\'")}')">
+                                        ${e.upgradeFlag ? '✓' : '↑ UP'}
+                                    </button>
+                                </div>
+                            </div>
+                            ${(e.upgradeFlag || e.notes.toUpperCase().includes('UPGRADE')) ? '<span class="upgrade-badge">Need Upgrade KG</span>' : ''}
                             ${e.notes ? `<div class="ex-notes">${e.notes}</div>` : ''}
                         </div>
                     `).join('')}
