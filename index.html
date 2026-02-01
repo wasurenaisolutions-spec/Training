@@ -4,50 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Personal Records - Elite Training</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:ital,wght@1,400;1,700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #ffffff; --accent: #facc15; --bg-black: #000000; --card-bg: #111827; --text-main: #ffffff; --text-dim: #9ca3af; --danger: #ef4444; --success: #22c55e; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-black); color: var(--text-main); margin: 0; padding: 15px; overflow-x: hidden; }
-        .container { max-width: 500px; margin: auto; }
-        .header { text-align: center; padding: 10px 0 30px 0; }
-        .logo { max-width: 220px; height: auto; margin-bottom: 20px; }
-        #page-title { font-size: 2.2rem; font-weight: 900; text-transform: uppercase; letter-spacing: -1.5px; margin: 10px 0; font-family: 'Arial Black', sans-serif; }
-        .client-grid { display: flex; flex-direction: column; gap: 12px; }
-        .client-card { background: var(--card-bg); padding: 22px; border-radius: 18px; cursor: pointer; border: 1px solid #1f2937; display: flex; align-items: center; gap: 20px; }
-        .profile-img { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
+        .container { max-width: 500px; margin: 0 auto; }
+
+        /* LOGO CENTRALE */
+        .header-main { 
+            text-align: center; 
+            padding: 15px 0 30px 0; 
+        }
+        .logo { 
+            max-width: 180px; 
+            height: auto; 
+            display: inline-block;
+            filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.1));
+        }
+
+        /* TITOLO SEZIONE A SINISTRA */
+        .section-header {
+            text-align: left;
+            padding: 0 0 12px 5px;
+        }
+        #page-title { 
+            font-family: 'Oswald', sans-serif; 
+            font-size: 1rem; 
+            font-weight: 400; 
+            font-style: italic; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            color: var(--primary);
+            margin: 0;
+            opacity: 0.7;
+        }
+
+        .client-grid { display: flex; flex-direction: column; gap: 10px; }
+        .client-card { background: var(--card-bg); padding: 18px; border-radius: 12px; cursor: pointer; border: 1px solid #1f2937; display: flex; align-items: center; gap: 15px; transition: transform 0.2s; }
+        .client-card:active { transform: scale(0.98); }
+        .profile-img { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
         .profile-img-small { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
+
         #workout-view { display: none; }
-        .back-btn { background: #1f2937; border: none; color: white; padding: 12px 24px; border-radius: 50px; cursor: pointer; margin-bottom: 20px; font-weight: bold; }
-        .client-header-inline { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; border-bottom: 1px solid #1f2937; padding-bottom: 15px; }
-        .accordion { margin-bottom: 10px; border-radius: 14px; overflow: hidden; background: var(--card-bg); border: 1px solid #1f2937; }
-        .accordion-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 800; text-transform: uppercase; font-size: 0.9rem; }
-        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; background: #05070a; }
-        .active .accordion-content { max-height: 1200px; }
-        .active .accordion-header { background: #1f2937; color: var(--accent); }
-        .exercise-row { padding: 15px 20px; border-bottom: 1px solid #1f2937; }
+        .back-btn { background: transparent; border: 1px solid #374151; color: var(--text-dim); padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-bottom: 20px; font-size: 0.75rem; text-transform: uppercase; font-family: 'Oswald', sans-serif; }
+        
+        .client-header-inline { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #1f2937; }
+        .client-header-inline h1 { font-family: 'Oswald', sans-serif; font-size: 1.8rem; font-style: italic; text-transform: uppercase; margin: 0; letter-spacing: 1px; }
+
+        .accordion { margin-bottom: 10px; border-radius: 10px; overflow: hidden; background: var(--card-bg); border: 1px solid #1f2937; }
+        .accordion-header { padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-family: 'Oswald', sans-serif; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; background: #080c14; }
+        .active .accordion-content { max-height: 2000px; }
+        .active .accordion-header { color: var(--accent); background: #1f2937; }
+
+        .exercise-row { padding: 18px 20px; border-bottom: 1px solid #1f2937; }
         .ex-main-info { display: flex; justify-content: space-between; align-items: center; }
-        .ex-name { color: #e5e7eb; font-size: 0.95rem; font-weight: bold; max-width: 60%; }
-        .ex-actions { display: flex; align-items: center; gap: 10px; }
-        .ex-weight { color: var(--accent); font-weight: 900; font-size: 1.2rem; }
-        .upgrade-btn { background: #1f2937; border: 1px solid var(--accent); color: var(--accent); padding: 5px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: bold; cursor: pointer; transition: all 0.3s; }
+        .ex-name { color: #f3f4f6; font-size: 0.95rem; font-weight: 500; max-width: 60%; line-height: 1.3; }
+        .ex-actions { display: flex; align-items: center; gap: 15px; }
+        .ex-weight { font-family: 'Oswald', sans-serif; color: var(--accent); font-weight: 700; font-size: 1.4rem; font-style: italic; }
+        
+        .upgrade-btn { background: #111827; border: 1px solid #4b5563; color: var(--text-dim); padding: 6px 12px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; cursor: pointer; transition: 0.2s; }
         .upgrade-btn.sent { background: var(--success); border-color: var(--success); color: white; }
-        .ex-notes { color: var(--text-dim); font-size: 0.8rem; margin-top: 5px; font-style: italic; }
-        .upgrade-badge { background: var(--danger); color: white; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; margin-top: 4px; display: inline-block; }
-        #loader { text-align: center; padding: 50px; color: var(--accent); font-weight: bold; }
+        
+        .ex-notes { color: var(--text-dim); font-size: 0.8rem; margin-top: 8px; font-style: italic; line-height: 1.4; border-left: 2px solid var(--accent); padding-left: 10px; margin-left: 2px; }
+        .upgrade-badge { background: var(--danger); color: white; font-size: 0.65rem; padding: 3px 10px; border-radius: 4px; font-weight: 900; margin-top: 8px; display: inline-block; text-transform: uppercase; letter-spacing: 1px; }
+        
+        #loader { text-align: center; padding: 80px; color: var(--accent); font-family: 'Oswald', sans-serif; font-style: italic; letter-spacing: 3px; font-size: 1.2rem; }
     </style>
 </head>
 <body>
 <div class="container">
-    <div class="header">
-        <img src="https://i.postimg.cc/Gt2531hd/Title-(Return-Address-Labels)-(Stickers-(Square))-(Stickers-(Rectangle)-(Landscape)).png" alt="Logo" class="logo">
-        <h1 id="page-title">Records</h1>
+    <div class="header-main">
+        <img src="https://i.postimg.cc/Gt2531hd/Title-(Return-Address-Labels)-(Stickers-(Square))-(Stickers-(Rectangle)-(Landscape)).png" alt="Elite Training Logo" class="logo">
     </div>
-    <div id="loader">SINCRONIZZAZIONE...</div>
-    <div id="home-view" style="display:none;"><div class="client-grid" id="client-list"></div></div>
+
+    <div id="loader">LOADING DATA...</div>
+
+    <div id="home-view" style="display:none;">
+        <div class="section-header">
+            <h2 id="page-title">Personal Records</h2>
+        </div>
+        <div class="client-grid" id="client-list"></div>
+    </div>
+
     <div id="workout-view">
-        <button class="back-btn" onclick="showHome()">← Back</button>
+        <button class="back-btn" onclick="showHome()">← BACK</button>
         <div class="client-header-inline">
             <img id="client-photo-detail" src="" class="profile-img-small">
-            <h1 id="client-name-display" style="margin: 0; font-size: 1.8rem; text-transform: uppercase; font-weight: 900;"></h1>
+            <h1 id="client-name-display"></h1>
         </div>
         <div id="workout-accordion-container"></div>
     </div>
@@ -56,19 +100,18 @@
 <script>
     const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=0&single=true&output=csv';
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbx_3oQAL4pYFTR2Fbi84U4ufsBxJsb70c5oUxWx-dGaaY7wOHMg2u2WB3NTO2CugRJN/exec';
-    
     const photos = { "Kuki": "https://i.postimg.cc/XvBNJTXb/Kuki.jpg", "Lovro": "https://i.postimg.cc/XqHt9YDD/Lovro.jpg", "Mihael": "https://i.postimg.cc/X7PTJX5X/Mihael.jpg" };
     let data = {};
 
     async function loadData() {
         try {
-            const response = await fetch(csvUrl + '&cache=' + new Date().getTime());
+            const response = await fetch(csvUrl + '&t=' + new Date().getTime());
             const csvText = await response.text();
             parseCSV(csvText);
             document.getElementById('loader').style.display = 'none';
             document.getElementById('home-view').style.display = 'block';
             renderClientList();
-        } catch (error) { document.getElementById('loader').innerText = "Errore di rete."; }
+        } catch (error) { document.getElementById('loader').innerText = "CONNECTION ERROR"; }
     }
 
     function parseCSV(text) {
@@ -83,7 +126,6 @@
                 const load = columns[3].trim().replace(/^"|"$/g, '');
                 const notes = columns[4] ? columns[4].trim().replace(/^"|"$/g, '') : '';
                 const upgradeFlag = columns[5] ? columns[5].trim().toUpperCase() === 'TRUE' : false;
-
                 if (!name) continue;
                 if (!data[name]) data[name] = {};
                 if (!data[name][area]) data[name][area] = [];
@@ -95,11 +137,11 @@
     function renderClientList() {
         const list = document.getElementById('client-list');
         list.innerHTML = '';
-        Object.keys(data).forEach(name => {
+        Object.keys(data).sort().forEach(name => {
             const card = document.createElement('div');
             card.className = 'client-card';
             card.onclick = () => showWorkout(name);
-            card.innerHTML = `<img src="${photos[name] || ''}" class="profile-img"><div style="font-weight:900; font-size: 1.4rem; text-transform: uppercase;">${name}</div>`;
+            card.innerHTML = `<img src="${photos[name] || ''}" class="profile-img"><div style="font-family:'Oswald',sans-serif;font-weight:700;font-size:1.3rem;text-transform:uppercase;font-style:italic;letter-spacing:1px;">${name}</div>`;
             list.appendChild(card);
         });
     }
@@ -108,20 +150,14 @@
         if (btn.classList.contains('sent')) return;
         btn.innerText = "...";
         try {
-            await fetch(scriptUrl, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify({ cliente, esercizio })
-            });
-            btn.innerText = "✓ Inviato";
-            btn.classList.add('sent');
-        } catch (e) { btn.innerText = "Errore"; }
+            await fetch(scriptUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ cliente, esercizio }) });
+            btn.innerText = "✓"; btn.classList.add('sent');
+        } catch (e) { btn.innerText = "UP"; }
     }
 
     function showWorkout(name) {
         document.getElementById('home-view').style.display = 'none';
         document.getElementById('workout-view').style.display = 'block';
-        document.getElementById('page-title').style.display = 'none';
         document.getElementById('client-name-display').innerText = name;
         document.getElementById('client-photo-detail').src = photos[name] || '';
         const container = document.getElementById('workout-accordion-container');
@@ -129,30 +165,25 @@
         for (const [area, exercises] of Object.entries(data[name])) {
             const acc = document.createElement('div');
             acc.className = 'accordion';
-            acc.innerHTML = `
-                <div class="accordion-header" onclick="this.parentElement.classList.toggle('active')">${area} <span>+</span></div>
+            acc.innerHTML = `<div class="accordion-header" onclick="this.parentElement.classList.toggle('active')">${area} <span>+</span></div>
                 <div class="accordion-content">
                     ${exercises.map(e => `
                         <div class="exercise-row">
                             <div class="ex-main-info">
                                 <span class="ex-name">${e.ex}</span>
-                                <div class="ex-actions">
-                                    <span class="ex-weight">${e.load}</span>
-                                    <button class="upgrade-btn ${e.upgradeFlag ? 'sent' : ''}" onclick="requestUpgrade(this, '${name}', '${e.ex.replace(/'/g, "\\'")}')">
-                                        ${e.upgradeFlag ? '✓' : '↑ UP'}
-                                    </button>
-                                </div>
+                                <div class="ex-actions"><span class="ex-weight">${e.load}</span>
+                                <button class="upgrade-btn ${e.upgradeFlag ? 'sent' : ''}" onclick="requestUpgrade(this, '${name}', '${e.ex.replace(/'/g, "\\'")}')">${e.upgradeFlag ? '✓' : 'UP'}</button></div>
                             </div>
-                            ${(e.upgradeFlag || e.notes.toUpperCase().includes('UPGRADE')) ? '<span class="upgrade-badge">Need Upgrade KG</span>' : ''}
+                            ${e.upgradeFlag ? '<span class="upgrade-badge">Need Upgrade KG</span>' : ''}
                             ${e.notes ? `<div class="ex-notes">${e.notes}</div>` : ''}
-                        </div>
-                    `).join('')}
+                        </div>`).join('')}
                 </div>`;
             container.appendChild(acc);
         }
+        window.scrollTo(0,0);
     }
 
-    function showHome() { document.getElementById('home-view').style.display = 'block'; document.getElementById('workout-view').style.display = 'none'; document.getElementById('page-title').style.display = 'block'; }
+    function showHome() { document.getElementById('home-view').style.display = 'block'; document.getElementById('workout-view').style.display = 'none'; }
     loadData();
 </script>
 </body>
