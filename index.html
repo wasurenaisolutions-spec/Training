@@ -16,30 +16,92 @@
         .section-header { text-align: left; padding: 0 0 12px 5px; }
         #page-title { font-family: 'Oswald', sans-serif; font-size: 1rem; font-weight: 400; font-style: italic; text-transform: uppercase; letter-spacing: 2px; color: var(--primary); margin: 0; opacity: 0.7; }
 
+        /* HOME LIST */
         .client-grid { display: flex; flex-direction: column; gap: 10px; }
-        .client-card { background: var(--card-bg); padding: 15px 18px; border-radius: 12px; cursor: pointer; border: 1px solid #1f2937; display: flex; align-items: center; gap: 15px; position: relative; }
+        .client-card { 
+            background: var(--card-bg); 
+            padding: 15px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            border: 1px solid #1f2937; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px;
+        }
 
         .profile-img { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); flex-shrink: 0; }
-        .client-info-wrapper { display: flex; align-items: center; justify-content: space-between; width: 100%; overflow: hidden; }
         
-        .client-name-home { font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 1.4rem; text-transform: uppercase; font-style: italic; letter-spacing: 1px; white-space: nowrap; }
+        .client-info-wrapper { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            width: 100%; 
+        }
+        
+        .client-name-home { 
+            font-family: 'Oswald', sans-serif; 
+            font-weight: 700; 
+            font-size: 1.3rem; 
+            text-transform: uppercase; 
+            font-style: italic; 
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
 
         /* BADGES */
-        .badge-slot-home { display: flex; gap: 8px; margin-left: auto; align-items: center; padding-left: 10px; }
-        .badge-img-large { width: 42px; height: 42px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); transition: transform 0.2s; cursor: zoom-in; }
+        .badge-list { 
+            display: flex; 
+            gap: 6px; 
+            margin-left: auto; 
+            align-items: center;
+        }
+        .badge-img { 
+            width: 40px; 
+            height: 40px; 
+            object-fit: contain; 
+            cursor: zoom-in;
+            transition: transform 0.2s;
+        }
 
         /* ZOOM OVERLAY */
-        #badge-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; cursor: zoom-out; }
-        #badge-overlay img { max-width: 80%; max-height: 80%; transform: scale(1.5); transition: 0.3s; }
+        #zoom-overlay { 
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.95); 
+            z-index: 10000; 
+            justify-content: center; 
+            align-items: center; 
+            cursor: zoom-out;
+        }
+        #zoom-img { max-width: 85%; max-height: 85%; transform: scale(1.3); }
 
-        /* SCHEDA SINGOLA */
+        /* WORKOUT VIEW */
         #workout-view { display: none; }
         .back-btn { background: transparent; border: 1px solid #374151; color: var(--text-dim); padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-bottom: 20px; font-size: 0.75rem; text-transform: uppercase; font-family: 'Oswald', sans-serif; }
-        .client-header-inline { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #1f2937; }
+        
+        .client-header-inline { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            margin-bottom: 25px; 
+            padding-bottom: 15px; 
+            border-bottom: 1px solid #1f2937; 
+        }
         .profile-img-small { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
-        .client-header-inline h1 { font-family: 'Oswald', sans-serif; font-size: 1.8rem; font-style: italic; text-transform: uppercase; margin: 0; letter-spacing: 1px; display: flex; align-items: center; width: 100%; }
+        .client-header-inline h1 { 
+            font-family: 'Oswald', sans-serif; 
+            font-size: 1.6rem; 
+            font-style: italic; 
+            text-transform: uppercase; 
+            margin: 0; 
+            display: flex; 
+            align-items: center; 
+            width: 100%;
+            justify-content: space-between;
+        }
 
-        /* ACCORDION & ROWS */
+        /* ACCORDION */
         .accordion { margin-bottom: 10px; border-radius: 10px; overflow: hidden; background: var(--card-bg); border: 1px solid #1f2937; }
         .accordion-header { padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-family: 'Oswald', sans-serif; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; }
         .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; background: #080c14; }
@@ -58,17 +120,22 @@
 </head>
 <body>
 
-<div id="badge-overlay" onclick="closeZoom()"><img id="zoomed-img" src=""></div>
+<div id="zoom-overlay" onclick="this.style.display='none'">
+    <img id="zoom-img" src="">
+</div>
 
 <div class="container">
     <div class="header-main">
         <img src="https://i.postimg.cc/Gt2531hd/Title-(Return-Address-Labels)-(Stickers-(Square))-(Stickers-(Rectangle)-(Landscape)).png" alt="Logo" class="logo">
     </div>
-    <div id="loader">LOADING DATA...</div>
+
+    <div id="loader">LOADING...</div>
+
     <div id="home-view" style="display:none;">
         <div class="section-header"><h2 id="page-title">Personal Records</h2></div>
         <div class="client-grid" id="client-list"></div>
     </div>
+
     <div id="workout-view">
         <button class="back-btn" onclick="showHome()">← BACK</button>
         <div class="client-header-inline">
@@ -85,6 +152,7 @@
     
     const photos = { "Kuki": "https://i.postimg.cc/XvBNJTXb/Kuki.jpg", "Lovro": "https://i.postimg.cc/XqHt9YDD/Lovro.jpg", "Mihael": "https://i.postimg.cc/X7PTJX5X/Mihael.jpg" };
     
+    // BADGES DEFINITI QUI
     const badges = { 
         "Kuki": ["https://i.postimg.cc/tR6FZvfB/Plank.png"], 
         "Mihael": ["https://i.postimg.cc/L8SdK7Km/Wallsit.png", "https://i.postimg.cc/63Fw4V3C/Battle-Rope.png"] 
@@ -92,14 +160,10 @@
 
     let data = {};
 
-    function openZoom(e, url) {
-        e.stopPropagation(); 
-        document.getElementById('zoomed-img').src = url;
-        document.getElementById('badge-overlay').style.display = 'flex';
-    }
-
-    function closeZoom() {
-        document.getElementById('badge-overlay').style.display = 'none';
+    function zoomBadge(e, url) {
+        e.stopPropagation(); // Impedisce di aprire la scheda cliente
+        document.getElementById('zoom-img').src = url;
+        document.getElementById('zoom-overlay').style.display = 'flex';
     }
 
     async function loadData() {
@@ -110,7 +174,7 @@
             document.getElementById('loader').style.display = 'none';
             document.getElementById('home-view').style.display = 'block';
             renderClientList();
-        } catch (error) { document.getElementById('loader').innerText = "CONNECTION ERROR"; }
+        } catch (error) { document.getElementById('loader').innerText = "ERROR"; }
     }
 
     function parseCSV(text) {
@@ -141,41 +205,32 @@
             card.className = 'client-card';
             card.onclick = () => showWorkout(name);
             
-            const badgeHTML = (badges[name] || []).map(b => 
-                `<img src="${b}" class="badge-img-large" onclick="openZoom(event, '${b}')">`
+            const badgeHTML = (badges[name] || []).map(url => 
+                `<img src="${url}" class="badge-img" onclick="zoomBadge(event, '${url}')">`
             ).join('');
             
             card.innerHTML = `
                 <img src="${photos[name] || ''}" class="profile-img">
                 <div class="client-info-wrapper">
                     <div class="client-name-home">${name}</div>
-                    <div class="badge-slot-home">${badgeHTML}</div>
+                    <div class="badge-list">${badgeHTML}</div>
                 </div>
             `;
             list.appendChild(card);
         });
     }
 
-    async function requestUpgrade(btn, cliente, esercizio) {
-        if (btn.classList.contains('sent')) return;
-        btn.innerText = "...";
-        try {
-            await fetch(scriptUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ cliente, esercizio }) });
-            btn.innerText = "✓"; btn.classList.add('sent');
-        } catch (e) { btn.innerText = "UP"; }
-    }
-
     function showWorkout(name) {
         document.getElementById('home-view').style.display = 'none';
         document.getElementById('workout-view').style.display = 'block';
         
-        const badgeHTMLInline = (badges[name] || []).map(b => 
-            `<img src="${b}" class="badge-img-large" style="width:38px; height:38px;" onclick="openZoom(event, '${b}')">`
+        const badgeHTML = (badges[name] || []).map(url => 
+            `<img src="${url}" class="badge-img" style="width:35px;height:35px;" onclick="zoomBadge(event, '${url}')">`
         ).join('');
         
         document.getElementById('client-name-display').innerHTML = `
-            <span style="flex-shrink:0;">${name}</span>
-            <div class="badge-slot-home" style="margin-left:15px; justify-content: flex-start;">${badgeHTMLInline}</div>
+            <span>${name}</span>
+            <div class="badge-list">${badgeHTML}</div>
         `;
         document.getElementById('client-photo-detail').src = photos[name] || '';
         
@@ -191,7 +246,7 @@
                             <div class="ex-main-info">
                                 <span class="ex-name">${e.ex}</span>
                                 <div class="ex-actions"><span class="ex-weight">${e.load}</span>
-                                <button class="upgrade-btn ${e.upgradeFlag ? 'sent' : ''}" onclick="requestUpgrade(this, '${name}', '${e.ex.replace(/'/g, "\\'")}')">${e.upgradeFlag ? '✓' : 'UP'}</button></div>
+                                <button class="upgrade-btn ${e.upgradeFlag ? 'sent' : ''}" onclick="requestUpgrade(this, '${name}', '${e.ex}')">${e.upgradeFlag ? '✓' : 'UP'}</button></div>
                             </div>
                             ${e.upgradeFlag ? '<span class="upgrade-badge">Need Upgrade KG</span>' : ''}
                             ${e.notes ? `<div class="ex-notes">${e.notes}</div>` : ''}
@@ -199,7 +254,15 @@
                 </div>`;
             container.appendChild(acc);
         }
-        window.scrollTo(0,0);
+    }
+
+    async function requestUpgrade(btn, cliente, esercizio) {
+        if (btn.classList.contains('sent')) return;
+        btn.innerText = "...";
+        try {
+            await fetch(scriptUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ cliente, esercizio }) });
+            btn.innerText = "✓"; btn.classList.add('sent');
+        } catch (e) { btn.innerText = "UP"; }
     }
 
     function showHome() { document.getElementById('home-view').style.display = 'block'; document.getElementById('workout-view').style.display = 'none'; }
