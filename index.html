@@ -3,269 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Personal Records - Elite Training</title>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:ital,wght@1,400;1,700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>Elite Training - Records</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:ital,wght@1,400;1,700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #ffffff; --accent: #facc15; --bg-black: #000000; --card-bg: #111827; --text-main: #ffffff; --text-dim: #9ca3af; --danger: #ef4444; --success: #22c55e; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-black); color: var(--text-main); margin: 0; padding: 15px; overflow-x: hidden; }
+        :root { --accent: #facc15; --bg: #000000; --card: #111827; --text: #ffffff; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; }
         .container { max-width: 500px; margin: 0 auto; }
-
-        .header-main { text-align: center; padding: 15px 0 30px 0; }
-        .logo { max-width: 180px; height: auto; display: inline-block; }
-
-        .section-header { text-align: left; padding: 0 0 12px 5px; }
-        #page-title { font-family: 'Oswald', sans-serif; font-size: 1rem; font-weight: 400; font-style: italic; text-transform: uppercase; letter-spacing: 2px; color: var(--primary); margin: 0; opacity: 0.7; }
-
-        /* HOME LIST */
-        .client-grid { display: flex; flex-direction: column; gap: 10px; }
-        .client-card { 
-            background: var(--card-bg); 
-            padding: 15px; 
-            border-radius: 12px; 
-            cursor: pointer; 
-            border: 1px solid #1f2937; 
-            display: flex; 
-            align-items: center; 
-            gap: 12px;
-        }
-
-        .profile-img { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); flex-shrink: 0; }
+        .logo { max-width: 160px; display: block; margin: 0 auto 20px; }
         
-        .client-info-wrapper { 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            width: 100%; 
-        }
+        /* Home List */
+        .client-card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #1f2937; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .profile-img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
+        .name-area { font-family: 'Oswald', sans-serif; font-size: 1.2rem; font-style: italic; text-transform: uppercase; flex-grow: 1; }
         
-        .client-name-home { 
-            font-family: 'Oswald', sans-serif; 
-            font-weight: 700; 
-            font-size: 1.3rem; 
-            text-transform: uppercase; 
-            font-style: italic; 
-            letter-spacing: 1px;
-            white-space: nowrap;
-        }
+        /* Badges */
+        .badge-list { display: flex; gap: 5px; }
+        .badge-img { width: 35px; height: 35px; object-fit: contain; cursor: zoom-in; }
 
-        /* BADGES */
-        .badge-list { 
-            display: flex; 
-            gap: 6px; 
-            margin-left: auto; 
-            align-items: center;
-        }
-        .badge-img { 
-            width: 40px; 
-            height: 40px; 
-            object-fit: contain; 
-            cursor: zoom-in;
-            transition: transform 0.2s;
-        }
+        /* Zoom Overlay */
+        #zoom-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; }
+        #zoom-img { max-width: 90%; max-height: 90%; }
 
-        /* ZOOM OVERLAY */
-        #zoom-overlay { 
-            display: none; 
-            position: fixed; 
-            top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.95); 
-            z-index: 10000; 
-            justify-content: center; 
-            align-items: center; 
-            cursor: zoom-out;
-        }
-        #zoom-img { max-width: 85%; max-height: 85%; transform: scale(1.3); }
-
-        /* WORKOUT VIEW */
+        /* View Management */
         #workout-view { display: none; }
-        .back-btn { background: transparent; border: 1px solid #374151; color: var(--text-dim); padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-bottom: 20px; font-size: 0.75rem; text-transform: uppercase; font-family: 'Oswald', sans-serif; }
+        .back-btn { background: #1f2937; color: white; border: none; padding: 8px 15px; border-radius: 5px; margin-bottom: 15px; cursor: pointer; font-family: 'Oswald', sans-serif; }
         
-        .client-header-inline { 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-            margin-bottom: 25px; 
-            padding-bottom: 15px; 
-            border-bottom: 1px solid #1f2937; 
-        }
-        .profile-img-small { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
-        .client-header-inline h1 { 
-            font-family: 'Oswald', sans-serif; 
-            font-size: 1.6rem; 
-            font-style: italic; 
-            text-transform: uppercase; 
-            margin: 0; 
-            display: flex; 
-            align-items: center; 
-            width: 100%;
-            justify-content: space-between;
-        }
-
-        /* ACCORDION */
-        .accordion { margin-bottom: 10px; border-radius: 10px; overflow: hidden; background: var(--card-bg); border: 1px solid #1f2937; }
-        .accordion-header { padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-family: 'Oswald', sans-serif; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; }
-        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; background: #080c14; }
-        .active .accordion-content { max-height: 2000px; }
-        .active .accordion-header { color: var(--accent); background: #1f2937; }
-        .exercise-row { padding: 18px 20px; border-bottom: 1px solid #1f2937; }
-        .ex-main-info { display: flex; justify-content: space-between; align-items: center; }
-        .ex-name { color: #f3f4f6; font-size: 0.95rem; font-weight: 500; max-width: 60%; }
-        .ex-weight { font-family: 'Oswald', sans-serif; color: var(--accent); font-weight: 700; font-size: 1.4rem; font-style: italic; }
-        .upgrade-btn { background: #111827; border: 1px solid #4b5563; color: var(--text-dim); padding: 6px 12px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; cursor: pointer; }
-        .upgrade-btn.sent { background: var(--success); border-color: var(--success); color: white; }
-        .ex-notes { color: var(--text-dim); font-size: 0.8rem; margin-top: 8px; font-style: italic; border-left: 2px solid var(--accent); padding-left: 10px; }
-        .upgrade-badge { background: var(--danger); color: white; font-size: 0.65rem; padding: 3px 10px; border-radius: 4px; font-weight: 900; margin-top: 8px; display: inline-block; text-transform: uppercase; }
-        #loader { text-align: center; padding: 80px; color: var(--accent); font-family: 'Oswald', sans-serif; font-style: italic; letter-spacing: 3px; font-size: 1.2rem; }
+        /* Accordion */
+        .accordion { background: var(--card); border: 1px solid #1f2937; border-radius: 8px; margin-bottom: 8px; }
+        .acc-header { padding: 15px; cursor: pointer; font-family: 'Oswald', sans-serif; text-transform: uppercase; display: flex; justify-content: space-between; }
+        .acc-content { display: none; padding: 0 15px 15px; background: #080c14; }
+        .ex-row { padding: 10px 0; border-bottom: 1px solid #1f2937; display: flex; justify-content: space-between; align-items: center; }
+        .ex-load { font-family: 'Oswald', sans-serif; color: var(--accent); font-size: 1.3rem; }
     </style>
 </head>
 <body>
 
-<div id="zoom-overlay" onclick="this.style.display='none'">
-    <img id="zoom-img" src="">
-</div>
+<div id="zoom-overlay" onclick="this.style.display='none'"><img id="zoom-img"></div>
 
 <div class="container">
-    <div class="header-main">
-        <img src="https://i.postimg.cc/Gt2531hd/Title-(Return-Address-Labels)-(Stickers-(Square))-(Stickers-(Rectangle)-(Landscape)).png" alt="Logo" class="logo">
-    </div>
+    <img src="https://i.postimg.cc/Gt2531hd/Title-(Return-Address-Labels)-(Stickers-(Square))-(Stickers-(Rectangle)-(Landscape)).png" class="logo">
 
-    <div id="loader">LOADING...</div>
-
-    <div id="home-view" style="display:none;">
-        <div class="section-header"><h2 id="page-title">Personal Records</h2></div>
-        <div class="client-grid" id="client-list"></div>
+    <div id="home-view">
+        <div id="client-list"></div>
     </div>
 
     <div id="workout-view">
-        <button class="back-btn" onclick="showHome()">← BACK</button>
-        <div class="client-header-inline">
-            <img id="client-photo-detail" src="" class="profile-img-small">
-            <h1 id="client-name-display"></h1>
-        </div>
-        <div id="workout-accordion-container"></div>
+        <button class="back-btn" onclick="location.reload()">← BACK</button>
+        <div id="workout-content"></div>
     </div>
 </div>
 
 <script>
     const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=0&single=true&output=csv';
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbx_3oQAL4pYFTR2Fbi84U4ufsBxJsb70c5oUxWx-dGaaY7wOHMg2u2WB3NTO2CugRJN/exec';
-    
     const photos = { "Kuki": "https://i.postimg.cc/XvBNJTXb/Kuki.jpg", "Lovro": "https://i.postimg.cc/XqHt9YDD/Lovro.jpg", "Mihael": "https://i.postimg.cc/X7PTJX5X/Mihael.jpg" };
-    
-    // BADGES DEFINITI QUI
     const badges = { 
-        "Kuki": ["https://i.postimg.cc/tR6FZvfB/Plank.png"],  
+        "Kuki": ["https://i.postimg.cc/tR6FZvfB/Plank.png"], 
+        "Mihael": ["https://i.postimg.cc/L8SdK7Km/Wallsit.png", "https://i.postimg.cc/63Fw4V3C/Battle-Rope.png"] 
     };
 
-    let data = {};
+    function zoom(e, url) { e.stopPropagation(); document.getElementById('zoom-img').src = url; document.getElementById('zoom-overlay').style.display = 'flex'; }
 
-    function zoomBadge(e, url) {
-        e.stopPropagation(); // Impedisce di aprire la scheda cliente
-        document.getElementById('zoom-img').src = url;
-        document.getElementById('zoom-overlay').style.display = 'flex';
-    }
+    async function load() {
+        const resp = await fetch(csvUrl + '&t=' + Date.now());
+        const text = await resp.text();
+        const rows = text.split('\n').slice(1);
+        const data = {};
 
-    async function loadData() {
-        try {
-            const response = await fetch(csvUrl + '&t=' + new Date().getTime());
-            const csvText = await response.text();
-            parseCSV(csvText);
-            document.getElementById('loader').style.display = 'none';
-            document.getElementById('home-view').style.display = 'block';
-            renderClientList();
-        } catch (error) { document.getElementById('loader').innerText = "ERROR"; }
-    }
+        rows.forEach(row => {
+            const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            if(cols.length < 4) return;
+            const [name, area, ex, load] = cols.map(c => c.trim().replace(/^"|"$/g, ''));
+            if(!data[name]) data[name] = {};
+            if(!data[name][area]) data[name][area] = [];
+            data[name][area].push({ex, load});
+        });
 
-    function parseCSV(text) {
-        const lines = text.split(/\r?\n/);
-        data = {};
-        for (let i = 1; i < lines.length; i++) {
-            const columns = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            if (columns.length >= 4) {
-                const name = columns[0].trim().replace(/^"|"$/g, '');
-                const area = columns[1].trim().replace(/^"|"$/g, '');
-                const ex = columns[2].trim().replace(/^"|"$/g, '');
-                const load = columns[3].trim().replace(/^"|"$/g, '');
-                const notes = columns[4] ? columns[4].trim().replace(/^"|"$/g, '') : '';
-                const upgradeFlag = columns[5] ? columns[5].trim().toUpperCase() === 'TRUE' : false;
-                if (!name) continue;
-                if (!data[name]) data[name] = {};
-                if (!data[name][area]) data[name][area] = [];
-                data[name][area].push({ ex, load, notes, upgradeFlag });
-            }
-        }
-    }
-
-    function renderClientList() {
         const list = document.getElementById('client-list');
-        list.innerHTML = '';
-        Object.keys(data).sort().forEach(name => {
+        Object.keys(data).forEach(name => {
+            const bHtml = (badges[name] || []).map(b => `<img src="${b}" class="badge-img" onclick="zoom(event,'${b}')">`).join('');
             const card = document.createElement('div');
             card.className = 'client-card';
-            card.onclick = () => showWorkout(name);
-            
-            const badgeHTML = (badges[name] || []).map(url => 
-                `<img src="${url}" class="badge-img" onclick="zoomBadge(event, '${url}')">`
-            ).join('');
-            
-            card.innerHTML = `
-                <img src="${photos[name] || ''}" class="profile-img">
-                <div class="client-info-wrapper">
-                    <div class="client-name-home">${name}</div>
-                    <div class="badge-list">${badgeHTML}</div>
-                </div>
-            `;
+            card.onclick = () => showWorkout(name, data[name]);
+            card.innerHTML = `<img src="${photos[name]}" class="profile-img"><div class="name-area">${name}</div><div class="badge-list">${bHtml}</div>`;
             list.appendChild(card);
         });
     }
 
-    function showWorkout(name) {
+    function showWorkout(name, areas) {
         document.getElementById('home-view').style.display = 'none';
-        document.getElementById('workout-view').style.display = 'block';
+        const view = document.getElementById('workout-view');
+        const content = document.getElementById('workout-content');
+        view.style.display = 'block';
         
-        const badgeHTML = (badges[name] || []).map(url => 
-            `<img src="${url}" class="badge-img" style="width:35px;height:35px;" onclick="zoomBadge(event, '${url}')">`
-        ).join('');
-        
-        document.getElementById('client-name-display').innerHTML = `
-            <span>${name}</span>
-            <div class="badge-list">${badgeHTML}</div>
-        `;
-        document.getElementById('client-photo-detail').src = photos[name] || '';
-        
-        const container = document.getElementById('workout-accordion-container');
-        container.innerHTML = '';
-        for (const [area, exercises] of Object.entries(data[name])) {
-            const acc = document.createElement('div');
-            acc.className = 'accordion';
-            acc.innerHTML = `<div class="accordion-header" onclick="this.parentElement.classList.toggle('active')">${area} <span>+</span></div>
-                <div class="accordion-content">
-                    ${exercises.map(e => `
-                        <div class="exercise-row">
-                            <div class="ex-main-info">
-                                <span class="ex-name">${e.ex}</span>
-                                <div class="ex-actions"><span class="ex-weight">${e.load}</span>
-                                <button class="upgrade-btn ${e.upgradeFlag ? 'sent' : ''}" onclick="requestUpgrade(this, '${name}', '${e.ex}')">${e.upgradeFlag ? '✓' : 'UP'}</button></div>
-                            </div>
-                            ${e.upgradeFlag ? '<span class="upgrade-badge">Need Upgrade KG</span>' : ''}
-                            ${e.notes ? `<div class="ex-notes">${e.notes}</div>` : ''}
-                        </div>`).join('')}
-                </div>`;
-            container.appendChild(acc);
+        let html = `<h1 style="font-family:Oswald; font-style:italic;">${name}</h1>`;
+        for(const area in areas) {
+            html += `<div class="accordion"><div class="acc-header" onclick="toggle(this)">${area} <span>+</span></div><div class="acc-content">`;
+            areas[area].forEach(e => {
+                html += `<div class="ex-row"><span>${e.ex}</span><span class="ex-load">${e.load}</span></div>`;
+            });
+            html += `</div></div>`;
         }
+        content.innerHTML = html;
     }
 
-    async function requestUpgrade(btn, cliente, esercizio) {
-        if (btn.classList.contains('sent')) return;
-        btn.innerText = "...";
-        try {
-            await fetch(scriptUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ cliente, esercizio }) });
-            btn.innerText = "✓"; btn.classList.add('sent');
-        } catch (e) { btn.innerText = "UP"; }
-    }
-
-    function showHome() { document.getElementById('home-view').style.display = 'block'; document.getElementById('workout-view').style.display = 'none'; }
-    loadData();
+    function toggle(el) { const content = el.nextElementSibling; content.style.display = content.style.display === 'block' ? 'none' : 'block'; }
+    load();
 </script>
 </body>
 </html>
