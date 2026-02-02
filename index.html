@@ -3,170 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Records - Elite Training</title>
+    <title>Elite Training Records</title>
     <style>
-        :root { --accent: #facc15; --bg: #000000; --card: #111827; --text: #ffffff; --success: #22c55e; --danger: #ef4444; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; overflow-x: hidden; }
+        :root { --accent: #facc15; --bg: #000000; --card: #111827; --text: #ffffff; }
+        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; }
         .container { max-width: 500px; margin: auto; }
-        .header { text-align: center; padding: 10px 0 20px; }
-        .logo { max-width: 200px; height: auto; }
-        #page-title { font-size: 2rem; font-weight: 900; text-transform: uppercase; margin: 10px 0; }
-        
-        /* Badges & Zoom */
-        .badge-container { display: flex; gap: 8px; margin-left: auto; }
-        .badge-img { width: 35px; height: 35px; object-fit: contain; cursor: zoom-in; }
+        .logo { max-width: 180px; display: block; margin: 0 auto 20px; }
+        .badge-container { display: flex; gap: 8px; margin-left: auto; align-items: center; }
+        .badge-img { width: 35px; height: 35px; object-fit: contain; cursor: pointer; }
         #zoom-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center; }
-        #zoom-img { max-width: 85%; max-height: 85%; border: 2px solid var(--accent); border-radius: 10px; }
-
-        /* Cards */
-        .client-card { background: var(--card); padding: 20px; border-radius: 15px; margin-bottom: 12px; border: 1px solid #1f2937; display: flex; align-items: center; gap: 15px; cursor: pointer; }
-        .profile-img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; flex-shrink: 0; }
-        .client-name { font-weight: 900; font-size: 1.3rem; text-transform: uppercase; flex-grow: 1; }
-        
-        /* Views */
+        .client-card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #1f2937; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .profile-img { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
         #workout-view { display: none; }
-        .back-btn { background: #1f2937; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; margin-bottom: 20px; font-weight: bold; }
-        
-        /* Accordion */
-        .accordion { background: var(--card); border: 1px solid #1f2937; border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
-        .acc-header { padding: 15px 20px; cursor: pointer; font-weight: bold; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
-        .acc-content { display: none; padding: 0 20px 15px; background: #080c14; }
-        .active .acc-content { display: block; }
-        .active .acc-header { color: var(--accent); background: #1f2937; }
-        
-        /* Exercises */
-        .ex-row { padding: 12px 0; border-bottom: 1px solid #1f2937; display: flex; justify-content: space-between; align-items: center; }
-        .ex-info { display: flex; flex-direction: column; max-width: 60%; }
-        .ex-name { font-weight: bold; font-size: 0.95rem; }
-        .ex-weight { color: var(--accent); font-weight: 900; font-size: 1.2rem; margin-right: 10px; }
-        .upgrade-btn { background: #1f2937; border: 1px solid var(--accent); color: var(--accent); padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; cursor: pointer; }
-        .upgrade-btn.sent { background: var(--success); border-color: var(--success); color: white; }
-        .ex-notes { font-size: 0.75rem; color: #9ca3af; font-style: italic; margin-top: 4px; }
+        .back-btn { background: #1f2937; color: white; border: none; padding: 10px 20px; border-radius: 20px; margin-bottom: 15px; }
+        .accordion { background: var(--card); border: 1px solid #1f2937; border-radius: 10px; margin-bottom: 8px; }
+        .acc-header { padding: 15px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; }
+        .acc-content { display: none; padding: 15px; background: #080c14; border-top: 1px solid #1f2937; }
+        .ex-row { padding: 10px 0; border-bottom: 1px solid #1f2937; display: flex; justify-content: space-between; align-items: center; }
+        .ex-load { color: var(--accent); font-weight: bold; font-size: 1.2rem; margin-right: 10px; }
+        .up-btn { background: #1f2937; border: 1px solid var(--accent); color: var(--accent); padding: 4px 8px; border-radius: 5px; font-size: 0.7rem; }
     </style>
 </head>
 <body>
-
-<div id="zoom-overlay" onclick="this.style.display='none'"><img id="zoom-img"></div>
-
-<div class="container">
-    <div class="header">
-        <img src="https://i.postimg.cc/Gt2531hd/Title-(Return-Address-Labels)-(Stickers-(Square))-(Stickers-(Rectangle)-(Landscape)).png" class="logo">
-        <h1 id="page-title">Records</h1>
-    </div>
-
-    <div id="loader" style="text-align:center; padding:20px;">SINCRONIZZAZIONE...</div>
-
-    <div id="home-view" style="display:none;"><div id="client-list"></div></div>
-
-    <div id="workout-view">
-        <button class="back-btn" onclick="showHome()">← Back</button>
-        <div id="workout-header" style="display:flex; align-items:center; gap:15px; margin-bottom:20px; border-bottom:1px solid #1f2937; padding-bottom:15px;">
-            <img id="detail-img" src="" style="width:50px; height:50px; border-radius:50%; border:2px solid var(--accent);">
-            <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
-                <h2 id="detail-name" style="margin:0; text-transform:uppercase;"></h2>
-                <div id="detail-badges" class="badge-container"></div>
-            </div>
+    <div id="zoom-overlay" onclick="this.style.display='none'"><img id="zoom-img" style="max-width:90%; max-height:90%;"></div>
+    <div class="container">
+        <div class="header"><img src="https://i.postimg.cc/Gt2531hd/Title-(Return-Address-Labels)-(Stickers-(Square))-(Stickers-(Rectangle)-(Landscape)).png" class="logo"></div>
+        <div id="home-view"><div id="client-list"></div></div>
+        <div id="workout-view">
+            <button class="back-btn" onclick="location.reload()">← Back</button>
+            <div id="workout-content"></div>
         </div>
-        <div id="workout-content"></div>
     </div>
-</div>
-
 <script>
     const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=0&single=true&output=csv';
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbx_3oQAL4pYFTR2Fbi84U4ufsBxJsb70c5oUxWx-dGaaY7wOHMg2u2WB3NTO2CugRJN/exec';
-    
     const photos = { "Kuki": "https://i.postimg.cc/XvBNJTXb/Kuki.jpg", "Lovro": "https://i.postimg.cc/XqHt9YDD/Lovro.jpg", "Mihael": "https://i.postimg.cc/X7PTJX5X/Mihael.jpg" };
     const badges = { 
         "Kuki": ["https://i.postimg.cc/tR6FZvfB/Plank.png"],
         "Mihael": ["https://i.postimg.cc/L8SdK7Km/Wallsit.png", "https://i.postimg.cc/63Fw4V3C/Battle-Rope.png"]
     };
 
-    let data = {};
-
-    function zoom(e, url) { e.stopPropagation(); document.getElementById('zoom-img').src = url; document.getElementById('zoom-overlay').style.display = 'flex'; }
-
-    async function loadData() {
-        try {
-            const resp = await fetch(csvUrl + '&t=' + Date.now());
-            const text = await resp.text();
-            parse(text);
-            document.getElementById('loader').style.display = 'none';
-            document.getElementById('home-view').style.display = 'block';
-            renderHome();
-        } catch (e) { document.getElementById('loader').innerText = "Errore Caricamento"; }
-    }
-
-    function parse(text) {
-        const rows = text.split(/\r?\n/).slice(1);
-        data = {};
-        rows.forEach(row => {
-            const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            if(cols.length < 4) return;
-            const [name, area, ex, load] = cols.map(c => c.trim().replace(/^"|"$/g, ''));
-            const notes = cols[4] ? cols[4].trim().replace(/^"|"$/g, '') : '';
-            const up = cols[5] ? cols[5].trim().toUpperCase() === 'TRUE' : false;
-            if(!data[name]) data[name] = {};
-            if(!data[name][area]) data[name][area] = [];
-            data[name][area].push({ex, load, notes, up});
+    async function start() {
+        const r = await fetch(csvUrl + '?t=' + Date.now());
+        const t = await r.text();
+        const data = {};
+        t.split('\n').slice(1).forEach(row => {
+            const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            if(c.length < 4) return;
+            const [n, a, e, l] = c.map(s => s.trim().replace(/^"|"$/g, ''));
+            if(!data[n]) data[n] = {};
+            if(!data[n][a]) data[n][a] = [];
+            data[n][a].push({e, l});
         });
-    }
 
-    function renderHome() {
         const list = document.getElementById('client-list');
-        list.innerHTML = '';
         Object.keys(data).forEach(name => {
-            const bHtml = (badges[name] || []).map(url => `<img src="${url}" class="badge-img" onclick="zoom(event,'${url}')">`).join('');
+            const b = (badges[name]||[]).map(u => `<img src="${u}" class="badge-img" onclick="event.stopPropagation();document.getElementById('zoom-img').src='${u}';document.getElementById('zoom-overlay').style.display='flex'">`).join('');
             const card = document.createElement('div');
             card.className = 'client-card';
-            card.onclick = () => showWorkout(name);
-            card.innerHTML = `<img src="${photos[name]}" class="profile-img"><div class="client-name">${name}</div><div class="badge-container">${bHtml}</div>`;
+            card.onclick = () => {
+                document.getElementById('home-view').style.display='none';
+                const v = document.getElementById('workout-view');
+                v.style.display='block';
+                let h = `<h2 style="text-transform:uppercase;display:flex;justify-content:space-between;">${name} <div class="badge-container">${b}</div></h2>`;
+                for(let a in data[name]){
+                    h += `<div class="accordion"><div class="acc-header" onclick="const c=this.nextElementSibling;c.style.display=c.style.display==='block'?'none':'block'">${a} <span>+</span></div><div class="acc-content">`;
+                    data[name][a].forEach(ex => h += `<div class="ex-row"><span>${ex.e}</span><div><span class="ex-load">${ex.l}</span><button class="up-btn">UP</button></div></div>`);
+                    h += `</div></div>`;
+                }
+                document.getElementById('workout-content').innerHTML = h;
+            };
+            card.innerHTML = `<img src="${photos[name]}" class="profile-img"><div style="font-weight:bold;flex-grow:1;text-transform:uppercase;">${name}</div><div class="badge-container">${b}</div>`;
             list.appendChild(card);
         });
     }
-
-    function showWorkout(name) {
-        document.getElementById('home-view').style.display = 'none';
-        document.getElementById('workout-view').style.display = 'block';
-        document.getElementById('detail-name').innerText = name;
-        document.getElementById('detail-img').src = photos[name];
-        document.getElementById('detail-badges').innerHTML = (badges[name] || []).map(url => `<img src="${url}" class="badge-img" onclick="zoom(event,'${url}')">`).join('');
-        
-        const content = document.getElementById('workout-content');
-        content.innerHTML = '';
-        for(const area in data[name]) {
-            const acc = document.createElement('div');
-            acc.className = 'accordion';
-            let exHtml = data[name][area].map(e => `
-                <div class="ex-row">
-                    <div class="ex-info">
-                        <span class="ex-name">${e.ex}</span>
-                        ${e.notes ? `<span class="ex-notes">${e.notes}</span>` : ''}
-                    </div>
-                    <div style="display:flex; align-items:center;">
-                        <span class="ex-weight">${e.load}</span>
-                        <button class="upgrade-btn ${e.up?'sent':''}" onclick="reqUp(this,'${name}','${e.ex.replace(/'/g,"\\'")}')">${e.up?'✓':'UP'}</button>
-                    </div>
-                </div>`).join('');
-            acc.innerHTML = `<div class="acc-header" onclick="this.parentElement.classList.toggle('active')">${area} <span>+</span></div><div class="acc-content">${exHtml}</div>`;
-            content.appendChild(acc);
-        }
-    }
-
-    async function reqUp(btn, cli, ex) {
-        if(btn.classList.contains('sent')) return;
-        btn.innerText = "...";
-        try {
-            await fetch(scriptUrl, {method:'POST', mode:'no-cors', body:JSON.stringify({cliente:cli, esercizio:ex})});
-            btn.innerText = "✓"; btn.classList.add('sent');
-        } catch(e) { btn.innerText = "UP"; }
-    }
-
-    function showHome() { 
-        document.getElementById('home-view').style.display = 'block'; 
-        document.getElementById('workout-view').style.display = 'none'; 
-    }
-    
-    loadData();
+    start();
 </script>
 </body>
 </html>
