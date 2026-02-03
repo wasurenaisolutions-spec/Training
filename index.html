@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Personal Records - Elite Training</title>
     <style>
-        :root { --accent: #facc15; --bg: #000000; --card: #111827; --text: #ffffff; --success: #22c55e; }
+        :root { --accent: #facc15; --bg: #000000; --card: #111827; --text: #ffffff; --success: #22c55e; --text-dim: #9ca3af; }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; }
         .container { max-width: 500px; margin: auto; }
         .header { text-align: center; padding: 10px 0; }
@@ -35,6 +35,10 @@
         
         /* Exercises */
         .ex-row { padding: 12px 0; border-bottom: 1px solid #1f2937; display: flex; justify-content: space-between; align-items: center; }
+        .ex-info { display: flex; flex-direction: column; max-width: 60%; }
+        .ex-name { font-weight: bold; font-size: 0.95rem; }
+        .ex-note-pt { font-size: 0.75rem; color: var(--success); font-style: italic; margin-top: 4px; display: none; }
+        .ex-note-pt.visible { display: block; }
         .ex-weight { color: var(--accent); font-weight: 900; font-size: 1.2rem; margin-right: 10px; }
         .upgrade-btn { background: #1f2937; border: 1px solid var(--accent); color: var(--accent); padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
         .upgrade-btn.sent { background: var(--success); border-color: var(--success); color: white; }
@@ -125,7 +129,10 @@
             acc.className = 'accordion';
             let exHtml = data[name][area].map(e => `
                 <div class="ex-row">
-                    <span style="font-weight:bold; max-width:60%">${e.ex}</span>
+                    <div class="ex-info">
+                        <span class="ex-name">${e.ex}</span>
+                        <span class="ex-note-pt ${e.up ? 'visible' : ''}">Request Sent to the PT</span>
+                    </div>
                     <div style="display:flex; align-items:center;">
                         <span class="ex-weight">${e.load}</span>
                         <button class="upgrade-btn ${e.up?'sent':''}" onclick="requestUpgrade(this,'${name}','${e.ex.replace(/'/g,"\\'")}')">${e.up?'✓':'UP'}</button>
@@ -138,7 +145,7 @@
 
     async function requestUpgrade(btn, client, exercise) {
         if(btn.classList.contains('sent')) return;
-        const originalText = btn.innerText;
+        const infoDiv = btn.closest('.ex-row').querySelector('.ex-note-pt');
         btn.innerText = "...";
         try {
             await fetch(scriptUrl, {
@@ -148,8 +155,9 @@
             });
             btn.innerText = "✓";
             btn.classList.add('sent');
+            infoDiv.classList.add('visible');
         } catch (e) {
-            btn.innerText = originalText;
+            btn.innerText = "UP";
             alert("Errore invio richiesta");
         }
     }
