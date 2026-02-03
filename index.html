@@ -3,80 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Elite Training Records</title>
+    <title>Personal Records - Elite Training</title>
     <style>
-        :root { --accent: #facc15; --bg: #000000; --card: #111827; --text: #ffffff; }
-        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; }
+        :root { --primary: #ffffff; --accent: #facc15; --bg-black: #000000; --card-bg: #111827; --text-main: #ffffff; --text-dim: #9ca3af; --danger: #ef4444; --success: #22c55e; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-black); color: var(--text-main); margin: 0; padding: 15px; overflow-x: hidden; }
         .container { max-width: 500px; margin: auto; }
-        .logo { max-width: 180px; display: block; margin: 0 auto 20px; }
+        .header { text-align: center; padding: 10px 0 30px 0; }
+        .logo { max-width: 220px; height: auto; margin-bottom: 20px; }
+        
+        /* Badges & Zoom Styles */
         .badge-container { display: flex; gap: 8px; margin-left: auto; align-items: center; }
-        .badge-img { width: 35px; height: 35px; object-fit: contain; cursor: pointer; }
+        .badge-img-icon { width: 38px; height: 38px; object-fit: contain; cursor: pointer; }
         #zoom-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center; }
-        .client-card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #1f2937; display: flex; align-items: center; gap: 12px; cursor: pointer; }
-        .profile-img { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
+        #zoom-img { max-width: 85%; max-height: 85%; border: 2px solid var(--accent); border-radius: 15px; }
+
+        .client-grid { display: flex; flex-direction: column; gap: 12px; }
+        .client-card { background: var(--card-bg); padding: 22px; border-radius: 18px; cursor: pointer; border: 1px solid #1f2937; display: flex; align-items: center; gap: 15px; }
+        .profile-img { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); flex-shrink: 0; }
+        
         #workout-view { display: none; }
-        .back-btn { background: #1f2937; color: white; border: none; padding: 10px 20px; border-radius: 20px; margin-bottom: 15px; }
-        .accordion { background: var(--card); border: 1px solid #1f2937; border-radius: 10px; margin-bottom: 8px; }
-        .acc-header { padding: 15px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; }
-        .acc-content { display: none; padding: 15px; background: #080c14; border-top: 1px solid #1f2937; }
-        .ex-row { padding: 10px 0; border-bottom: 1px solid #1f2937; display: flex; justify-content: space-between; align-items: center; }
-        .ex-load { color: var(--accent); font-weight: bold; font-size: 1.2rem; margin-right: 10px; }
-        .up-btn { background: #1f2937; border: 1px solid var(--accent); color: var(--accent); padding: 4px 8px; border-radius: 5px; font-size: 0.7rem; }
+        .back-btn { background: #1f2937; border: none; color: white; padding: 12px 24px; border-radius: 50px; cursor: pointer; margin-bottom: 20px; font-weight: bold; }
+        .client-header-inline { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; border-bottom: 1px solid #1f2937; padding-bottom: 15px; }
+        .client-info-wrapper { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+
+        /* Accordion */
+        .accordion { margin-bottom: 10px; border-radius: 14px; overflow: hidden; background: var(--card-bg); border: 1px solid #1f2937; }
+        .accordion-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 800; text-transform: uppercase; font-size: 0.9rem; }
+        .accordion-content { display: none; padding: 15px 20px; background: #05070a; }
+        .active .accordion-content { display: block; }
+        .active .accordion-header { background: #1f2937; color: var(--accent); }
+        
+        .exercise-row { padding: 15px 0; border-bottom: 1px solid #1f2937; }
+        .ex-main-info { display: flex; justify-content: space-between; align-items: center; }
+        .ex-name { color: #e5e7eb; font-size: 0.95rem; font-weight: bold; }
+        .ex-weight { color: var(--accent); font-weight: 900; font-size: 1.2rem; margin-right: 10px; }
+        .upgrade-btn { background: #1f2937; border: 1px solid var(--accent); color: var(--accent); padding: 5px 10px; border-radius: 8px; font-size: 0.7rem; cursor: pointer; }
+        .upgrade-btn.sent { background: var(--success); border-color: var(--success); color: white; }
     </style>
 </head>
 <body>
-    <div id="zoom-overlay" onclick="this.style.display='none'"><img id="zoom-img" style="max-width:90%; max-height:90%;"></div>
-    <div class="container">
-        <div class="header"><img src="https://i.postimg.cc/Gt2531hd/Title-(Return-Address-Labels)-(Stickers-(Square))-(Stickers-(Rectangle)-(Landscape)).png" class="logo"></div>
-        <div id="home-view"><div id="client-list"></div></div>
-        <div id="workout-view">
-            <button class="back-btn" onclick="location.reload()">← Back</button>
-            <div id="workout-content"></div>
-        </div>
+
+<div id="zoom-overlay" onclick="this.style.display='none'"><img id="zoom-img" src=""></div>
+
+<div class="container">
+    <div class="header">
+        <img src="https://i.postimg.cc/Gt2531hd/Title-(Return-Address-Labels)-(Stickers-(Square))-(Stickers-(Rectangle)-(Landscape)).png" alt="Logo" class="logo">
     </div>
+
+    <div id="home-view">
+        <div class="client-grid" id="client-list"></div>
+    </div>
+
+    <div id="workout-view">
+        <button class="back-btn" onclick="showHome()">← BACK</button>
+        <div class="client-header-inline">
+            <img id="client-photo-detail" src="" style="width:50px;height:50px;border-radius:50%;border:2px solid var(--accent);">
+            <div class="client-info-wrapper">
+                <h1 id="client-name-display" style="margin:0; font-size:1.5rem; text-transform:uppercase;"></h1>
+                <div id="detail-badge-slot" class="badge-container"></div>
+            </div>
+        </div>
+        <div id="workout-accordion-container"></div>
+    </div>
+</div>
+
 <script>
     const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=0&single=true&output=csv';
     const photos = { "Kuki": "https://i.postimg.cc/XvBNJTXb/Kuki.jpg", "Lovro": "https://i.postimg.cc/XqHt9YDD/Lovro.jpg", "Mihael": "https://i.postimg.cc/X7PTJX5X/Mihael.jpg" };
-    const badges = { 
+    const badges = {
         "Kuki": ["https://i.postimg.cc/tR6FZvfB/Plank.png"],
         "Mihael": ["https://i.postimg.cc/L8SdK7Km/Wallsit.png", "https://i.postimg.cc/63Fw4V3C/Battle-Rope.png"]
     };
 
-    async function start() {
-        const r = await fetch(csvUrl + '?t=' + Date.now());
-        const t = await r.text();
-        const data = {};
-        t.split('\n').slice(1).forEach(row => {
-            const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            if(c.length < 4) return;
-            const [n, a, e, l] = c.map(s => s.trim().replace(/^"|"$/g, ''));
-            if(!data[n]) data[n] = {};
-            if(!data[n][a]) data[n][a] = [];
-            data[n][a].push({e, l});
-        });
+    let data = {};
 
+    function openZoom(e, url) { e.stopPropagation(); document.getElementById('zoom-img').src = url; document.getElementById('zoom-overlay').style.display = 'flex'; }
+
+    async function loadData() {
+        const response = await fetch(csvUrl + '&t=' + Date.now());
+        const csvText = await response.text();
+        const lines = csvText.split(/\r?\n/).slice(1);
+        data = {};
+        lines.forEach(line => {
+            const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            if (cols.length < 4) return;
+            const [name, area, ex, load] = cols.map(c => c.trim().replace(/^"|"$/g, ''));
+            const up = cols[5] ? cols[5].trim().toUpperCase() === 'TRUE' : false;
+            if (!data[name]) data[name] = {};
+            if (!data[name][area]) data[name][area] = [];
+            data[name][area].push({ ex, load, up });
+        });
+        renderHome();
+    }
+
+    function renderHome() {
         const list = document.getElementById('client-list');
+        list.innerHTML = '';
         Object.keys(data).forEach(name => {
-            const b = (badges[name]||[]).map(u => `<img src="${u}" class="badge-img" onclick="event.stopPropagation();document.getElementById('zoom-img').src='${u}';document.getElementById('zoom-overlay').style.display='flex'">`).join('');
+            const bHtml = (badges[name] || []).map(u => `<img src="${u}" class="badge-img-icon" onclick="openZoom(event,'${u}')">`).join('');
             const card = document.createElement('div');
             card.className = 'client-card';
-            card.onclick = () => {
-                document.getElementById('home-view').style.display='none';
-                const v = document.getElementById('workout-view');
-                v.style.display='block';
-                let h = `<h2 style="text-transform:uppercase;display:flex;justify-content:space-between;">${name} <div class="badge-container">${b}</div></h2>`;
-                for(let a in data[name]){
-                    h += `<div class="accordion"><div class="acc-header" onclick="const c=this.nextElementSibling;c.style.display=c.style.display==='block'?'none':'block'">${a} <span>+</span></div><div class="acc-content">`;
-                    data[name][a].forEach(ex => h += `<div class="ex-row"><span>${ex.e}</span><div><span class="ex-load">${ex.l}</span><button class="up-btn">UP</button></div></div>`);
-                    h += `</div></div>`;
-                }
-                document.getElementById('workout-content').innerHTML = h;
-            };
-            card.innerHTML = `<img src="${photos[name]}" class="profile-img"><div style="font-weight:bold;flex-grow:1;text-transform:uppercase;">${name}</div><div class="badge-container">${b}</div>`;
+            card.onclick = () => showWorkout(name);
+            card.innerHTML = `<img src="${photos[name]}" class="profile-img"><div class="client-info-wrapper"><div style="font-weight:900;font-size:1.3rem;text-transform:uppercase;">${name}</div><div class="badge-container">${bHtml}</div></div>`;
             list.appendChild(card);
         });
     }
-    start();
+
+    function showWorkout(name) {
+        document.getElementById('home-view').style.display = 'none';
+        document.getElementById('workout-view').style.display = 'block';
+        document.getElementById('client-name-display').innerText = name;
+        document.getElementById('client-photo-detail').src = photos[name];
+        document.getElementById('detail-badge-slot').innerHTML = (badges[name] || []).map(u => `<img src="${u}" class="badge-img-icon" onclick="openZoom(event,'${u}')">`).join('');
+        
+        const container = document.getElementById('workout-accordion-container');
+        container.innerHTML = '';
+        for (const area in data[name]) {
+            const acc = document.createElement('div');
+            acc.className = 'accordion';
+            const exHtml = data[name][area].map(e => `<div class="exercise-row"><div class="ex-main-info"><span class="ex-name">${e.ex}</span><div><span class="ex-weight">${e.load}</span><button class="upgrade-btn ${e.up?'sent':''}">UP</button></div></div></div>`).join('');
+            acc.innerHTML = `<div class="accordion-header" onclick="this.parentElement.classList.toggle('active')">${area} <span>+</span></div><div class="accordion-content">${exHtml}</div>`;
+            container.appendChild(acc);
+        }
+    }
+
+    function showHome() { document.getElementById('home-view').style.display = 'block'; document.getElementById('workout-view').style.display = 'none'; }
+    loadData();
 </script>
 </body>
 </html>
