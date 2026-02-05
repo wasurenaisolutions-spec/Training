@@ -26,8 +26,12 @@
             background: #111827; color: #6b7280; font-weight: 900; 
             text-transform: uppercase; cursor: pointer; transition: 0.3s;
         }
+        /* Stili per il tasto attivo */
         .tab-btn.active[data-gender="M"] { border-color: var(--men); color: var(--men); background: #1e3a8a33; }
         .tab-btn.active[data-gender="F"] { border-color: var(--women); color: var(--women); background: #581c8733; }
+
+        /* Messaggio iniziale */
+        #empty-msg { text-align: center; color: #6b7280; margin-top: 40px; font-style: italic; font-size: 0.9rem; }
 
         .client-card { 
             background: var(--card); padding: 18px; border-radius: 15px; 
@@ -73,9 +77,10 @@
     <div id="home-view">
         <h2 id="main-title">Personal Records</h2>
         <div class="tabs">
-            <button class="tab-btn active" data-gender="M" onclick="switchTab('M')">MEN</button>
+            <button class="tab-btn" data-gender="M" onclick="switchTab('M')">MEN</button>
             <button class="tab-btn" data-gender="F" onclick="switchTab('F')">WOMEN</button>
         </div>
+        <div id="empty-msg">Select a category to view the athletes</div>
         <div id="client-list"></div>
     </div>
 
@@ -110,7 +115,7 @@
     };
 
     let fullData = {}; 
-    let currentGender = 'M';
+    let currentGender = null; // Partenza nulla
 
     async function loadData() {
         try {
@@ -135,6 +140,7 @@
 
     function switchTab(g) {
         currentGender = g;
+        document.getElementById('empty-msg').style.display = 'none'; // Nasconde il messaggio
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelector(`.tab-btn[data-gender="${g}"]`).classList.add('active');
         renderHome();
@@ -143,6 +149,8 @@
     function renderHome() {
         const list = document.getElementById('client-list');
         list.innerHTML = '';
+        if (!currentGender) return; // Se non c'è selezione, non disegnare card
+
         Object.keys(fullData).forEach(name => {
             if(fullData[name].gender === currentGender) {
                 const bHtml = (badges[name] || []).map(url => `<img src="${url}" class="badge-img" onclick="event.stopPropagation(); zoom('${url}')">`).join('');
@@ -186,10 +194,8 @@
 
     async function requestUpgrade(btn, client, exercise) {
         if(btn.classList.contains('sent')) return;
-        
-        // --- NUOVO SISTEMA DI CONFERMA ---
         const confirmAction = confirm("You are requesting for an upgrade, are you sure?");
-        if (!confirmAction) return; // Se l'utente clicca Annulla/No, la funzione si ferma qui.
+        if (!confirmAction) return;
         
         const infoDiv = btn.closest('.ex-row').querySelector('.ex-note-pt');
         btn.innerText = "...";
