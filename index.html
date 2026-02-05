@@ -14,14 +14,12 @@
         .header { text-align: center; padding: 10px 0; margin-bottom: 10px; }
         .logo { max-width: 160px; }
         
-        /* Nuovo Titolo: Piccolo, Sinistra, Italic */
         #main-title { 
             font-size: 1.1rem; font-weight: 800; font-style: italic; 
             text-transform: uppercase; text-align: left; 
             margin: 0 0 10px 5px; color: var(--text); letter-spacing: 1px;
         }
 
-        /* Tabs Style */
         .tabs { display: flex; gap: 10px; margin-bottom: 20px; padding: 0 5px; }
         .tab-btn { 
             flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #1f2937;
@@ -31,7 +29,6 @@
         .tab-btn.active[data-gender="M"] { border-color: var(--men); color: var(--men); background: #1e3a8a33; }
         .tab-btn.active[data-gender="F"] { border-color: var(--women); color: var(--women); background: #581c8733; }
 
-        /* Cards con bordi colorati */
         .client-card { 
             background: var(--card); padding: 18px; border-radius: 15px; 
             margin-bottom: 12px; border: 1px solid #1f2937; 
@@ -43,12 +40,10 @@
         .profile-img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
         .client-name { font-weight: 900; font-size: 1.2rem; text-transform: uppercase; flex-grow: 1; }
         
-        /* Badges & Zoom */
         .badge-container { display: flex; gap: 6px; margin-left: auto; }
         .badge-img { width: 35px; height: 35px; object-fit: contain; cursor: zoom-in; }
         #zoom-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; justify-content: center; align-items: center; }
         
-        /* Altre viste e Accordion (Invariati) */
         #workout-view { display: none; }
         .back-btn { background: #1f2937; color: white; border: none; padding: 10px 20px; border-radius: 20px; margin-bottom: 20px; font-weight: bold; }
         .accordion { background: var(--card); border: 1px solid #1f2937; border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
@@ -128,7 +123,7 @@
                 if(cols.length < 4) return;
                 const [name, area, ex, load] = cols.map(c => c.trim().replace(/^"|"$/g, ''));
                 const up = cols[5] ? cols[5].trim().toUpperCase() === 'TRUE' : false;
-                const gender = cols[6] ? cols[6].trim().toUpperCase() : 'M'; // Colonna G
+                const gender = cols[6] ? cols[6].trim().toUpperCase() : 'M';
                 
                 if(!fullData[name]) fullData[name] = { gender: gender, workouts: {} };
                 if(!fullData[name].workouts[area]) fullData[name].workouts[area] = [];
@@ -191,6 +186,11 @@
 
     async function requestUpgrade(btn, client, exercise) {
         if(btn.classList.contains('sent')) return;
+        
+        // --- NUOVO SISTEMA DI CONFERMA ---
+        const confirmAction = confirm("You are requesting for an upgrade, are you sure?");
+        if (!confirmAction) return; // Se l'utente clicca Annulla/No, la funzione si ferma qui.
+        
         const infoDiv = btn.closest('.ex-row').querySelector('.ex-note-pt');
         btn.innerText = "...";
         try {
