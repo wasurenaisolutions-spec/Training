@@ -75,7 +75,13 @@
     const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=0&single=true&output=csv';
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbx_3oQAL4pYFTR2Fbi84U4ufsBxJsb70c5oUxWx-dGaaY7wOHMg2u2WB3NTO2CugRJN/exec';
     
-    const photos = { "Kuki": "https://i.postimg.cc/XvBNJTXb/Kuki.jpg", "Lovro": "https://i.postimg.cc/XqHt9YDD/Lovro.jpg", "Mihael": "https://i.postimg.cc/X7PTJX5X/Mihael.jpg" };
+    const photos = { 
+        "Kuki": "https://i.postimg.cc/XvBNJTXb/Kuki.jpg", 
+        "Lovro": "https://i.postimg.cc/XqHt9YDD/Lovro.jpg", 
+        "Mihael": "https://i.postimg.cc/X7PTJX5X/Mihael.jpg",
+        "P. Sephiroth": "https://i.postimg.cc/Cx6B8pPC/Petar-Sephirot.jpg"
+    };
+
     const badges = { 
         "Kuki": ["https://i.postimg.cc/tR6FZvfB/Plank.png"],
         "Mihael": ["https://i.postimg.cc/L8SdK7Km/Wallsit.png", "https://i.postimg.cc/63Fw4V3C/Battle-Rope.png"],
@@ -111,7 +117,7 @@
             const card = document.createElement('div');
             card.className = 'client-card';
             card.onclick = () => showWorkout(name);
-            card.innerHTML = `<img src="${photos[name]}" class="profile-img"><div class="client-name">${name}</div><div class="badge-container">${bHtml}</div>`;
+            card.innerHTML = `<img src="${photos[name] || 'https://www.w3schools.com/howto/img_avatar.png'}" class="profile-img"><div class="client-name">${name}</div><div class="badge-container">${bHtml}</div>`;
             list.appendChild(card);
         });
     }
@@ -120,7 +126,7 @@
         document.getElementById('home-view').style.display = 'none';
         document.getElementById('workout-view').style.display = 'block';
         document.getElementById('detail-name').innerText = name;
-        document.getElementById('detail-img').src = photos[name];
+        document.getElementById('detail-img').src = photos[name] || 'https://www.w3schools.com/howto/img_avatar.png';
         document.getElementById('detail-badges').innerHTML = (badges[name] || []).map(url => `<img src="${url}" class="badge-img" onclick="zoom('${url}')">`).join('');
         
         const content = document.getElementById('workout-content');
