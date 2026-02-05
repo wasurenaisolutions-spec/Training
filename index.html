@@ -5,35 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Personal Records - Elite Training</title>
     <style>
-        :root { --accent: #facc15; --bg: #000000; --card: #111827; --text: #ffffff; --success: #22c55e; --text-dim: #9ca3af; }
+        :root { 
+            --accent: #facc15; --bg: #000000; --card: #111827; --text: #ffffff; 
+            --success: #22c55e; --men: #3b82f6; --women: #a855f7; 
+        }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; }
         .container { max-width: 500px; margin: auto; }
-        .header { text-align: center; padding: 10px 0; }
-        .logo { max-width: 180px; margin-bottom: 10px; }
-        #main-title { font-size: 2.2rem; font-weight: 900; text-transform: uppercase; text-align: center; margin-bottom: 25px; color: var(--text); }
+        .header { text-align: center; padding: 10px 0; margin-bottom: 10px; }
+        .logo { max-width: 160px; }
+        
+        /* Nuovo Titolo: Piccolo, Sinistra, Italic */
+        #main-title { 
+            font-size: 1.1rem; font-weight: 800; font-style: italic; 
+            text-transform: uppercase; text-align: left; 
+            margin: 0 0 10px 5px; color: var(--text); letter-spacing: 1px;
+        }
+
+        /* Tabs Style */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; padding: 0 5px; }
+        .tab-btn { 
+            flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #1f2937;
+            background: #111827; color: #6b7280; font-weight: 900; 
+            text-transform: uppercase; cursor: pointer; transition: 0.3s;
+        }
+        .tab-btn.active[data-gender="M"] { border-color: var(--men); color: var(--men); background: #1e3a8a33; }
+        .tab-btn.active[data-gender="F"] { border-color: var(--women); color: var(--women); background: #581c8733; }
+
+        /* Cards con bordi colorati */
+        .client-card { 
+            background: var(--card); padding: 18px; border-radius: 15px; 
+            margin-bottom: 12px; border: 1px solid #1f2937; 
+            display: flex; align-items: center; gap: 12px; cursor: pointer; 
+        }
+        .client-card.border-M { border-left: 5px solid var(--men); }
+        .client-card.border-F { border-left: 5px solid var(--women); }
+        
+        .profile-img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
+        .client-name { font-weight: 900; font-size: 1.2rem; text-transform: uppercase; flex-grow: 1; }
         
         /* Badges & Zoom */
         .badge-container { display: flex; gap: 6px; margin-left: auto; }
         .badge-img { width: 35px; height: 35px; object-fit: contain; cursor: zoom-in; }
         #zoom-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; justify-content: center; align-items: center; }
         
-        /* Cards */
-        .client-card { background: var(--card); padding: 18px; border-radius: 15px; margin-bottom: 12px; border: 1px solid #1f2937; display: flex; align-items: center; gap: 12px; cursor: pointer; }
-        .profile-img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
-        .client-name { font-weight: 900; font-size: 1.2rem; text-transform: uppercase; flex-grow: 1; }
-        
-        /* Workout View */
+        /* Altre viste e Accordion (Invariati) */
         #workout-view { display: none; }
         .back-btn { background: #1f2937; color: white; border: none; padding: 10px 20px; border-radius: 20px; margin-bottom: 20px; font-weight: bold; }
-        
-        /* Accordion */
         .accordion { background: var(--card); border: 1px solid #1f2937; border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
         .acc-header { padding: 15px 20px; cursor: pointer; font-weight: bold; text-transform: uppercase; display: flex; justify-content: space-between; }
         .acc-content { display: none; padding: 0 20px 15px; background: #080c14; }
         .active .acc-content { display: block; }
         .active .acc-header { color: var(--accent); background: #1f2937; }
-        
-        /* Exercises */
         .ex-row { padding: 12px 0; border-bottom: 1px solid #1f2937; display: flex; justify-content: space-between; align-items: center; }
         .ex-info { display: flex; flex-direction: column; max-width: 60%; }
         .ex-name { font-weight: bold; font-size: 0.95rem; }
@@ -54,7 +76,11 @@
     </div>
 
     <div id="home-view">
-        <h1 id="main-title">Personal Records</h1>
+        <h2 id="main-title">Personal Records</h2>
+        <div class="tabs">
+            <button class="tab-btn active" data-gender="M" onclick="switchTab('M')">MEN</button>
+            <button class="tab-btn" data-gender="F" onclick="switchTab('F')">WOMEN</button>
+        </div>
         <div id="client-list"></div>
     </div>
 
@@ -88,37 +114,49 @@
         "Lovro": ["https://i.postimg.cc/Y08sP0Lx/Consistency-Leader.png"]
     };
 
-    let data = {};
+    let fullData = {}; 
+    let currentGender = 'M';
 
     async function loadData() {
         try {
             const resp = await fetch(csvUrl + '&t=' + Date.now());
             const text = await resp.text();
             const rows = text.split(/\r?\n/).slice(1);
-            data = {};
+            fullData = {}; 
             rows.forEach(row => {
                 const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 if(cols.length < 4) return;
                 const [name, area, ex, load] = cols.map(c => c.trim().replace(/^"|"$/g, ''));
                 const up = cols[5] ? cols[5].trim().toUpperCase() === 'TRUE' : false;
-                if(!data[name]) data[name] = {};
-                if(!data[name][area]) data[name][area] = [];
-                data[name][area].push({ex, load, up});
+                const gender = cols[6] ? cols[6].trim().toUpperCase() : 'M'; // Colonna G
+                
+                if(!fullData[name]) fullData[name] = { gender: gender, workouts: {} };
+                if(!fullData[name].workouts[area]) fullData[name].workouts[area] = [];
+                fullData[name].workouts[area].push({ex, load, up});
             });
             renderHome();
         } catch (e) { console.error("Errore caricamento"); }
     }
 
+    function switchTab(g) {
+        currentGender = g;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector(`.tab-btn[data-gender="${g}"]`).classList.add('active');
+        renderHome();
+    }
+
     function renderHome() {
         const list = document.getElementById('client-list');
         list.innerHTML = '';
-        Object.keys(data).forEach(name => {
-            const bHtml = (badges[name] || []).map(url => `<img src="${url}" class="badge-img" onclick="event.stopPropagation(); zoom('${url}')">`).join('');
-            const card = document.createElement('div');
-            card.className = 'client-card';
-            card.onclick = () => showWorkout(name);
-            card.innerHTML = `<img src="${photos[name] || 'https://www.w3schools.com/howto/img_avatar.png'}" class="profile-img"><div class="client-name">${name}</div><div class="badge-container">${bHtml}</div>`;
-            list.appendChild(card);
+        Object.keys(fullData).forEach(name => {
+            if(fullData[name].gender === currentGender) {
+                const bHtml = (badges[name] || []).map(url => `<img src="${url}" class="badge-img" onclick="event.stopPropagation(); zoom('${url}')">`).join('');
+                const card = document.createElement('div');
+                card.className = `client-card border-${currentGender}`;
+                card.onclick = () => showWorkout(name);
+                card.innerHTML = `<img src="${photos[name] || 'https://www.w3schools.com/howto/img_avatar.png'}" class="profile-img"><div class="client-name">${name}</div><div class="badge-container">${bHtml}</div>`;
+                list.appendChild(card);
+            }
         });
     }
 
@@ -131,10 +169,11 @@
         
         const content = document.getElementById('workout-content');
         content.innerHTML = '';
-        for(const area in data[name]) {
+        const clientWorkouts = fullData[name].workouts;
+        for(const area in clientWorkouts) {
             const acc = document.createElement('div');
             acc.className = 'accordion';
-            let exHtml = data[name][area].map(e => `
+            let exHtml = clientWorkouts[area].map(e => `
                 <div class="ex-row">
                     <div class="ex-info">
                         <span class="ex-name">${e.ex}</span>
