@@ -26,11 +26,9 @@
             background: #111827; color: #6b7280; font-weight: 900; 
             text-transform: uppercase; cursor: pointer; transition: 0.3s;
         }
-        /* Stili per il tasto attivo */
         .tab-btn.active[data-gender="M"] { border-color: var(--men); color: var(--men); background: #1e3a8a33; }
         .tab-btn.active[data-gender="F"] { border-color: var(--women); color: var(--women); background: #581c8733; }
 
-        /* Messaggio iniziale */
         #empty-msg { text-align: center; color: #6b7280; margin-top: 40px; font-style: italic; font-size: 0.9rem; }
 
         .client-card { 
@@ -101,21 +99,23 @@
     const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=0&single=true&output=csv';
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbx_3oQAL4pYFTR2Fbi84U4ufsBxJsb70c5oUxWx-dGaaY7wOHMg2u2WB3NTO2CugRJN/exec';
     
+    // --- Nuovi link Foto Profilo (Postimages Account) ---
     const photos = { 
-        "Kuki": "https://i.postimg.cc/XvBNJTXb/Kuki.jpg", 
-        "Lovro": "https://i.postimg.cc/XqHt9YDD/Lovro.jpg", 
-        "Mihael": "https://i.postimg.cc/X7PTJX5X/Mihael.jpg",
-        "P. Sephiroth": "https://i.postimg.cc/Cx6B8pPC/Petar-Sephirot.jpg"
+        "Kuki": "https://i.postimg.cc/5tQ05jyn/Kuki.jpg", 
+        "Lovro": "https://i.postimg.cc/9fwMPz0L/Lovro.jpg", 
+        "Mihael": "https://i.postimg.cc/mr1D3hkp/Mihael.jpg",
+        "P. Sephiroth": "https://i.postimg.cc/CKn1Cd5t/Petar-Sephirot.jpg"
     };
 
+    // --- Nuovi link Badge (Postimages Account) ---
     const badges = { 
-        "Kuki": ["https://i.postimg.cc/tR6FZvfB/Plank.png"],
-        "Mihael": ["https://i.postimg.cc/L8SdK7Km/Wallsit.png", "https://i.postimg.cc/63Fw4V3C/Battle-Rope.png"],
-        "Lovro": ["https://i.postimg.cc/Y08sP0Lx/Consistency-Leader.png"]
+        "Kuki": ["https://i.postimg.cc/nrvB3CP6/Plank.png"],
+        "Mihael": ["https://i.postimg.cc/hv9T2f5N/Wallsit.png", "https://i.postimg.cc/sfSYjNgP/Battle-Rope.png"],
+        "Lovro": ["https://i.postimg.cc/mZMYL5g9/Consistency-Leader.png"]
     };
 
     let fullData = {}; 
-    let currentGender = null; // Partenza nulla
+    let currentGender = null;
 
     async function loadData() {
         try {
@@ -140,7 +140,7 @@
 
     function switchTab(g) {
         currentGender = g;
-        document.getElementById('empty-msg').style.display = 'none'; // Nasconde il messaggio
+        document.getElementById('empty-msg').style.display = 'none';
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelector(`.tab-btn[data-gender="${g}"]`).classList.add('active');
         renderHome();
@@ -149,7 +149,7 @@
     function renderHome() {
         const list = document.getElementById('client-list');
         list.innerHTML = '';
-        if (!currentGender) return; // Se non c'è selezione, non disegnare card
+        if (!currentGender) return;
 
         Object.keys(fullData).forEach(name => {
             if(fullData[name].gender === currentGender) {
