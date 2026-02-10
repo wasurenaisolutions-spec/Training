@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Elite Training Hub</title>
+    <title>Personal Records - Elite Training</title>
     <style>
         :root { 
             --accent: #facc15; --bg: #000000; --card: #111827; --text: #ffffff; 
             --success: #22c55e; --men: #3b82f6; --women: #a855f7; --reward: #facc15;
-            --workout: #ef4444; --text-dim: #9ca3af;
+            --workout: #ef4444;
         }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; }
         .container { max-width: 500px; margin: auto; }
@@ -25,51 +25,70 @@
         .tab-btn { 
             flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #1f2937;
             background: #111827; color: #6b7280; font-weight: 900; 
-            text-transform: uppercase; cursor: pointer; transition: 0.3s; font-size: 0.8rem;
+            text-transform: uppercase; cursor: pointer; transition: 0.3s;
         }
         .tab-btn.active[data-type="M"] { border-color: var(--men); color: var(--men); background: #1e3a8a33; }
         .tab-btn.active[data-type="F"] { border-color: var(--women); color: var(--women); background: #581c8733; }
         .tab-btn.active[data-type="R"] { border-color: var(--reward); color: var(--reward); background: #facc1522; }
         .tab-btn.active[data-type="W"] { border-color: var(--workout); color: var(--workout); background: #ef444422; }
 
+        #empty-msg { text-align: center; color: #6b7280; margin-top: 40px; font-style: italic; font-size: 0.9rem; }
+
         .client-card { 
             background: var(--card); padding: 18px; border-radius: 15px; 
             margin-bottom: 12px; border: 1px solid #1f2937; 
-            display: flex; align-items: center; gap: 15px; cursor: pointer;
+            display: flex; align-items: center; gap: 12px; cursor: pointer; 
         }
-        .client-card.border-R { border-left: 5px solid var(--reward); }
-        .client-card.border-W { border-left: 5px solid var(--workout); }
         .client-card.border-M { border-left: 5px solid var(--men); }
         .client-card.border-F { border-left: 5px solid var(--women); }
+        .client-card.border-R { border-left: 5px solid var(--reward); cursor: default; }
+        .client-card.border-W { border-left: 5px solid var(--workout); }
         
-        .badge-title { font-weight: 900; font-size: 1.1rem; text-transform: uppercase; color: var(--text); flex-grow: 1; }
-        .badge-img-large { width: 65px; height: 65px; object-fit: contain; flex-shrink: 0; border-radius: 8px; }
-
+        .profile-img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
+        .client-name { font-weight: 900; font-size: 1.2rem; text-transform: uppercase; flex-grow: 1; }
+        
+        .badge-desc { color: var(--text); font-style: italic; font-size: 0.85rem; flex-grow: 1; line-height: 1.3; }
+        
+        .badge-container { display: flex; gap: 6px; margin-left: auto; }
+        .badge-img { width: 35px; height: 35px; object-fit: contain; cursor: zoom-in; }
+        .badge-img-large { width: 60px; height: 60px; object-fit: contain; cursor: zoom-in; flex-shrink: 0; }
+        
+        /* Stili Lavagna Workout */
         .board-card {
             background: #0a0a0a; border: 1px solid #1f2937; border-radius: 20px;
-            padding: 25px; margin-top: 10px; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+            padding: 25px; margin-top: 10px;
         }
         .board-text {
-            white-space: pre-wrap;
-            font-size: 1.1rem; line-height: 1.6; color: #e5e7eb;
+            white-space: pre-wrap; font-size: 1.1rem; line-height: 1.6; color: #e5e7eb;
         }
 
         #zoom-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; justify-content: center; align-items: center; }
-        #zoom-img { max-width:90%; max-height:85%; border:2px solid var(--accent); border-radius:10px; }
-        #workout-view, #board-view { display: none; }
         
+        #workout-view, #board-view { display: none; }
         .back-btn { background: #1f2937; color: white; border: none; padding: 10px 20px; border-radius: 20px; margin-bottom: 20px; font-weight: bold; cursor: pointer; }
-        .profile-img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
+        .accordion { background: var(--card); border: 1px solid #1f2937; border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
+        .acc-header { padding: 15px 20px; cursor: pointer; font-weight: bold; text-transform: uppercase; display: flex; justify-content: space-between; }
+        .acc-content { display: none; padding: 0 20px 15px; background: #080c14; }
+        .active .acc-content { display: block; }
+        .active .acc-header { color: var(--accent); background: #1f2937; }
+        .ex-row { padding: 12px 0; border-bottom: 1px solid #1f2937; display: flex; justify-content: space-between; align-items: center; }
+        .ex-info { display: flex; flex-direction: column; max-width: 60%; }
+        .ex-name { font-weight: bold; font-size: 0.95rem; }
+        .ex-note-pt { font-size: 0.75rem; color: var(--success); font-style: italic; margin-top: 4px; display: none; }
+        .ex-note-pt.visible { display: block; }
+        .ex-weight { color: var(--accent); font-weight: 900; font-size: 1.2rem; margin-right: 10px; }
         .upgrade-btn { background: #1f2937; border: 1px solid var(--accent); color: var(--accent); padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
         .upgrade-btn.sent { background: var(--success); border-color: var(--success); color: white; }
     </style>
 </head>
 <body>
 
-<div id="zoom-overlay" onclick="this.style.display='none'"><img id="zoom-img"></div>
+<div id="zoom-overlay" onclick="this.style.display='none'"><img id="zoom-img" style="max-width:90%; max-height:85%; border:2px solid var(--accent); border-radius:10px;"></div>
 
 <div class="container">
-    <div class="header"><img src="https://i.postimg.cc/Gt2531hd/Title-(Return-Address-Labels)-(Stickers-(Square))-(Stickers-(Rectangle)-(Landscape)).png" class="logo"></div>
+    <div class="header">
+        <img src="https://i.postimg.cc/Gt2531hd/Title-(Return-Address-Labels)-(Stickers-(Square))-(Stickers-(Rectangle)-(Landscape)).png" class="logo">
+    </div>
 
     <div id="home-view">
         <h2 id="main-title">Personal Records</h2>
@@ -77,29 +96,34 @@
             <button class="tab-btn" data-type="M" onclick="switchTab('M')">MEN</button>
             <button class="tab-btn" data-type="F" onclick="switchTab('F')">WOMEN</button>
         </div>
+        
         <h2 id="main-title">Rewards & Workouts</h2>
         <div class="tabs">
-            <button class="tab-btn" data-type="R" onclick="switchTab('R')">BADGES</button>
+            <button class="tab-btn" data-type="R" onclick="switchTab('R')" style="margin-right:5px;">BADGES</button>
             <button class="tab-btn" data-type="W" onclick="switchTab('W')">WORKOUTS</button>
         </div>
+
+        <div id="empty-msg">Select a category to view the list</div>
         <div id="client-list"></div>
     </div>
 
     <div id="workout-view">
-        <button class="back-btn" onclick="showView('home-view')">← BACK</button>
-        <div id="detail-header" style="display:flex; align-items:center; gap:15px; margin-bottom:20px;">
+        <button class="back-btn" onclick="showHome()">← BACK</button>
+        <div id="detail-header" style="display:flex; align-items:center; gap:15px; margin-bottom:20px; border-bottom:1px solid #1f2937; padding-bottom:15px;">
             <img id="detail-img" src="" class="profile-img">
-            <h2 id="detail-name" style="margin:0; text-transform:uppercase; flex-grow:1;"></h2>
-            <div id="detail-badges" style="display:flex; gap:5px;"></div>
+            <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+                <h2 id="detail-name" style="margin:0; text-transform:uppercase;"></h2>
+                <div id="detail-badges" class="badge-container"></div>
+            </div>
         </div>
         <div id="workout-content"></div>
     </div>
 
     <div id="board-view">
-        <button class="back-btn" onclick="showView('home-view')">← BACK</button>
+        <button class="back-btn" onclick="showHome()">← BACK</button>
         <div style="text-align:center; margin-bottom:20px;">
-            <img id="board-img" src="" style="width:90px; height:90px; object-fit:contain; margin-bottom:10px; cursor:zoom-in;" onclick="zoom(this.src)">
-            <h2 id="board-title" style="text-transform:uppercase; color:var(--accent); margin:0; letter-spacing:1px;"></h2>
+            <img id="board-img" src="" style="width:80px; height:80px; object-fit:contain; margin-bottom:10px;" onclick="zoom(this.src)">
+            <h2 id="board-title" style="text-transform:uppercase; color:var(--accent); margin:0;"></h2>
         </div>
         <div class="board-card">
             <div id="board-content" class="board-text"></div>
@@ -114,53 +138,66 @@
     const baseWorkoutsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=362105029&single=true&output=csv';
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbx_3oQAL4pYFTR2Fbi84U4ufsBxJsb70c5oUxWx-dGaaY7wOHMg2u2WB3NTO2CugRJN/exec';
 
-    let athletesData = {}, workoutData = {}, badgesLibrary = [], baseWorkouts = [], currentTab = null;
+    let athletesData = {}; 
+    let workoutData = {};  
+    let badgesLibrary = [];
+    let baseWorkouts = [];
+    let currentTab = null;
 
     async function loadData() {
-        const t = Date.now();
         try {
-            const [aR, eR, bR, wR] = await Promise.all([
-                fetch(athletesUrl+'&t='+t), fetch(exercisesUrl+'&t='+t), 
-                fetch(badgesLibUrl+'&t='+t), fetch(baseWorkoutsUrl+'&t='+t)
+            const t = Date.now();
+            const [aResp, eResp, bResp, wResp] = await Promise.all([
+                fetch(athletesUrl + '&t=' + t),
+                fetch(exercisesUrl + '&t=' + t),
+                fetch(badgesLibUrl + '&t=' + t),
+                fetch(baseWorkoutsUrl + '&t=' + t)
             ]);
 
-            const aText = await aR.text();
+            const aText = await aResp.text();
             aText.split(/\r?\n/).slice(1).forEach(row => {
-                const c = row.split(/[;,](?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                if(c.length < 3) return;
-                const name = c[0].trim().replace(/^"|"$/g, '');
-                athletesData[name] = { photo: c[1].trim(), gender: c[2].trim().toUpperCase(), badges: (c[3]||"").split(',').map(b=>b.trim().replace(/^"|"$/g,'')).filter(l=>l.length>5) };
+                const cols = row.split(/[;,](?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                if(cols.length < 3) return;
+                const name = cols[0].trim().replace(/^"|"$/g, '');
+                const photo = cols[1].trim().replace(/^"|"$/g, '');
+                const gender = cols[2].trim().toUpperCase().replace(/^"|"$/g, '');
+                const personalBadges = cols[3] ? cols[3].split(',').map(b => b.trim().replace(/^"|"$/g, '')) : [];
+                athletesData[name] = { photo, gender, badges: personalBadges.filter(l => l.length > 5) };
             });
 
-            const eText = await eR.text();
+            const eText = await eResp.text();
             eText.split(/\r?\n/).slice(1).forEach(row => {
-                const c = row.split(/[;,](?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                if(c.length < 4) return;
-                const n = c[0].trim().replace(/^"|"$/g, '');
-                const a = c[1].trim().replace(/^"|"$/g, '');
-                if(!workoutData[n]) workoutData[n] = {};
-                if(!workoutData[n][a]) workoutData[n][a] = [];
-                workoutData[n][a].push({ex: c[2].trim(), load: c[3].trim(), up: c[5]?.trim().toUpperCase()==='TRUE'});
+                const cols = row.split(/[;,](?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                if(cols.length < 4) return;
+                const name = cols[0].trim().replace(/^"|"$/g, '');
+                const area = cols[1].trim().replace(/^"|"$/g, '');
+                const ex = cols[2].trim().replace(/^"|"$/g, '');
+                const load = cols[3].trim().replace(/^"|"$/g, '');
+                const up = cols[5] ? cols[5].trim().toUpperCase() === 'TRUE' : false;
+                if(!workoutData[name]) workoutData[name] = {};
+                if(!workoutData[name][area]) workoutData[name][area] = [];
+                workoutData[name][area].push({ex, load, up});
             });
 
-            const bText = await bR.text();
+            const bText = await bResp.text();
             badgesLibrary = bText.split(/\r?\n/).slice(1).map(row => {
-                const c = row.split(/[;,](?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.trim().replace(/^"|"$/g, ''));
-                return { title: c[0], link: c[1], note: c[2] };
+                const [title, link, note] = row.split(/[;,](?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.trim().replace(/^"|"$/g, ''));
+                return { title, link, note };
             }).filter(b => b.link);
 
-            const wText = await wR.text();
+            const wText = await wResp.text();
             baseWorkouts = wText.split(/\r?\n/).slice(1).map(row => {
-                const c = row.split(/[;,](?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.trim().replace(/^"|"$/g, ''));
-                return { title: c[0], description: c[1], link: c[2] };
+                const [title, desc, link] = row.split(/[;,](?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.trim().replace(/^"|"$/g, ''));
+                return { title, desc, link };
             }).filter(w => w.link);
-            
+
             renderHome();
-        } catch(e) { console.error(e); }
+        } catch (e) { console.error("Errore!", e); }
     }
 
     function switchTab(type) {
         currentTab = type;
+        document.getElementById('empty-msg').style.display = 'none';
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelector(`.tab-btn[data-type="${type}"]`).classList.add('active');
         renderHome();
@@ -169,82 +206,103 @@
     function renderHome() {
         const list = document.getElementById('client-list');
         list.innerHTML = '';
+        if (!currentTab) return;
+
         if (currentTab === 'R') {
             badgesLibrary.forEach(b => {
-                list.appendChild(createSimpleCard(b.link, b.title, 'R', () => zoom(b.link)));
+                const card = document.createElement('div');
+                card.className = `client-card border-R`;
+                card.innerHTML = `<img src="${b.link}" class="badge-img-large" onclick="zoom('${b.link}')"><div class="badge-desc">${b.note || ''}</div>`;
+                list.appendChild(card);
             });
-        } else if (currentTab === 'W') {
+        } 
+        else if (currentTab === 'W') {
             baseWorkouts.forEach((w, index) => {
-                list.appendChild(createSimpleCard(w.link, w.title, 'W', (e) => {
+                const card = document.createElement('div');
+                card.className = `client-card border-W`;
+                card.onclick = (e) => {
                     if(e.target.tagName === 'IMG') zoom(w.link);
                     else showBoard(index);
-                }));
+                };
+                card.innerHTML = `<img src="${w.link}" class="badge-img-large"><div class="client-name">${w.title}</div>`;
+                list.appendChild(card);
             });
-        } else if(currentTab) {
+        }
+        else {
             Object.keys(athletesData).forEach(name => {
                 if(athletesData[name].gender === currentTab) {
+                    const bHtml = (athletesData[name].badges || []).map(url => `<img src="${url}" class="badge-img" onclick="event.stopPropagation(); zoom('${url}')">`).join('');
                     const card = document.createElement('div');
                     card.className = `client-card border-${currentTab}`;
-                    card.onclick = () => showAthleteWorkout(name);
-                    const bHtml = (athletesData[name].badges || []).map(url => `<img src="${url}" style="width:25px; height:25px; object-fit:contain;" onclick="event.stopPropagation(); zoom('${url}')">`).join('');
-                    card.innerHTML = `<img src="${athletesData[name].photo}" class="profile-img"><div class="badge-title">${name}</div><div style="display:flex; gap:3px;">${bHtml}</div>`;
+                    card.onclick = () => showWorkout(name);
+                    card.innerHTML = `<img src="${athletesData[name].photo || 'https://www.w3schools.com/howto/img_avatar.png'}" class="profile-img"><div class="client-name">${name}</div><div class="badge-container">${bHtml}</div>`;
                     list.appendChild(card);
                 }
             });
         }
     }
 
-    function createSimpleCard(img, title, type, action) {
-        const card = document.createElement('div');
-        card.className = `client-card border-${type}`;
-        card.onclick = action;
-        card.innerHTML = `<img src="${img}" class="badge-img-large"><div class="badge-title">${title}</div>`;
-        return card;
-    }
-
-    function showAthleteWorkout(name) {
-        showView('workout-view');
+    function showWorkout(name) {
+        document.getElementById('home-view').style.display = 'none';
+        document.getElementById('workout-view').style.display = 'block';
+        document.getElementById('board-view').style.display = 'none';
         document.getElementById('detail-name').innerText = name;
-        document.getElementById('detail-img').src = athletesData[name].photo;
-        document.getElementById('detail-badges').innerHTML = (athletesData[name].badges || []).map(url => `<img src="${url}" style="width:30px; height:30px; object-fit:contain;" onclick="zoom('${url}')">`).join('');
+        document.getElementById('detail-img').src = athletesData[name].photo || 'https://www.w3schools.com/howto/img_avatar.png';
+        document.getElementById('detail-badges').innerHTML = (athletesData[name].badges || []).map(url => `<img src="${url}" class="badge-img" onclick="zoom('${url}')">`).join('');
+        
         const content = document.getElementById('workout-content');
         content.innerHTML = '';
-        const cw = workoutData[name] || {};
-        for(const area in cw) {
+        const clientWorkouts = workoutData[name] || {};
+        
+        for(const area in clientWorkouts) {
             const acc = document.createElement('div');
-            acc.innerHTML = `<div style="padding:15px; background:#1f2937; cursor:pointer; font-weight:bold; border-radius:10px; margin-top:10px; display:flex; justify-content:space-between;" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'block' ? 'none' : 'block'">${area} <span>+</span></div>
-            <div style="display:none; padding:10px;">${cw[area].map(e => `<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #1f2937;">
-                <div><strong>${e.ex}</strong></div>
-                <div style="display:flex; align-items:center;"><span style="color:var(--accent); font-weight:900; font-size:1.2rem; margin-right:10px;">${e.load}</span>
-                <button class="upgrade-btn ${e.up?'sent':''}" onclick="requestUpgrade(this,'${name}','${e.ex}')">${e.up?'✓':'UP'}</button></div>
-            </div>`).join('')}</div>`;
+            acc.className = 'accordion';
+            let exHtml = clientWorkouts[area].map(e => `
+                <div class="ex-row">
+                    <div class="ex-info">
+                        <span class="ex-name">${e.ex}</span>
+                        <span class="ex-note-pt ${e.up ? 'visible' : ''}">Request Sent to the PT</span>
+                    </div>
+                    <div style="display:flex; align-items:center;">
+                        <span class="ex-weight">${e.load}</span>
+                        <button class="upgrade-btn ${e.up?'sent':''}" onclick="requestUpgrade(this,'${name}','${e.ex.replace(/'/g,"\\'")}')">${e.up?'✓':'UP'}</button>
+                    </div>
+                </div>`).join('');
+            acc.innerHTML = `<div class="acc-header" onclick="this.parentElement.classList.toggle('active')">${area} <span>+</span></div><div class="acc-content">${exHtml}</div>`;
             content.appendChild(acc);
         }
     }
 
     function showBoard(index) {
         const w = baseWorkouts[index];
-        showView('board-view');
+        document.getElementById('home-view').style.display = 'none';
+        document.getElementById('workout-view').style.display = 'none';
+        document.getElementById('board-view').style.display = 'block';
         document.getElementById('board-title').innerText = w.title;
         document.getElementById('board-img').src = w.link;
-        document.getElementById('board-content').innerText = w.description;
+        document.getElementById('board-content').innerText = w.desc;
     }
 
-    function showView(id) {
-        ['home-view', 'workout-view', 'board-view'].forEach(v => document.getElementById(v).style.display = 'none');
-        document.getElementById(id).style.display = 'block';
-    }
-
-    async function requestUpgrade(btn, client, ex) {
+    async function requestUpgrade(btn, client, exercise) {
         if(btn.classList.contains('sent')) return;
+        if (!confirm("You are requesting for an upgrade, are you sure?")) return;
+        const infoDiv = btn.closest('.ex-row').querySelector('.ex-note-pt');
         btn.innerText = "...";
         try {
-            await fetch(scriptUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ cliente: client, esercizio: ex, nota: "Upgrade" }) });
-            btn.innerText = "✓"; btn.classList.add('sent');
-        } catch (e) { btn.innerText = "UP"; }
+            await fetch(scriptUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ cliente: client, esercizio: exercise, nota: "Weight Upgrade Requested" }) });
+            btn.innerText = "✓";
+            btn.classList.add('sent');
+            infoDiv.classList.add('visible');
+        } catch (e) { btn.innerText = "UP"; alert("Errore invio richiesta"); }
     }
 
     function zoom(url) { document.getElementById('zoom-img').src = url; document.getElementById('zoom-overlay').style.display = 'flex'; }
+    function showHome() { 
+        document.getElementById('home-view').style.display = 'block'; 
+        document.getElementById('workout-view').style.display = 'none';
+        document.getElementById('board-view').style.display = 'none';
+    }
+    
     loadData();
 </script>
 </body>
