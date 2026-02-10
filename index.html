@@ -53,7 +53,6 @@
         .badge-img { width: 35px; height: 35px; object-fit: contain; cursor: zoom-in; }
         .badge-img-large { width: 60px; height: 60px; object-fit: contain; cursor: zoom-in; flex-shrink: 0; }
         
-        /* Stili Lavagna Workout */
         .board-card {
             background: #0a0a0a; border: 1px solid #1f2937; border-radius: 20px;
             padding: 25px; margin-top: 10px;
@@ -144,52 +143,65 @@
     let baseWorkouts = [];
     let currentTab = null;
 
+    // Helper per leggere correttamente i CSV anche con testi complessi
+    function parseCSV(text) {
+        const rows = [];
+        let row = [];
+        let col = "";
+        let inQuotes = false;
+        for (let i = 0; i < text.length; i++) {
+            let char = text[i];
+            let nextChar = text[i+1];
+            if (char === '"' && inQuotes && nextChar === '"') { col += '"'; i++; }
+            else if (char === '"') { inQuotes = !inQuotes; }
+            else if (char === ',' && !inQuotes) { row.push(col.trim()); col = ""; }
+            else if (char === '\n' && !inQuotes) { row.push(col.trim()); rows.push(row); row = []; col = ""; }
+            else { col += char; }
+        }
+        if (col || row.length > 0) { row.push(col.trim()); rows.push(row); }
+        return rows;
+    }
+
     async function loadData() {
         try {
             const t = Date.now();
             const [aResp, eResp, bResp, wResp] = await Promise.all([
-                fetch(athletesUrl + '&t=' + t),
-                fetch(exercisesUrl + '&t=' + t),
-                fetch(badgesLibUrl + '&t=' + t),
-                fetch(baseWorkoutsUrl + '&t=' + t)
+                fetch(athletesUrl + '&t=' + t).then(r => r.text()),
+                fetch(exercisesUrl + '&t=' + t).then(r => r.text()),
+                fetch(badgesLibUrl + '&t=' + t).then(r => r.text()),
+                fetch(baseWorkoutsUrl + '&t=' + t).then(r => r.text())
             ]);
 
-            const aText = await aResp.text();
-            aText.split(/\r?\n/).slice(1).forEach(row => {
-                const cols = row.split(/[;,](?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            // Parsing Atleti
+            parseCSV(aResp).slice(1).forEach(cols => {
                 if(cols.length < 3) return;
-                const name = cols[0].trim().replace(/^"|"$/g, '');
-                const photo = cols[1].trim().replace(/^"|"$/g, '');
-                const gender = cols[2].trim().toUpperCase().replace(/^"|"$/g, '');
-                const personalBadges = cols[3] ? cols[3].split(',').map(b => b.trim().replace(/^"|"$/g, '')) : [];
-                athletesData[name] = { photo, gender, badges: personalBadges.filter(l => l.length > 5) };
+                const name = cols[0];
+                athletesData[name] = { 
+                    photo: cols[1], 
+                    gender: cols[2].toUpperCase(), 
+                    badges: cols[3] ? cols[3].split(',').map(b => b.trim()).filter(l => l.length > 5) : [] 
+                };
             });
 
-            const eText = await eResp.text();
-            eText.split(/\r?\n/).slice(1).forEach(row => {
-                const cols = row.split(/[;,](?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            // Parsing Esercizi
+            parseCSV(eResp).slice(1).forEach(cols => {
                 if(cols.length < 4) return;
-                const name = cols[0].trim().replace(/^"|"$/g, '');
-                const area = cols[1].trim().replace(/^"|"$/g, '');
-                const ex = cols[2].trim().replace(/^"|"$/g, '');
-                const load = cols[3].trim().replace(/^"|"$/g, '');
-                const up = cols[5] ? cols[5].trim().toUpperCase() === 'TRUE' : false;
+                const name = cols[0], area = cols[1], ex = cols[2], load = cols[3];
+                const up = cols[5] ? cols[5].toUpperCase() === 'TRUE' : false;
                 if(!workoutData[name]) workoutData[name] = {};
                 if(!workoutData[name][area]) workoutData[name][area] = [];
                 workoutData[name][area].push({ex, load, up});
             });
 
-            const bText = await bResp.text();
-            badgesLibrary = bText.split(/\r?\n/).slice(1).map(row => {
-                const [title, link, note] = row.split(/[;,](?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.trim().replace(/^"|"$/g, ''));
-                return { title, link, note };
-            }).filter(b => b.link);
+            // Parsing Badges
+            badgesLibrary = parseCSV(bResp).slice(1).map(cols => ({
+                title: cols[0], link: cols[1], note: cols[2]
+            })).filter(b => b.link);
 
-            const wText = await wResp.text();
-            baseWorkouts = wText.split(/\r?\n/).slice(1).map(row => {
-                const [title, desc, link] = row.split(/[;,](?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.trim().replace(/^"|"$/g, ''));
-                return { title, desc, link };
-            }).filter(w => w.link);
+            // Parsing Workouts
+            baseWorkouts = parseCSV(wResp).slice(1).map(cols => ({
+                title: cols[0], desc: cols[1], link: cols[2]
+            })).filter(w => w.title && w.link);
 
             renderHome();
         } catch (e) { console.error("Errore!", e); }
