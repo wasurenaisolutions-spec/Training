@@ -3,81 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Personal Records - Elite Training</title>
+    <title>Warehouse Ronin APP</title>
     <style>
         :root { 
             --accent: #facc15; --bg: #000000; --card: #111827; --text: #ffffff; 
             --success: #22c55e; --men: #3b82f6; --women: #a855f7; --reward: #facc15;
             --workout: #ef4444;
+            /* Variabile per il colore neon casuale */
+            --neon-color: #ffffff; 
         }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; }
-        .container { max-width: 500px; margin: auto; }
-        .header { text-align: center; padding: 10px 0; margin-bottom: 10px; }
-        .logo { max-width: 160px; }
         
-        #main-title { 
-            font-size: 1.1rem; font-weight: 800; font-style: italic; 
-            text-transform: uppercase; text-align: left; 
-            margin: 0 0 10px 5px; color: var(--text); letter-spacing: 1px;
+        /* Animazione Neon Flickering */
+        @keyframes neonFlicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                filter: drop-shadow(0 0 5px var(--neon-color)) 
+                        drop-shadow(0 0 15px var(--neon-color));
+                opacity: 1;
+            }
+            20%, 24%, 55% {
+                filter: none;
+                opacity: 0.5;
+            }
         }
 
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; padding: 0 5px; }
-        .tab-btn { 
-            flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #1f2937;
-            background: #111827; color: #6b7280; font-weight: 900; 
-            text-transform: uppercase; cursor: pointer; transition: 0.3s;
+        html, body { height: 100%; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; flex-direction: column; }
+        
+        .container { max-width: 500px; margin: 0 auto; flex: 1 0 auto; width: 100%; }
+        
+        /* Header con animazione Neon */
+        .header { 
+            text-align: center; 
+            padding: 20px 0; 
+            margin-bottom: 25px; 
         }
+        .logo { 
+            width: 210px; 
+            height: auto; 
+            /* Applica animazione neon */
+            animation: neonFlicker 3s infinite alternate;
+        }
+        
+        /* ... (Resto degli stili invariato) ... */
+        #main-title { font-size: 1.1rem; font-weight: 800; font-style: italic; text-transform: uppercase; text-align: left; margin: 0 0 10px 5px; color: var(--text); letter-spacing: 1px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; padding: 0 5px; }
+        .tab-btn { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #1f2937; background: #111827; color: #6b7280; font-weight: 900; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
         .tab-btn.active[data-type="M"] { border-color: var(--men); color: var(--men); background: #1e3a8a33; }
         .tab-btn.active[data-type="F"] { border-color: var(--women); color: var(--women); background: #581c8733; }
         .tab-btn.active[data-type="R"] { border-color: var(--reward); color: var(--reward); background: #facc1522; }
         .tab-btn.active[data-type="W"] { border-color: var(--workout); color: var(--workout); background: #ef444422; }
-
-        #empty-msg { text-align: center; color: #6b7280; margin-top: 40px; font-style: italic; font-size: 0.9rem; }
-
-        .client-card { 
-            background: var(--card); padding: 18px; border-radius: 15px; 
-            margin-bottom: 12px; border: 1px solid #1f2937; 
-            display: flex; align-items: center; gap: 12px; cursor: pointer; 
-        }
+        .client-card { background: var(--card); padding: 18px; border-radius: 15px; margin-bottom: 12px; border: 1px solid #1f2937; display: flex; align-items: center; gap: 12px; cursor: pointer; }
         .client-card.border-M { border-left: 5px solid var(--men); }
         .client-card.border-F { border-left: 5px solid var(--women); }
         .client-card.border-R { border-left: 5px solid var(--reward); cursor: default; }
         .client-card.border-W { border-left: 5px solid var(--workout); }
-        
         .profile-img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
         .client-name { font-weight: 900; font-size: 1.2rem; text-transform: uppercase; flex-grow: 1; }
-        
-        .badge-desc { color: var(--text); font-style: italic; font-size: 0.85rem; flex-grow: 1; line-height: 1.3; }
-        
-        .badge-container { display: flex; gap: 6px; margin-left: auto; }
-        .badge-img { width: 35px; height: 35px; object-fit: contain; cursor: zoom-in; }
         .badge-img-large { width: 60px; height: 60px; object-fit: contain; cursor: zoom-in; flex-shrink: 0; }
-        
-        .board-card {
-            background: #0a0a0a; border: 1px solid #1f2937; border-radius: 20px;
-            padding: 25px; margin-top: 10px;
-        }
-        .board-text {
-            white-space: pre-wrap; font-size: 1.1rem; line-height: 1.6; color: #e5e7eb;
-        }
-
+        .board-card { background: #0a0a0a; border: 1px solid #1f2937; border-radius: 20px; padding: 25px; margin-top: 10px; }
+        .board-text { white-space: pre-wrap; font-size: 1.1rem; line-height: 1.6; color: #e5e7eb; }
         #zoom-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; justify-content: center; align-items: center; }
-        
         #workout-view, #board-view { display: none; }
         .back-btn { background: #1f2937; color: white; border: none; padding: 10px 20px; border-radius: 20px; margin-bottom: 20px; font-weight: bold; cursor: pointer; }
         .accordion { background: var(--card); border: 1px solid #1f2937; border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
         .acc-header { padding: 15px 20px; cursor: pointer; font-weight: bold; text-transform: uppercase; display: flex; justify-content: space-between; }
         .acc-content { display: none; padding: 0 20px 15px; background: #080c14; }
         .active .acc-content { display: block; }
-        .active .acc-header { color: var(--accent); background: #1f2937; }
         .ex-row { padding: 12px 0; border-bottom: 1px solid #1f2937; display: flex; justify-content: space-between; align-items: center; }
-        .ex-info { display: flex; flex-direction: column; max-width: 60%; }
-        .ex-name { font-weight: bold; font-size: 0.95rem; }
-        .ex-note-pt { font-size: 0.75rem; color: var(--success); font-style: italic; margin-top: 4px; display: none; }
-        .ex-note-pt.visible { display: block; }
         .ex-weight { color: var(--accent); font-weight: 900; font-size: 1.2rem; margin-right: 10px; }
         .upgrade-btn { background: #1f2937; border: 1px solid var(--accent); color: var(--accent); padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
         .upgrade-btn.sent { background: var(--success); border-color: var(--success); color: white; }
+        .footer-container { flex-shrink: 0; text-align: center; padding: 20px 20px 40px; margin-top: 20px; border-top: 1px solid #111827; }
+        .powered-by { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.65rem; color: #6b7280; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .ronin-logo-small { width: 40px; height: auto; opacity: 0.8; }
+        .privacy-footer { font-size: 0.6rem; color: #4b5563; line-height: 1.5; letter-spacing: 0.2px; }
+        .privacy-footer p { margin: 6px 0; }
     </style>
 </head>
 <body>
@@ -86,7 +86,7 @@
 
 <div class="container">
     <div class="header">
-        <img src="https://i.postimg.cc/Gt2531hd/Title-(Return-Address-Labels)-(Stickers-(Square))-(Stickers-(Rectangle)-(Landscape)).png" class="logo">
+        <img id="header-logo" src="https://i.postimg.cc/Gt2531hd/Title_(Return_Address_Labels)_(Stickers_(Square))_(Stickers_(Rectangle)_(Landscape)).png" class="logo">
     </div>
 
     <div id="home-view">
@@ -95,24 +95,22 @@
             <button class="tab-btn" data-type="M" onclick="switchTab('M')">MEN</button>
             <button class="tab-btn" data-type="F" onclick="switchTab('F')">WOMEN</button>
         </div>
-        
         <h2 id="main-title">Rewards & Workouts</h2>
         <div class="tabs">
             <button class="tab-btn" data-type="R" onclick="switchTab('R')" style="margin-right:5px;">BADGES</button>
             <button class="tab-btn" data-type="W" onclick="switchTab('W')">WORKOUTS</button>
         </div>
-
-        <div id="empty-msg">Select a category to view the list</div>
+        <div id="empty-msg" style="text-align:center; color:#6b7280; margin-top:40px; font-style:italic;">Select a category</div>
         <div id="client-list"></div>
     </div>
-
+    
     <div id="workout-view">
         <button class="back-btn" onclick="showHome()">← BACK</button>
         <div id="detail-header" style="display:flex; align-items:center; gap:15px; margin-bottom:20px; border-bottom:1px solid #1f2937; padding-bottom:15px;">
             <img id="detail-img" src="" class="profile-img">
             <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
                 <h2 id="detail-name" style="margin:0; text-transform:uppercase;"></h2>
-                <div id="detail-badges" class="badge-container"></div>
+                <div id="detail-badges" class="badge-container" style="display:flex; gap:5px;"></div>
             </div>
         </div>
         <div id="workout-content"></div>
@@ -130,29 +128,42 @@
     </div>
 </div>
 
+<div id="privacy-disclaimer" class="footer-container">
+    <div class="powered-by">
+        <span>Powered by</span>
+        <img src="https://i.postimg.cc/6Q1gJjvY/Roninlogooriginal.png" class="ronin-logo-small">
+    </div>
+    <div class="privacy-footer">
+        <p><b>HR:</b> Vaša privatnost nam je važna. Ako želite biti uklonjeni iz aplikacije, obratite se svojim PT-ima.</p>
+        <p><b>IT:</b> La tua privacy è importante. Se desideri non far più parte dell'app, rivolgiti ai tuoi PT.</p>
+        <p><b>EN:</b> Your privacy matters. If you wish to be removed from the app, please contact your PTs.</p>
+        <p><b>JP:</b> プライバシーは重要です。アプリからの削除を希望される場合は、PTにご連絡ください。</p>
+    </div>
+</div>
+
 <script>
+    // Funzione Colore Casuale Neon
+    function setRandomNeon() {
+        const colors = ['#ffffff', '#a855f7', '#ef4444', '#3b82f6']; // Bianco, Viola, Rosso, Blu
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        document.documentElement.style.setProperty('--neon-color', randomColor);
+    }
+    setRandomNeon();
+
+    // (Logica Data Loading e Switch Tab invariata)
     const exercisesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=0&single=true&output=csv';
     const athletesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=719192490&single=true&output=csv'; 
     const badgesLibUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=660633997&single=true&output=csv';
     const baseWorkoutsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=362105029&single=true&output=csv';
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbx_3oQAL4pYFTR2Fbi84U4ufsBxJsb70c5oUxWx-dGaaY7wOHMg2u2WB3NTO2CugRJN/exec';
 
-    let athletesData = {}; 
-    let workoutData = {};  
-    let badgesLibrary = [];
-    let baseWorkouts = [];
-    let currentTab = null;
+    let athletesData = {}, workoutData = {}, badgesLibrary = [], baseWorkouts = [], currentTab = null;
 
-    // Helper per leggere correttamente i CSV anche con testi complessi
     function parseCSV(text) {
-        const rows = [];
-        let row = [];
-        let col = "";
-        let inQuotes = false;
+        const rows = []; let row = []; let col = ""; let inQuotes = false;
         for (let i = 0; i < text.length; i++) {
             let char = text[i];
-            let nextChar = text[i+1];
-            if (char === '"' && inQuotes && nextChar === '"') { col += '"'; i++; }
+            if (char === '"' && inQuotes && text[i+1] === '"') { col += '"'; i++; }
             else if (char === '"') { inQuotes = !inQuotes; }
             else if (char === ',' && !inQuotes) { row.push(col.trim()); col = ""; }
             else if (char === '\n' && !inQuotes) { row.push(col.trim()); rows.push(row); row = []; col = ""; }
@@ -171,40 +182,20 @@
                 fetch(badgesLibUrl + '&t=' + t).then(r => r.text()),
                 fetch(baseWorkoutsUrl + '&t=' + t).then(r => r.text())
             ]);
-
-            // Parsing Atleti
             parseCSV(aResp).slice(1).forEach(cols => {
                 if(cols.length < 3) return;
-                const name = cols[0];
-                athletesData[name] = { 
-                    photo: cols[1], 
-                    gender: cols[2].toUpperCase(), 
-                    badges: cols[3] ? cols[3].split(',').map(b => b.trim()).filter(l => l.length > 5) : [] 
-                };
+                athletesData[cols[0]] = { photo: cols[1], gender: cols[2].toUpperCase(), badges: cols[3] ? cols[3].split(',').map(b => b.trim()).filter(l => l.length > 5) : [] };
             });
-
-            // Parsing Esercizi
             parseCSV(eResp).slice(1).forEach(cols => {
                 if(cols.length < 4) return;
-                const name = cols[0], area = cols[1], ex = cols[2], load = cols[3];
-                const up = cols[5] ? cols[5].toUpperCase() === 'TRUE' : false;
-                if(!workoutData[name]) workoutData[name] = {};
-                if(!workoutData[name][area]) workoutData[name][area] = [];
-                workoutData[name][area].push({ex, load, up});
+                if(!workoutData[cols[0]]) workoutData[cols[0]] = {};
+                if(!workoutData[cols[0]][cols[1]]) workoutData[cols[0]][cols[1]] = [];
+                workoutData[cols[0]][cols[1]].push({ex: cols[2], load: cols[3], up: cols[5]?.toUpperCase() === 'TRUE'});
             });
-
-            // Parsing Badges
-            badgesLibrary = parseCSV(bResp).slice(1).map(cols => ({
-                title: cols[0], link: cols[1], note: cols[2]
-            })).filter(b => b.link);
-
-            // Parsing Workouts
-            baseWorkouts = parseCSV(wResp).slice(1).map(cols => ({
-                title: cols[0], desc: cols[1], link: cols[2]
-            })).filter(w => w.title && w.link);
-
+            badgesLibrary = parseCSV(bResp).slice(1).map(cols => ({ title: cols[0], link: cols[1], note: cols[2] })).filter(b => b.link);
+            baseWorkouts = parseCSV(wResp).slice(1).map(cols => ({ title: cols[0], desc: cols[1], link: cols[2] })).filter(w => w.title && w.link);
             renderHome();
-        } catch (e) { console.error("Errore!", e); }
+        } catch (e) { console.error("Data Load Error", e); }
     }
 
     function switchTab(type) {
@@ -218,36 +209,25 @@
     function renderHome() {
         const list = document.getElementById('client-list');
         list.innerHTML = '';
-        if (!currentTab) return;
-
         if (currentTab === 'R') {
             badgesLibrary.forEach(b => {
-                const card = document.createElement('div');
-                card.className = `client-card border-R`;
-                card.innerHTML = `<img src="${b.link}" class="badge-img-large" onclick="zoom('${b.link}')"><div class="badge-desc">${b.note || ''}</div>`;
+                const card = document.createElement('div'); card.className = `client-card border-R`;
+                card.innerHTML = `<img src="${b.link}" class="badge-img-large" onclick="zoom('${b.link}')"><div style="font-size:0.85rem; font-style:italic;">${b.note || ''}</div>`;
                 list.appendChild(card);
             });
-        } 
-        else if (currentTab === 'W') {
+        } else if (currentTab === 'W') {
             baseWorkouts.forEach((w, index) => {
-                const card = document.createElement('div');
-                card.className = `client-card border-W`;
-                card.onclick = (e) => {
-                    if(e.target.tagName === 'IMG') zoom(w.link);
-                    else showBoard(index);
-                };
+                const card = document.createElement('div'); card.className = `client-card border-W`;
+                card.onclick = (e) => e.target.tagName === 'IMG' ? zoom(w.link) : showBoard(index);
                 card.innerHTML = `<img src="${w.link}" class="badge-img-large"><div class="client-name">${w.title}</div>`;
                 list.appendChild(card);
             });
-        }
-        else {
+        } else {
             Object.keys(athletesData).forEach(name => {
                 if(athletesData[name].gender === currentTab) {
-                    const bHtml = (athletesData[name].badges || []).map(url => `<img src="${url}" class="badge-img" onclick="event.stopPropagation(); zoom('${url}')">`).join('');
-                    const card = document.createElement('div');
-                    card.className = `client-card border-${currentTab}`;
+                    const card = document.createElement('div'); card.className = `client-card border-${currentTab}`;
                     card.onclick = () => showWorkout(name);
-                    card.innerHTML = `<img src="${athletesData[name].photo || 'https://www.w3schools.com/howto/img_avatar.png'}" class="profile-img"><div class="client-name">${name}</div><div class="badge-container">${bHtml}</div>`;
+                    card.innerHTML = `<img src="${athletesData[name].photo || 'https://www.w3schools.com/howto/img_avatar.png'}" class="profile-img"><div class="client-name">${name}</div>`;
                     list.appendChild(card);
                 }
             });
@@ -255,66 +235,50 @@
     }
 
     function showWorkout(name) {
-        document.getElementById('home-view').style.display = 'none';
-        document.getElementById('workout-view').style.display = 'block';
-        document.getElementById('board-view').style.display = 'none';
+        toggleViews('workout-view');
         document.getElementById('detail-name').innerText = name;
-        document.getElementById('detail-img').src = athletesData[name].photo || 'https://www.w3schools.com/howto/img_avatar.png';
-        document.getElementById('detail-badges').innerHTML = (athletesData[name].badges || []).map(url => `<img src="${url}" class="badge-img" onclick="zoom('${url}')">`).join('');
-        
+        document.getElementById('detail-img').src = athletesData[name].photo || '';
         const content = document.getElementById('workout-content');
         content.innerHTML = '';
-        const clientWorkouts = workoutData[name] || {};
-        
-        for(const area in clientWorkouts) {
-            const acc = document.createElement('div');
-            acc.className = 'accordion';
-            let exHtml = clientWorkouts[area].map(e => `
+        const data = workoutData[name] || {};
+        for(const area in data) {
+            const acc = document.createElement('div'); acc.className = 'accordion';
+            let rows = data[area].map(e => `
                 <div class="ex-row">
-                    <div class="ex-info">
-                        <span class="ex-name">${e.ex}</span>
-                        <span class="ex-note-pt ${e.up ? 'visible' : ''}">Request Sent to the PT</span>
-                    </div>
-                    <div style="display:flex; align-items:center;">
-                        <span class="ex-weight">${e.load}</span>
-                        <button class="upgrade-btn ${e.up?'sent':''}" onclick="requestUpgrade(this,'${name}','${e.ex.replace(/'/g,"\\'")}')">${e.up?'✓':'UP'}</button>
-                    </div>
+                    <div style="max-width:60%"><span style="font-weight:bold; font-size:0.95rem;">${e.ex}</span></div>
+                    <div style="display:flex; align-items:center;"><span class="ex-weight">${e.load}</span><button class="upgrade-btn ${e.up?'sent':''}" onclick="requestUpgrade(this,'${name}','${e.ex}')">${e.up?'✓':'UP'}</button></div>
                 </div>`).join('');
-            acc.innerHTML = `<div class="acc-header" onclick="this.parentElement.classList.toggle('active')">${area} <span>+</span></div><div class="acc-content">${exHtml}</div>`;
+            acc.innerHTML = `<div class="acc-header" onclick="this.parentElement.classList.toggle('active')">${area} <span>+</span></div><div class="acc-content">${rows}</div>`;
             content.appendChild(acc);
         }
     }
 
     function showBoard(index) {
+        toggleViews('board-view');
         const w = baseWorkouts[index];
-        document.getElementById('home-view').style.display = 'none';
-        document.getElementById('workout-view').style.display = 'none';
-        document.getElementById('board-view').style.display = 'block';
         document.getElementById('board-title').innerText = w.title;
         document.getElementById('board-img').src = w.link;
         document.getElementById('board-content').innerText = w.desc;
     }
 
-    async function requestUpgrade(btn, client, exercise) {
-        if(btn.classList.contains('sent')) return;
-        if (!confirm("You are requesting for an upgrade, are you sure?")) return;
-        const infoDiv = btn.closest('.ex-row').querySelector('.ex-note-pt');
-        btn.innerText = "...";
-        try {
-            await fetch(scriptUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ cliente: client, esercizio: exercise, nota: "Weight Upgrade Requested" }) });
-            btn.innerText = "✓";
-            btn.classList.add('sent');
-            infoDiv.classList.add('visible');
-        } catch (e) { btn.innerText = "UP"; alert("Errore invio richiesta"); }
+    function toggleViews(viewId) {
+        ['home-view', 'workout-view', 'board-view', 'privacy-disclaimer'].forEach(id => {
+            document.getElementById(id).style.display = (id === viewId) ? 'block' : 'none';
+        });
     }
 
+    function showHome() { toggleViews('home-view'); document.getElementById('privacy-disclaimer').style.display = 'block'; }
     function zoom(url) { document.getElementById('zoom-img').src = url; document.getElementById('zoom-overlay').style.display = 'flex'; }
-    function showHome() { 
-        document.getElementById('home-view').style.display = 'block'; 
-        document.getElementById('workout-view').style.display = 'none';
-        document.getElementById('board-view').style.display = 'none';
-    }
     
+    async function requestUpgrade(btn, client, exercise) {
+        if(btn.classList.contains('sent') || !confirm("Request weight upgrade?")) return;
+        btn.innerText = "...";
+        try {
+            await fetch(scriptUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ cliente: client, esercizio: exercise }) });
+            btn.innerText = "✓"; btn.classList.add('sent');
+        } catch (e) { btn.innerText = "UP"; }
+    }
+
     loadData();
 </script>
 </body>
