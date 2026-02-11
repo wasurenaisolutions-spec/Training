@@ -8,32 +8,37 @@
         :root { 
             --accent: #facc15; --bg: #000000; --card: #111827; --text: #ffffff; 
             --success: #22c55e; --men: #3b82f6; --women: #a855f7; --reward: #facc15;
-            --workout: #ef4444; --neon-color: #ffffff; 
+            --workout: #ef4444;
         }
-        
-        @keyframes neonFlicker {
-            0%, 18%, 22%, 25%, 53%, 57%, 100% {
-                filter: drop-shadow(0 0 5px var(--neon-color)) drop-shadow(0 0 15px var(--neon-color));
-                opacity: 1;
-            }
-            20%, 24%, 55% { filter: none; opacity: 0.5; }
-        }
-
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; flex-direction: column; min-height: 100vh; }
         .container { max-width: 500px; margin: 0 auto; flex: 1; width: 100%; }
-        .header { text-align: center; padding: 20px 0; margin-bottom: 15px; }
-        .logo { width: 210px; height: auto; animation: neonFlicker 3s infinite alternate; }
         
-        #main-title { font-size: 1.1rem; font-weight: 800; font-style: italic; text-transform: uppercase; text-align: left; margin: 20px 0 10px 5px; color: var(--text); letter-spacing: 1px; }
+        /* Logo con retroilluminazione soffusa bianca */
+        .header { text-align: center; padding: 20px 0; margin-bottom: 15px; }
+        .logo { max-width: 180px; filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3)); }
+        
+        #main-title { 
+            font-size: 1.1rem; font-weight: 800; font-style: italic; 
+            text-transform: uppercase; text-align: left; 
+            margin: 20px 0 10px 5px; color: var(--text); letter-spacing: 1px;
+        }
 
         .tabs { display: flex; gap: 10px; margin-bottom: 20px; padding: 0 5px; }
-        .tab-btn { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #1f2937; background: #111827; color: #6b7280; font-weight: 900; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
+        .tab-btn { 
+            flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #1f2937;
+            background: #111827; color: #6b7280; font-weight: 900; 
+            text-transform: uppercase; cursor: pointer; transition: 0.3s;
+        }
         .tab-btn.active[data-type="M"] { border-color: var(--men); color: var(--men); background: #1e3a8a33; }
         .tab-btn.active[data-type="F"] { border-color: var(--women); color: var(--women); background: #581c8733; }
         .tab-btn.active[data-type="R"] { border-color: var(--reward); color: var(--reward); background: #facc1522; }
         .tab-btn.active[data-type="W"] { border-color: var(--workout); color: var(--workout); background: #ef444422; }
 
-        .client-card { background: var(--card); padding: 18px; border-radius: 15px; margin-bottom: 12px; border: 1px solid #1f2937; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .client-card { 
+            background: var(--card); padding: 18px; border-radius: 15px; 
+            margin-bottom: 12px; border: 1px solid #1f2937; 
+            display: flex; align-items: center; gap: 12px; cursor: pointer; 
+        }
         .client-card.border-M { border-left: 5px solid var(--men); }
         .client-card.border-F { border-left: 5px solid var(--women); }
         .client-card.border-R { border-left: 5px solid var(--reward); cursor: default; }
@@ -42,32 +47,37 @@
         .profile-img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
         .client-name { font-weight: 900; font-size: 1.2rem; text-transform: uppercase; flex-grow: 1; }
         
-        .badge-container { display: flex; gap: 5px; margin-left: auto; }
-        .badge-img { width: 30px; height: 30px; object-fit: contain; cursor: zoom-in; }
-        .badge-img-large { width: 65px; height: 65px; object-fit: contain; flex-shrink: 0; border-radius: 8px; }
+        .badge-desc { color: var(--text); font-style: italic; font-size: 0.85rem; flex-grow: 1; line-height: 1.3; }
+        .badge-container { display: flex; gap: 6px; margin-left: auto; }
+        .badge-img { width: 35px; height: 35px; object-fit: contain; cursor: zoom-in; }
+        .badge-img-large { width: 60px; height: 60px; object-fit: contain; cursor: zoom-in; flex-shrink: 0; }
+        
+        .board-card { background: #0a0a0a; border: 1px solid #1f2937; border-radius: 20px; padding: 25px; margin-top: 10px; }
+        .board-text { white-space: pre-wrap; font-size: 1.1rem; line-height: 1.6; color: #e5e7eb; }
+
+        #zoom-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; justify-content: center; align-items: center; }
         
         #workout-view, #board-view { display: none; }
         .back-btn { background: #1f2937; color: white; border: none; padding: 10px 20px; border-radius: 20px; margin-bottom: 20px; font-weight: bold; cursor: pointer; }
-        
-        /* Stile per la visualizzazione della scheda Workout */
-        .board-card { background: #0a0a0a; border: 1px solid #1f2937; border-radius: 20px; padding: 25px; margin-top: 10px; }
-        .board-text { white-space: pre-wrap; font-size: 1rem; line-height: 1.6; color: #e5e7eb; font-family: monospace; }
-
         .accordion { background: var(--card); border: 1px solid #1f2937; border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
         .acc-header { padding: 15px 20px; cursor: pointer; font-weight: bold; text-transform: uppercase; display: flex; justify-content: space-between; }
         .acc-content { display: none; padding: 0 20px 15px; background: #080c14; }
         .active .acc-content { display: block; }
+        .active .acc-header { color: var(--accent); background: #1f2937; }
 
         .ex-row { padding: 12px 0; border-bottom: 1px solid #1f2937; display: flex; justify-content: space-between; align-items: center; }
+        .ex-info { display: flex; flex-direction: column; max-width: 60%; }
+        .ex-name { font-weight: bold; font-size: 0.95rem; }
+        .ex-note-pt { font-size: 0.75rem; color: var(--success); font-style: italic; margin-top: 4px; display: none; }
+        .ex-note-pt.visible { display: block; }
         .ex-weight { color: var(--accent); font-weight: 900; font-size: 1.2rem; margin-right: 10px; }
         .upgrade-btn { background: #1f2937; border: 1px solid var(--accent); color: var(--accent); padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
-        
+        .upgrade-btn.sent { background: var(--success); border-color: var(--success); color: white; }
+
         .footer-container { text-align: center; padding: 20px; margin-top: 20px; border-top: 1px solid #111827; }
         .powered-by { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.65rem; color: #6b7280; margin-bottom: 15px; text-transform: uppercase; }
         .ronin-logo-small { width: 40px; height: auto; opacity: 0.8; }
         .privacy-footer { font-size: 0.6rem; color: #4b5563; line-height: 1.5; }
-
-        #zoom-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; justify-content: center; align-items: center; }
     </style>
 </head>
 <body>
@@ -76,7 +86,7 @@
 
 <div class="container">
     <div class="header">
-        <img id="header-logo" src="https://i.postimg.cc/Gt2531hd/Title_(Return_Address_Labels)_(Stickers_(Square))_(Stickers_(Rectangle)_(Landscape)).png" class="logo">
+        <img src="https://i.postimg.cc/Gt2531hd/Title_(Return_Address_Labels)_(Stickers_(Square))_(Stickers_(Rectangle)_(Landscape)).png" class="logo">
     </div>
 
     <div id="home-view">
@@ -85,12 +95,14 @@
             <button class="tab-btn" data-type="M" onclick="switchTab('M')">MEN</button>
             <button class="tab-btn" data-type="F" onclick="switchTab('F')">WOMEN</button>
         </div>
+        
         <h2 id="main-title">Rewards & Workouts</h2>
         <div class="tabs">
             <button class="tab-btn" data-type="R" onclick="switchTab('R')">BADGES</button>
             <button class="tab-btn" data-type="W" onclick="switchTab('W')">WORKOUTS</button>
         </div>
-        <div id="empty-msg" style="text-align:center; color:#6b7280; margin-top:40px; font-style:italic;">Select a category</div>
+
+        <div id="empty-msg" style="text-align: center; color: #6b7280; margin-top: 40px; font-style: italic; font-size: 0.9rem;">Select a category to view the list</div>
         <div id="client-list"></div>
     </div>
 
@@ -109,8 +121,8 @@
     <div id="board-view">
         <button class="back-btn" onclick="showHome()">← BACK</button>
         <div style="text-align:center; margin-bottom:20px;">
-            <img id="board-img" src="" style="width:100px; height:100px; object-fit:contain; margin-bottom:10px;" onclick="zoom(this.src)">
-            <h2 id="board-title" style="text-transform:uppercase; color:var(--accent); margin:0; letter-spacing:1px;"></h2>
+            <img id="board-img" src="" style="width:80px; height:80px; object-fit:contain; margin-bottom:10px;" onclick="zoom(this.src)">
+            <h2 id="board-title" style="text-transform:uppercase; color:var(--accent); margin:0;"></h2>
         </div>
         <div class="board-card">
             <div id="board-content" class="board-text"></div>
@@ -118,7 +130,7 @@
     </div>
 </div>
 
-<div class="footer-container">
+<div id="privacy-disclaimer" class="footer-container">
     <div class="powered-by">
         <span>Powered by</span>
         <img src="https://i.postimg.cc/6Q1gJjvY/Roninlogooriginal.png" class="ronin-logo-small">
@@ -127,18 +139,10 @@
         <p><b>HR:</b> Vaša privatnost nam je važna. Ako želite biti uklonjeni iz aplikacije, obratite se svojim PT-ima.</p>
         <p><b>IT:</b> La tua privacy è importante. Se desideri non far più parte dell'app, rivolgiti ai tuoi PT.</p>
         <p><b>EN:</b> Your privacy matters. If you wish to be removed from the app, please contact your PTs.</p>
-        <p><b>JP:</b> プライバシーは重要です。アプリからの削除を希望される場合は、PTにご連絡ください。</p>
     </div>
 </div>
 
 <script>
-    function setRandomNeon() {
-        const colors = ['#ffffff', '#a855f7', '#ef4444', '#3b82f6'];
-        const randomColor = colors[Math.floor(Math.random() * colors.length)];
-        document.documentElement.style.setProperty('--neon-color', randomColor);
-    }
-    setRandomNeon();
-
     const athletesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=719192490&single=true&output=csv'; 
     const exercisesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=0&single=true&output=csv';
     const badgesLibUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=660633997&single=true&output=csv';
@@ -147,55 +151,46 @@
 
     let athletesData = {}, workoutData = {}, badgesLibrary = [], baseWorkouts = [], currentTab = null;
 
-    function parseCSVLine(line) {
-        const result = []; let cur = ""; let inQuotes = false;
-        for (let char of line) {
-            if (char === '"') inQuotes = !inQuotes;
-            else if (char === ',' && !inQuotes) { result.push(cur.trim()); cur = ""; }
-            else cur += char;
+    function parseCSV(text) {
+        const rows = []; let row = []; let col = ""; let inQuotes = false;
+        for (let i = 0; i < text.length; i++) {
+            let char = text[i];
+            if (char === '"' && inQuotes && text[i+1] === '"') { col += '"'; i++; }
+            else if (char === '"') inQuotes = !inQuotes;
+            else if (char === ',' && !inQuotes) { row.push(col.trim()); col = ""; }
+            else if (char === '\n' && !inQuotes) { row.push(col.trim()); rows.push(row); row = []; col = ""; }
+            else col += char;
         }
-        result.push(cur.trim());
-        return result;
+        if (col || row.length > 0) { row.push(col.trim()); rows.push(row); }
+        return rows;
     }
 
     async function loadData() {
         try {
             const t = Date.now();
-            const [aText, eText, bText, wText] = await Promise.all([
+            const [aResp, eResp, bResp, wResp] = await Promise.all([
                 fetch(athletesUrl + '&t=' + t).then(r => r.text()),
                 fetch(exercisesUrl + '&t=' + t).then(r => r.text()),
                 fetch(badgesLibUrl + '&t=' + t).then(r => r.text()),
                 fetch(baseWorkoutsUrl + '&t=' + t).then(r => r.text())
             ]);
 
-            // Atleti
-            aText.split(/\r?\n/).slice(1).forEach(row => {
-                const cols = parseCSVLine(row);
+            parseCSV(aResp).slice(1).forEach(cols => {
                 if(cols.length < 3) return;
-                athletesData[cols[0]] = { photo: cols[1], gender: cols[2].toUpperCase(), badges: cols[3] ? cols[3].split(',').map(b => b.trim()) : [] };
+                athletesData[cols[0]] = { photo: cols[1], gender: cols[2].toUpperCase(), badges: cols[3] ? cols[3].split(',').map(b => b.trim()).filter(l => l.length > 5) : [] };
             });
 
-            // Carichi (PR)
-            eText.split(/\r?\n/).slice(1).forEach(row => {
-                const cols = parseCSVLine(row);
+            parseCSV(eResp).slice(1).forEach(cols => {
                 if(cols.length < 4) return;
-                if(!workoutData[cols[0]]) workoutData[cols[0]] = {};
-                if(!workoutData[cols[0]][cols[1]]) workoutData[cols[0]][cols[1]] = [];
-                workoutData[cols[0]][cols[1]].push({ex: cols[2], load: cols[3], up: cols[5]?.toUpperCase() === 'TRUE'});
+                const name = cols[0], area = cols[1], ex = cols[2], load = cols[3];
+                const up = cols[5] ? cols[5].toUpperCase() === 'TRUE' : false;
+                if(!workoutData[name]) workoutData[name] = {};
+                if(!workoutData[name][area]) workoutData[name][area] = [];
+                workoutData[name][area].push({ex, load, up});
             });
 
-            // Libreria Badge
-            badgesLibrary = bText.split(/\r?\n/).slice(1).map(row => {
-                const cols = parseCSVLine(row);
-                return { title: cols[0], link: cols[1], note: cols[2] };
-            }).filter(b => b.link);
-
-            // Schede Workout (Colonne: Titolo, Descrizione, Link Immagine)
-            baseWorkouts = wText.split(/\r?\n/).slice(1).map(row => {
-                const cols = parseCSVLine(row);
-                if(cols.length < 3) return null;
-                return { title: cols[0], desc: cols[1], link: cols[2] };
-            }).filter(w => w !== null);
+            badgesLibrary = parseCSV(bResp).slice(1).map(cols => ({ title: cols[0], link: cols[1], note: cols[2] })).filter(b => b.link);
+            baseWorkouts = parseCSV(wResp).slice(1).map(cols => ({ title: cols[0], desc: cols[1], link: cols[2] })).filter(w => w.title && w.link);
 
             renderHome();
         } catch (e) { console.error("Load Error", e); }
@@ -215,26 +210,52 @@
         if (currentTab === 'R') {
             badgesLibrary.forEach(b => {
                 const card = document.createElement('div'); card.className = `client-card border-R`;
-                card.innerHTML = `<img src="${b.link}" class="badge-img-large" onclick="zoom('${b.link}')"><div style="font-size:0.85rem; font-style:italic;">${b.note || ''}</div>`;
+                card.innerHTML = `<img src="${b.link}" class="badge-img-large" onclick="zoom('${b.link}')"><div class="badge-desc">${b.note || ''}</div>`;
                 list.appendChild(card);
             });
         } else if (currentTab === 'W') {
             baseWorkouts.forEach((w, index) => {
                 const card = document.createElement('div'); card.className = `client-card border-W`;
-                card.onclick = () => showBoard(index);
+                card.onclick = (e) => { if(e.target.tagName !== 'IMG') showBoard(index); else zoom(w.link); };
                 card.innerHTML = `<img src="${w.link}" class="badge-img-large"><div class="client-name">${w.title}</div>`;
                 list.appendChild(card);
             });
         } else {
             Object.keys(athletesData).forEach(name => {
                 if(athletesData[name].gender === currentTab) {
+                    const bHtml = (athletesData[name].badges || []).map(url => `<img src="${url}" class="badge-img" onclick="event.stopPropagation(); zoom('${url}')">`).join('');
                     const card = document.createElement('div'); card.className = `client-card border-${currentTab}`;
                     card.onclick = () => showWorkout(name);
-                    const bHtml = (athletesData[name].badges || []).map(url => `<img src="${url}" class="badge-img" onclick="event.stopPropagation(); zoom('${url}')">`).join('');
-                    card.innerHTML = `<img src="${athletesData[name].photo || ''}" class="profile-img"><div class="client-name">${name}</div><div class="badge-container">${bHtml}</div>`;
+                    card.innerHTML = `<img src="${athletesData[name].photo || 'https://www.w3schools.com/howto/img_avatar.png'}" class="profile-img"><div class="client-name">${name}</div><div class="badge-container">${bHtml}</div>`;
                     list.appendChild(card);
                 }
             });
+        }
+    }
+
+    function showWorkout(name) {
+        toggleViews('workout-view');
+        document.getElementById('detail-name').innerText = name;
+        document.getElementById('detail-img').src = athletesData[name].photo || 'https://www.w3schools.com/howto/img_avatar.png';
+        document.getElementById('detail-badges').innerHTML = (athletesData[name].badges || []).map(url => `<img src="${url}" class="badge-img" onclick="zoom('${url}')">`).join('');
+        const content = document.getElementById('workout-content');
+        content.innerHTML = '';
+        const data = workoutData[name] || {};
+        for(const area in data) {
+            const acc = document.createElement('div'); acc.className = 'accordion';
+            let exHtml = data[area].map(e => `
+                <div class="ex-row">
+                    <div class="ex-info">
+                        <span class="ex-name">${e.ex}</span>
+                        <span class="ex-note-pt ${e.up ? 'visible' : ''}">Request Sent to the PT</span>
+                    </div>
+                    <div style="display:flex; align-items:center;">
+                        <span class="ex-weight">${e.load}</span>
+                        <button class="upgrade-btn ${e.up?'sent':''}" onclick="requestUpgrade(this,'${name}','${e.ex.replace(/'/g,"\\'")}')">${e.up?'✓':'UP'}</button>
+                    </div>
+                </div>`).join('');
+            acc.innerHTML = `<div class="acc-header" onclick="this.parentElement.classList.toggle('active')">${area} <span>+</span></div><div class="acc-content">${exHtml}</div>`;
+            content.appendChild(acc);
         }
     }
 
@@ -243,28 +264,7 @@
         const w = baseWorkouts[index];
         document.getElementById('board-title').innerText = w.title;
         document.getElementById('board-img').src = w.link;
-        // Ripulisce il testo e lo inserisce mantenendo i ritorni a capo
-        document.getElementById('board-content').innerText = w.desc.replace(/^"|"$/g, '').replace(/\\n/g, '\n');
-    }
-
-    function showWorkout(name) {
-        toggleViews('workout-view');
-        document.getElementById('detail-name').innerText = name;
-        document.getElementById('detail-img').src = athletesData[name].photo || '';
-        document.getElementById('detail-badges').innerHTML = (athletesData[name].badges || []).map(url => `<img src="${url}" class="badge-img" onclick="zoom('${url}')">`).join('');
-        const content = document.getElementById('workout-content');
-        content.innerHTML = '';
-        const data = workoutData[name] || {};
-        for(const area in data) {
-            const acc = document.createElement('div'); acc.className = 'accordion';
-            let rows = data[area].map(e => `
-                <div class="ex-row">
-                    <div style="max-width:60%"><span style="font-weight:bold;">${e.ex}</span></div>
-                    <div style="display:flex; align-items:center;"><span class="ex-weight">${e.load}</span><button class="upgrade-btn" onclick="requestUpgrade(this,'${name}','${e.ex}')">${e.up?'✓':'UP'}</button></div>
-                </div>`).join('');
-            acc.innerHTML = `<div class="acc-header" onclick="this.parentElement.classList.toggle('active')">${area} <span>+</span></div><div class="acc-content">${rows}</div>`;
-            content.appendChild(acc);
-        }
+        document.getElementById('board-content').innerText = w.desc;
     }
 
     function toggleViews(viewId) {
@@ -277,11 +277,13 @@
     function zoom(url) { document.getElementById('zoom-img').src = url; document.getElementById('zoom-overlay').style.display = 'flex'; }
     
     async function requestUpgrade(btn, client, exercise) {
-        if(btn.innerText === '✓' || !confirm("Request weight upgrade?")) return;
+        if(btn.classList.contains('sent')) return;
+        if (!confirm("You are requesting for an upgrade, are you sure?")) return;
+        const infoDiv = btn.closest('.ex-row').querySelector('.ex-note-pt');
         btn.innerText = "...";
         try {
-            await fetch(scriptUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ cliente: client, esercizio: exercise }) });
-            btn.innerText = "✓";
+            await fetch(scriptUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ cliente: client, esercizio: exercise, nota: "Weight Upgrade Requested" }) });
+            btn.innerText = "✓"; btn.classList.add('sent'); infoDiv.classList.add('visible');
         } catch (e) { btn.innerText = "UP"; }
     }
 
