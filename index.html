@@ -8,8 +8,7 @@
         :root { 
             --accent: #facc15; --bg: #000000; --card: #111827; --text: #ffffff; 
             --success: #22c55e; --men: #3b82f6; --women: #a855f7; --reward: #facc15;
-            --workout: #ef4444;
-            --neon-color: #ffffff; 
+            --workout: #ef4444; --neon-color: #ffffff; 
         }
         
         @keyframes neonFlicker {
@@ -22,7 +21,6 @@
 
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; flex-direction: column; min-height: 100vh; }
         .container { max-width: 500px; margin: 0 auto; flex: 1; width: 100%; }
-        
         .header { text-align: center; padding: 20px 0; margin-bottom: 15px; }
         .logo { width: 210px; height: auto; animation: neonFlicker 3s infinite alternate; }
         
@@ -46,10 +44,15 @@
         
         .badge-container { display: flex; gap: 5px; margin-left: auto; }
         .badge-img { width: 30px; height: 30px; object-fit: contain; cursor: zoom-in; }
-        .badge-img-large { width: 60px; height: 60px; object-fit: contain; flex-shrink: 0; cursor: zoom-in; }
+        .badge-img-large { width: 65px; height: 65px; object-fit: contain; flex-shrink: 0; border-radius: 8px; }
         
         #workout-view, #board-view { display: none; }
         .back-btn { background: #1f2937; color: white; border: none; padding: 10px 20px; border-radius: 20px; margin-bottom: 20px; font-weight: bold; cursor: pointer; }
+        
+        /* Stile per la visualizzazione della scheda Workout */
+        .board-card { background: #0a0a0a; border: 1px solid #1f2937; border-radius: 20px; padding: 25px; margin-top: 10px; }
+        .board-text { white-space: pre-wrap; font-size: 1rem; line-height: 1.6; color: #e5e7eb; font-family: monospace; }
+
         .accordion { background: var(--card); border: 1px solid #1f2937; border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
         .acc-header { padding: 15px 20px; cursor: pointer; font-weight: bold; text-transform: uppercase; display: flex; justify-content: space-between; }
         .acc-content { display: none; padding: 0 20px 15px; background: #080c14; }
@@ -58,11 +61,7 @@
         .ex-row { padding: 12px 0; border-bottom: 1px solid #1f2937; display: flex; justify-content: space-between; align-items: center; }
         .ex-weight { color: var(--accent); font-weight: 900; font-size: 1.2rem; margin-right: 10px; }
         .upgrade-btn { background: #1f2937; border: 1px solid var(--accent); color: var(--accent); padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
-        .upgrade-btn.sent { background: var(--success); border-color: var(--success); color: white; }
-
-        .board-card { background: #0a0a0a; border: 1px solid #1f2937; border-radius: 20px; padding: 25px; margin-top: 10px; }
-        .board-text { white-space: pre-wrap; font-size: 1.1rem; line-height: 1.6; color: #e5e7eb; }
-
+        
         .footer-container { text-align: center; padding: 20px; margin-top: 20px; border-top: 1px solid #111827; }
         .powered-by { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.65rem; color: #6b7280; margin-bottom: 15px; text-transform: uppercase; }
         .ronin-logo-small { width: 40px; height: auto; opacity: 0.8; }
@@ -110,8 +109,8 @@
     <div id="board-view">
         <button class="back-btn" onclick="showHome()">← BACK</button>
         <div style="text-align:center; margin-bottom:20px;">
-            <img id="board-img" src="" style="width:80px; height:80px; object-fit:contain; margin-bottom:10px;" onclick="zoom(this.src)">
-            <h2 id="board-title" style="text-transform:uppercase; color:var(--accent); margin:0;"></h2>
+            <img id="board-img" src="" style="width:100px; height:100px; object-fit:contain; margin-bottom:10px;" onclick="zoom(this.src)">
+            <h2 id="board-title" style="text-transform:uppercase; color:var(--accent); margin:0; letter-spacing:1px;"></h2>
         </div>
         <div class="board-card">
             <div id="board-content" class="board-text"></div>
@@ -119,7 +118,7 @@
     </div>
 </div>
 
-<div id="privacy-disclaimer" class="footer-container">
+<div class="footer-container">
     <div class="powered-by">
         <span>Powered by</span>
         <img src="https://i.postimg.cc/6Q1gJjvY/Roninlogooriginal.png" class="ronin-logo-small">
@@ -140,10 +139,9 @@
     }
     setRandomNeon();
 
-    const exercisesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=0&single=true&output=csv';
     const athletesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=719192490&single=true&output=csv'; 
+    const exercisesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=0&single=true&output=csv';
     const badgesLibUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=660633997&single=true&output=csv';
-    // Link CSV corretto fornito dall'utente
     const baseWorkoutsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=362105029&single=true&output=csv';
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbx_3oQAL4pYFTR2Fbi84U4ufsBxJsb70c5oUxWx-dGaaY7wOHMg2u2WB3NTO2CugRJN/exec';
 
@@ -163,20 +161,22 @@
     async function loadData() {
         try {
             const t = Date.now();
-            const [aResp, eResp, bResp, wResp] = await Promise.all([
+            const [aText, eText, bText, wText] = await Promise.all([
                 fetch(athletesUrl + '&t=' + t).then(r => r.text()),
                 fetch(exercisesUrl + '&t=' + t).then(r => r.text()),
                 fetch(badgesLibUrl + '&t=' + t).then(r => r.text()),
                 fetch(baseWorkoutsUrl + '&t=' + t).then(r => r.text())
             ]);
 
-            aResp.split(/\r?\n/).slice(1).forEach(row => {
+            // Atleti
+            aText.split(/\r?\n/).slice(1).forEach(row => {
                 const cols = parseCSVLine(row);
                 if(cols.length < 3) return;
                 athletesData[cols[0]] = { photo: cols[1], gender: cols[2].toUpperCase(), badges: cols[3] ? cols[3].split(',').map(b => b.trim()) : [] };
             });
 
-            eResp.split(/\r?\n/).slice(1).forEach(row => {
+            // Carichi (PR)
+            eText.split(/\r?\n/).slice(1).forEach(row => {
                 const cols = parseCSVLine(row);
                 if(cols.length < 4) return;
                 if(!workoutData[cols[0]]) workoutData[cols[0]] = {};
@@ -184,15 +184,18 @@
                 workoutData[cols[0]][cols[1]].push({ex: cols[2], load: cols[3], up: cols[5]?.toUpperCase() === 'TRUE'});
             });
 
-            badgesLibrary = bResp.split(/\r?\n/).slice(1).map(row => {
+            // Libreria Badge
+            badgesLibrary = bText.split(/\r?\n/).slice(1).map(row => {
                 const cols = parseCSVLine(row);
                 return { title: cols[0], link: cols[1], note: cols[2] };
             }).filter(b => b.link);
 
-            baseWorkouts = wResp.split(/\r?\n/).slice(1).map(row => {
+            // Schede Workout (Colonne: Titolo, Descrizione, Link Immagine)
+            baseWorkouts = wText.split(/\r?\n/).slice(1).map(row => {
                 const cols = parseCSVLine(row);
+                if(cols.length < 3) return null;
                 return { title: cols[0], desc: cols[1], link: cols[2] };
-            }).filter(w => w.title && w.link);
+            }).filter(w => w !== null);
 
             renderHome();
         } catch (e) { console.error("Load Error", e); }
@@ -235,6 +238,15 @@
         }
     }
 
+    function showBoard(index) {
+        toggleViews('board-view');
+        const w = baseWorkouts[index];
+        document.getElementById('board-title').innerText = w.title;
+        document.getElementById('board-img').src = w.link;
+        // Ripulisce il testo e lo inserisce mantenendo i ritorni a capo
+        document.getElementById('board-content').innerText = w.desc.replace(/^"|"$/g, '').replace(/\\n/g, '\n');
+    }
+
     function showWorkout(name) {
         toggleViews('workout-view');
         document.getElementById('detail-name').innerText = name;
@@ -248,19 +260,11 @@
             let rows = data[area].map(e => `
                 <div class="ex-row">
                     <div style="max-width:60%"><span style="font-weight:bold;">${e.ex}</span></div>
-                    <div style="display:flex; align-items:center;"><span class="ex-weight">${e.load}</span><button class="upgrade-btn ${e.up?'sent':''}" onclick="requestUpgrade(this,'${name}','${e.ex}')">${e.up?'✓':'UP'}</button></div>
+                    <div style="display:flex; align-items:center;"><span class="ex-weight">${e.load}</span><button class="upgrade-btn" onclick="requestUpgrade(this,'${name}','${e.ex}')">${e.up?'✓':'UP'}</button></div>
                 </div>`).join('');
             acc.innerHTML = `<div class="acc-header" onclick="this.parentElement.classList.toggle('active')">${area} <span>+</span></div><div class="acc-content">${rows}</div>`;
             content.appendChild(acc);
         }
-    }
-
-    function showBoard(index) {
-        toggleViews('board-view');
-        const w = baseWorkouts[index];
-        document.getElementById('board-title').innerText = w.title;
-        document.getElementById('board-img').src = w.link;
-        document.getElementById('board-content').innerText = w.desc;
     }
 
     function toggleViews(viewId) {
@@ -273,11 +277,11 @@
     function zoom(url) { document.getElementById('zoom-img').src = url; document.getElementById('zoom-overlay').style.display = 'flex'; }
     
     async function requestUpgrade(btn, client, exercise) {
-        if(btn.classList.contains('sent') || !confirm("Request weight upgrade?")) return;
+        if(btn.innerText === '✓' || !confirm("Request weight upgrade?")) return;
         btn.innerText = "...";
         try {
             await fetch(scriptUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ cliente: client, esercizio: exercise }) });
-            btn.innerText = "✓"; btn.classList.add('sent');
+            btn.innerText = "✓";
         } catch (e) { btn.innerText = "UP"; }
     }
 
