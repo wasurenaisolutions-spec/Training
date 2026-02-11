@@ -45,8 +45,8 @@
         .client-name { font-weight: 900; font-size: 1.2rem; text-transform: uppercase; flex-grow: 1; }
         
         .badge-container { display: flex; gap: 5px; margin-left: auto; }
-        .badge-img { width: 30px; height: 30px; object-fit: contain; }
-        .badge-img-large { width: 60px; height: 60px; object-fit: contain; flex-shrink: 0; }
+        .badge-img { width: 30px; height: 30px; object-fit: contain; cursor: zoom-in; }
+        .badge-img-large { width: 60px; height: 60px; object-fit: contain; flex-shrink: 0; cursor: zoom-in; }
         
         #workout-view, #board-view { display: none; }
         .back-btn { background: #1f2937; color: white; border: none; padding: 10px 20px; border-radius: 20px; margin-bottom: 20px; font-weight: bold; cursor: pointer; }
@@ -143,6 +143,7 @@
     const exercisesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=0&single=true&output=csv';
     const athletesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=719192490&single=true&output=csv'; 
     const badgesLibUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=660633997&single=true&output=csv';
+    // Link CSV corretto fornito dall'utente
     const baseWorkoutsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=362105029&single=true&output=csv';
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbx_3oQAL4pYFTR2Fbi84U4ufsBxJsb70c5oUxWx-dGaaY7wOHMg2u2WB3NTO2CugRJN/exec';
 
@@ -226,7 +227,7 @@
                 if(athletesData[name].gender === currentTab) {
                     const card = document.createElement('div'); card.className = `client-card border-${currentTab}`;
                     card.onclick = () => showWorkout(name);
-                    const bHtml = (athletesData[name].badges || []).map(url => `<img src="${url}" class="badge-img">`).join('');
+                    const bHtml = (athletesData[name].badges || []).map(url => `<img src="${url}" class="badge-img" onclick="event.stopPropagation(); zoom('${url}')">`).join('');
                     card.innerHTML = `<img src="${athletesData[name].photo || ''}" class="profile-img"><div class="client-name">${name}</div><div class="badge-container">${bHtml}</div>`;
                     list.appendChild(card);
                 }
