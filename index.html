@@ -145,7 +145,7 @@
     const badgesLibUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=660633997&single=true&output=csv';
     const baseWorkoutsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=362105029&single=true&output=csv';
     
-    // Nuovo URL Script aggiornato
+    // Assicurati che questo sia il link /exec dello script con doPost(e) { JSON.parse(...) }
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbzTkTpf0jfEt57JfZGyT2DBzIBybu40ILH7ROiE7SUkj2diZyDK-B793LG4J5ouprL7/exec';
 
     let athletesData = {}, workoutData = {}, badgesLibrary = [], baseWorkouts = [], currentTab = null;
@@ -275,7 +275,7 @@
     function showHome() { toggleViews('home-view'); }
     function zoom(url) { document.getElementById('zoom-img').src = url; document.getElementById('zoom-overlay').style.display = 'flex'; }
     
-    // Funzione invio dati ottimizzata
+    // FUNZIONE AGGIORNATA PER SCRIPT CON JSON.PARSE
     async function requestUpgrade(btn, client, exercise) {
         if(btn.classList.contains('sent')) return;
         if (!confirm("You are requesting for an upgrade, are you sure?")) return;
@@ -283,23 +283,22 @@
         const infoDiv = btn.closest('.ex-row').querySelector('.ex-note-pt');
         btn.innerText = "...";
 
-        // Usiamo URLSearchParams per compatibilità con App Script
-        const params = new URLSearchParams();
-        params.append('cliente', client);
-        params.append('esercizio', exercise);
-
         try {
             await fetch(scriptUrl, { 
                 method: 'POST', 
                 mode: 'no-cors', 
-                body: params 
+                body: JSON.stringify({ 
+                    cliente: client, 
+                    esercizio: exercise 
+                }) 
             });
+            
             btn.innerText = "✓"; 
             btn.classList.add('sent'); 
             infoDiv.classList.add('visible');
         } catch (e) { 
+            console.error("Errore invio:", e);
             btn.innerText = "UP"; 
-            console.error(e);
         }
     }
 
