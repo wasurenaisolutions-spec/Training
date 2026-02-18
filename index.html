@@ -76,7 +76,8 @@
         .footer-container { text-align: center; padding: 20px; margin-top: 20px; border-top: 1px solid #111827; }
         .powered-by { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.65rem; color: #6b7280; margin-bottom: 15px; text-transform: uppercase; }
         .ronin-logo-small { width: 40px; height: auto; opacity: 0.8; }
-        .privacy-footer { font-size: 0.6rem; color: #4b5563; line-height: 1.5; }
+        .privacy-footer { font-size: 0.6rem; color: #4b5563; line-height: 1.5; text-align: left; }
+        .lang-block { margin-bottom: 10px; border-bottom: 1px solid #111827; padding-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -135,7 +136,15 @@
         <img src="https://i.postimg.cc/6Q1gJjvY/Roninlogooriginal.png" class="ronin-logo-small">
     </div>
     <div class="privacy-footer">
-        <p>IT: La tua privacy è importante. Se desideri non far più parte dell'app, rivolgiti ai tuoi PT. Per favore non condividere il link dell'app con nessuno. È un'app privata riservata al gruppo di Warehouse.</p>
+        <div class="lang-block">
+            <strong>IT:</strong> La tua privacy è importante. Se desideri non far più parte dell'app, rivolgiti ai tuoi PT. Per favore non condividere il link dell'app con nessuno. È un'app privata riservata al gruppo di Warehouse.
+        </div>
+        <div class="lang-block">
+            <strong>EN:</strong> Your privacy is important. If you wish to be removed from the app, contact your PTs. Please do not share the app link with anyone. This is a private app reserved for the Warehouse group.
+        </div>
+        <div class="lang-block">
+            <strong>HR:</strong> Vaša privatnost je važna. Ako želite biti uklonjeni iz aplikacije, obratite se svojim PT-ima. Molimo ne dijelite poveznicu aplikacije ni s kim. Ovo je privatna aplikacija rezervirana za grupu Warehouse.
+        </div>
     </div>
 </div>
 
@@ -145,8 +154,8 @@
     const badgesLibUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=660633997&single=true&output=csv';
     const baseWorkoutsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=362105029&single=true&output=csv';
     
-    // Link aggiornato con la versione /exec corretta
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbzu32GyFxWN98s-Thr0jSgxCn83CeHtEEeebpo7sVkiYfgCKqGqSChvNzviZglrCtWc/exec';
+    // Link aggiornato con la versione corretta (nuovo deployment con doGet/doPost)
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbwbp1xvnxkY803VzUZVED4yszHLtA836gPGryUL19GROBuzDrGl6H7uDbek28VG6fiN/exec';
 
     let athletesData = {}, workoutData = {}, badgesLibrary = [], baseWorkouts = [], currentTab = null;
 
