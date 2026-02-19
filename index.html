@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Warehouse Ronin APP</title>
+    
+    <link rel="apple-touch-icon" href="https://i.postimg.cc/pd0Dsxp2/APP_LOGO.png">
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/pd0Dsxp2/APP_LOGO.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
     <style>
         :root { 
             --accent: #facc15; --bg: #000000; --card: #111827; --text: #ffffff; 
@@ -159,6 +165,7 @@
     const badgesLibUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=660633997&single=true&output=csv';
     const baseWorkoutsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=362105029&single=true&output=csv';
     
+    // SOSTITUISCI QUESTO URL CON QUELLO NUOVO DOPO IL DEPLOY
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbwbp1xvnxkY803VzUZVED4yszHLtA836gPGryUL19GROBuzDrGl6H7uDbek28VG6fiN/exec';
 
     let athletesData = {}, workoutData = {}, badgesLibrary = [], baseWorkouts = [], currentTab = null;
@@ -193,8 +200,9 @@
             });
 
             parseCSV(eResp).slice(1).forEach(cols => {
-                if(cols.length < 4) return;
+                if(cols.length < 6) return;
                 const name = cols[0], area = cols[1], ex = cols[2], load = cols[3];
+                // Legge Colonna F (indice 5) per lo stato UP
                 const up = cols[5] ? cols[5].toUpperCase() === 'TRUE' : false;
                 if(!workoutData[name]) workoutData[name] = {};
                 if(!workoutData[name][area]) workoutData[name][area] = [];
