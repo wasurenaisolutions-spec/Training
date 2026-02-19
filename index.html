@@ -6,9 +6,14 @@
     <title>Warehouse Ronin APP</title>
     
     <link rel="apple-touch-icon" href="https://i.postimg.cc/pd0Dsxp2/APP_LOGO.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://i.postimg.cc/pd0Dsxp2/APP_LOGO.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/pd0Dsxp2/APP_LOGO.png">
     <link rel="icon" type="image/png" href="https://i.postimg.cc/pd0Dsxp2/APP_LOGO.png">
+    
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Warehouse">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
 
     <style>
         :root { 
@@ -154,7 +159,7 @@
             <span class="lang-label">EN:</span> Your privacy is important. If you wish to be removed from the app, contact your PTs. Please do not share the app link with anyone. This is a private app reserved for the Warehouse group.
         </div>
         <div class="lang-block">
-            <span class="lang-label">JP:</span> あなたのプライバシーは重要です。アプリからの削除を希望される場合は、パーソナルトレーナーにご連絡ください。アプリのリンクを誰とも共有しないでください。これは Warehouse グループ専用のプライベートアプリです。
+            <span class="lang-label">JP:</span> あなたのプライバシーは重要です。アプリからの削除を希望される場合は、パーソナルトレーナーにご連絡ください。アプリのリンクを誰とも共有しないでください。これは Warehouse グループ専用 di プライベートアプリです。
         </div>
     </div>
 </div>
@@ -165,7 +170,6 @@
     const badgesLibUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=660633997&single=true&output=csv';
     const baseWorkoutsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=362105029&single=true&output=csv';
     
-    // SOSTITUISCI QUESTO URL CON QUELLO NUOVO DOPO IL DEPLOY
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbwbp1xvnxkY803VzUZVED4yszHLtA836gPGryUL19GROBuzDrGl6H7uDbek28VG6fiN/exec';
 
     let athletesData = {}, workoutData = {}, badgesLibrary = [], baseWorkouts = [], currentTab = null;
@@ -202,7 +206,6 @@
             parseCSV(eResp).slice(1).forEach(cols => {
                 if(cols.length < 6) return;
                 const name = cols[0], area = cols[1], ex = cols[2], load = cols[3];
-                // Legge Colonna F (indice 5) per lo stato UP
                 const up = cols[5] ? cols[5].toUpperCase() === 'TRUE' : false;
                 if(!workoutData[name]) workoutData[name] = {};
                 if(!workoutData[name][area]) workoutData[name][area] = [];
