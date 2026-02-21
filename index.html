@@ -80,6 +80,12 @@
         .ex-name { font-weight: bold; font-size: 0.95rem; }
         .ex-note-pt { font-size: 0.75rem; color: var(--success); font-style: italic; margin-top: 4px; display: none; }
         .ex-note-pt.visible { display: block; }
+        
+        /* STILE PER IL TESTO PROGRESSO */
+        .ex-progress-text { font-size: 0.75rem; font-style: italic; margin-top: 2px; font-weight: bold; }
+        .prog-positive { color: var(--success); }
+        .prog-negative { color: var(--workout); }
+
         .ex-weight { color: var(--accent); font-weight: 900; font-size: 1.2rem; margin-right: 10px; }
         .upgrade-btn { background: #1f2937; border: 1px solid var(--accent); color: var(--accent); padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
         .upgrade-btn.sent { background: var(--success); border-color: var(--success); color: white; }
@@ -149,18 +155,10 @@
         <img src="https://i.postimg.cc/6Q1gJjvY/Roninlogooriginal.png" class="ronin-logo-small">
     </div>
     <div class="privacy-footer">
-        <div class="lang-block">
-            <span class="lang-label">HR:</span> Vaša privatnost je važna. Ako želite biti uklonjeni iz aplikacije, obratite se svojim PT-ima. Molimo ne dijelite poveznicu aplikacije ni s kim. Ovo je privatna aplikacija rezervirana za grupu Warehouse.
-        </div>
-        <div class="lang-block">
-            <span class="lang-label">IT:</span> La tua privacy è importante. Se desideri non far più parte dell'app, rivolgiti ai tuoi PT. Per favore non condividere il link dell'app con nessuno. È un'app privata riservata al gruppo di Warehouse.
-        </div>
-        <div class="lang-block">
-            <span class="lang-label">EN:</span> Your privacy is important. If you wish to be removed from the app, contact your PTs. Please do not share the app link with anyone. This is a private app reserved for the Warehouse group.
-        </div>
-        <div class="lang-block">
-            <span class="lang-label">JP:</span> あなたのプライバシーは重要です。アプリからの削除を希望される場合は、パーソナルトレーナーにご連絡ください。アプリのリンクを誰とも共有しないでください。これは Warehouse グループ専用 di プライベートアプリです。
-        </div>
+        <div class="lang-block"><span class="lang-label">HR:</span> Vaša privatnost je važna...</div>
+        <div class="lang-block"><span class="lang-label">IT:</span> La tua privacy è importante...</div>
+        <div class="lang-block"><span class="lang-label">EN:</span> Your privacy is important...</div>
+        <div class="lang-block"><span class="lang-label">JP:</span> あなたのプライバシーは重要です...</div>
     </div>
 </div>
 
@@ -207,9 +205,11 @@
                 if(cols.length < 6) return;
                 const name = cols[0], area = cols[1], ex = cols[2], load = cols[3];
                 const up = cols[5] ? cols[5].toUpperCase() === 'TRUE' : false;
+                const progPct = cols[7] || ""; // Legge Colonna H
+
                 if(!workoutData[name]) workoutData[name] = {};
                 if(!workoutData[name][area]) workoutData[name][area] = [];
-                workoutData[name][area].push({ex, load, up});
+                workoutData[name][area].push({ex, load, up, progPct});
             });
 
             badgesLibrary = parseCSV(bResp).slice(1).map(cols => ({ title: cols[0], link: cols[1], note: cols[2] })).filter(b => b.link);
@@ -266,17 +266,28 @@
         const data = workoutData[name] || {};
         for(const area in data) {
             const acc = document.createElement('div'); acc.className = 'accordion';
-            let exHtml = data[area].map(e => `
+            let exHtml = data[area].map(e => {
+                let progHtml = "";
+                if(e.progPct && e.progPct !== "") {
+                    const isNeg = e.progPct.includes('-');
+                    const cls = isNeg ? 'prog-negative' : 'prog-positive';
+                    const label = isNeg ? 'Regress' : 'Progress +';
+                    progHtml = `<span class="ex-progress-text ${cls}">${label} ${e.progPct.replace('-', '')}</span>`;
+                }
+
+                return `
                 <div class="ex-row">
                     <div class="ex-info">
                         <span class="ex-name">${e.ex}</span>
+                        ${progHtml}
                         <span class="ex-note-pt ${e.up ? 'visible' : ''}">Request Sent to the PT</span>
                     </div>
                     <div style="display:flex; align-items:center;">
                         <span class="ex-weight">${e.load}</span>
                         <button class="upgrade-btn ${e.up?'sent':''}" onclick="requestUpgrade(this,'${name}','${e.ex.replace(/'/g,"\\'")}')">${e.up?'✓':'UP'}</button>
                     </div>
-                </div>`).join('');
+                </div>`;
+            }).join('');
             acc.innerHTML = `<div class="acc-header" onclick="this.parentElement.classList.toggle('active')">${area} <span>+</span></div><div class="acc-content">${exHtml}</div>`;
             content.appendChild(acc);
         }
@@ -302,20 +313,14 @@
     async function requestUpgrade(btn, client, exercise) {
         if(btn.classList.contains('sent')) return;
         if (!confirm("You are requesting for an upgrade, are you sure?")) return;
-        
         const infoDiv = btn.closest('.ex-row').querySelector('.ex-note-pt');
         btn.innerText = "...";
-
         try {
             await fetch(scriptUrl, { 
                 method: 'POST', 
                 mode: 'no-cors', 
-                body: JSON.stringify({ 
-                    cliente: client, 
-                    esercizio: exercise 
-                }) 
+                body: JSON.stringify({ cliente: client, esercizio: exercise }) 
             });
-            
             btn.innerText = "✓"; 
             btn.classList.add('sent'); 
             infoDiv.classList.add('visible');
