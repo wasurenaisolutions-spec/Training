@@ -81,18 +81,18 @@
         .ex-note-pt { font-size: 0.75rem; color: var(--success); font-style: italic; margin-top: 4px; display: none; }
         .ex-note-pt.visible { display: block; }
         
-        /* STILE PER STARTING WEIGHT */
         .ex-start-weight { font-size: 0.75rem; font-style: italic; margin-top: 2px; font-weight: bold; color: var(--accent); }
 
         .ex-weight { color: var(--accent); font-weight: 900; font-size: 1.2rem; margin-right: 10px; }
         .upgrade-btn { background: #1f2937; border: 1px solid var(--accent); color: var(--accent); padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
         .upgrade-btn.sent { background: var(--success); border-color: var(--success); color: white; }
 
-        .footer-container { text-align: center; padding: 25px 15px; margin-top: 30px; border-top: 1px solid #1f2937; background: #050505; }
-        .powered-by { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.75rem; color: #6b7280; margin-bottom: 20px; text-transform: uppercase; font-weight: bold; }
+        /* FIX DISCLAIMER FOOTER */
+        .footer-container { text-align: center; padding: 30px 15px; margin-top: 40px; border-top: 1px solid #1f2937; background: #050505; width: 100%; box-sizing: border-box; }
+        .powered-by { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.75rem; color: #6b7280; margin-bottom: 25px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; }
         .ronin-logo-small { width: 45px; height: auto; opacity: 0.9; }
-        .privacy-footer { font-size: 0.75rem; color: #9ca3af; line-height: 1.6; text-align: left; }
-        .lang-block { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #111827; }
+        .privacy-footer { font-size: 0.7rem; color: #9ca3af; line-height: 1.5; text-align: left; max-width: 450px; margin: 0 auto; }
+        .lang-block { margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #111827; }
         .lang-block:last-child { border-bottom: none; }
         .lang-label { color: var(--accent); font-weight: bold; margin-right: 5px; }
     </style>
@@ -153,10 +153,10 @@
         <img src="https://i.postimg.cc/6Q1gJjvY/Roninlogooriginal.png" class="ronin-logo-small">
     </div>
     <div class="privacy-footer">
-        <div class="lang-block"><span class="lang-label">HR:</span> Vaša privatnost je važna...</div>
-        <div class="lang-block"><span class="lang-label">IT:</span> La tua privacy è importante...</div>
-        <div class="lang-block"><span class="lang-label">EN:</span> Your privacy is important...</div>
-        <div class="lang-block"><span class="lang-label">JP:</span> あなたのプライバシーは重要です...</div>
+        <div class="lang-block"><span class="lang-label">HR:</span> Vaša privatnost è važna. Ovi podaci služe samo za praćenje vašeg napretka u treningu i nisu vidljivi trećim stranama niti se koriste u marketinške svrhe.</div>
+        <div class="lang-block"><span class="lang-label">IT:</span> La tua privacy è importante. Questi dati vengono utilizzati esclusivamente per monitorare i tuoi progressi e non sono visibili a terzi né utilizzati per scopi di marketing.</div>
+        <div class="lang-block"><span class="lang-label">EN:</span> Your privacy is important. This data is used only to track your training progress and is not visible to third parties or used for marketing purposes.</div>
+        <div class="lang-block"><span class="lang-label">JP:</span> あなたのプライバシーは重要です。このデータはトレーニングの進捗を追跡するためにのみ使用され、第三者には公開されず、マーケティング目的でも使用されません。</div>
     </div>
 </div>
 
@@ -203,7 +203,7 @@
                 if(cols.length < 6) return;
                 const name = cols[0], area = cols[1], ex = cols[2], load = cols[3];
                 const up = cols[5] ? cols[5].toUpperCase() === 'TRUE' : false;
-                const startWeight = cols[6] || ""; // Legge Colonna G (Starting Weight)
+                const startWeight = cols[6] || ""; 
 
                 if(!workoutData[name]) workoutData[name] = {};
                 if(!workoutData[name][area]) workoutData[name][area] = [];
