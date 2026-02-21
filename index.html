@@ -81,10 +81,8 @@
         .ex-note-pt { font-size: 0.75rem; color: var(--success); font-style: italic; margin-top: 4px; display: none; }
         .ex-note-pt.visible { display: block; }
         
-        /* STILE PER IL TESTO PROGRESSO */
-        .ex-progress-text { font-size: 0.75rem; font-style: italic; margin-top: 2px; font-weight: bold; }
-        .prog-positive { color: var(--success); }
-        .prog-negative { color: var(--workout); }
+        /* STILE PER STARTING WEIGHT */
+        .ex-start-weight { font-size: 0.75rem; font-style: italic; margin-top: 2px; font-weight: bold; color: var(--accent); }
 
         .ex-weight { color: var(--accent); font-weight: 900; font-size: 1.2rem; margin-right: 10px; }
         .upgrade-btn { background: #1f2937; border: 1px solid var(--accent); color: var(--accent); padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
@@ -205,11 +203,11 @@
                 if(cols.length < 6) return;
                 const name = cols[0], area = cols[1], ex = cols[2], load = cols[3];
                 const up = cols[5] ? cols[5].toUpperCase() === 'TRUE' : false;
-                const progPct = cols[7] || ""; // Legge Colonna H
+                const startWeight = cols[6] || ""; // Legge Colonna G (Starting Weight)
 
                 if(!workoutData[name]) workoutData[name] = {};
                 if(!workoutData[name][area]) workoutData[name][area] = [];
-                workoutData[name][area].push({ex, load, up, progPct});
+                workoutData[name][area].push({ex, load, up, startWeight});
             });
 
             badgesLibrary = parseCSV(bResp).slice(1).map(cols => ({ title: cols[0], link: cols[1], note: cols[2] })).filter(b => b.link);
@@ -267,19 +265,16 @@
         for(const area in data) {
             const acc = document.createElement('div'); acc.className = 'accordion';
             let exHtml = data[area].map(e => {
-                let progHtml = "";
-                if(e.progPct && e.progPct !== "") {
-                    const isNeg = e.progPct.includes('-');
-                    const cls = isNeg ? 'prog-negative' : 'prog-positive';
-                    const label = isNeg ? 'Regress' : 'Progress +';
-                    progHtml = `<span class="ex-progress-text ${cls}">${label} ${e.progPct.replace('-', '')}</span>`;
+                let startHtml = "";
+                if(e.startWeight && e.startWeight.trim() !== "") {
+                    startHtml = `<span class="ex-start-weight">You started with ${e.startWeight}</span>`;
                 }
 
                 return `
                 <div class="ex-row">
                     <div class="ex-info">
                         <span class="ex-name">${e.ex}</span>
-                        ${progHtml}
+                        ${startHtml}
                         <span class="ex-note-pt ${e.up ? 'visible' : ''}">Request Sent to the PT</span>
                     </div>
                     <div style="display:flex; align-items:center;">
