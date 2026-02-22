@@ -62,32 +62,41 @@
         .badge-img { width: 35px; height: 35px; object-fit: contain; cursor: zoom-in; }
         .badge-img-large { width: 60px; height: 60px; object-fit: contain; cursor: zoom-in; flex-shrink: 0; }
         
-        .board-card { background: #0a0a0a; border: 1px solid #1f2937; border-radius: 20px; padding: 25px; margin-top: 10px; }
-        .board-text { white-space: pre-wrap; font-size: 1.1rem; line-height: 1.6; color: #e5e7eb; }
+        /* CHAT BOT STYLE */
+        #chat-bubble {
+            position: fixed; bottom: 30px; right: 20px;
+            width: 65px; height: 65px; background: var(--accent);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.8); z-index: 9999;
+            overflow: hidden; touch-action: none; border: 2px solid var(--accent);
+        }
+        #chat-bubble img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
 
-        #zoom-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; justify-content: center; align-items: center; }
+        #chat-window {
+            display: none; position: fixed; bottom: 110px; right: 20px;
+            width: 320px; height: 450px; background: var(--card);
+            border: 1px solid #1f2937; border-radius: 15px;
+            flex-direction: column; z-index: 9998; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.9);
+        }
+
+        #chat-header { 
+            background: #1f2937; padding: 12px; font-weight: 900; 
+            font-size: 0.75rem; color: var(--accent); text-transform: uppercase;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid #374151;
+        }
+
+        #chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #050505; }
+        .msg { padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; line-height: 1.4; max-width: 80%; word-wrap: break-word; }
+        .msg-user { background: var(--men); align-self: flex-end; color: white; }
+        .msg-bot { background: #1f2937; align-self: flex-start; border-left: 3px solid var(--accent); }
         
-        #workout-view, #board-view { display: none; }
-        .back-btn { background: #1f2937; color: white; border: none; padding: 10px 20px; border-radius: 20px; margin-bottom: 20px; font-weight: bold; cursor: pointer; }
-        .accordion { background: var(--card); border: 1px solid #1f2937; border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
-        .acc-header { padding: 15px 20px; cursor: pointer; font-weight: bold; text-transform: uppercase; display: flex; justify-content: space-between; }
-        .acc-content { display: none; padding: 0 20px 15px; background: #080c14; }
-        .active .acc-content { display: block; }
-        .active .acc-header { color: var(--accent); background: #1f2937; }
+        #chat-input-area { padding: 12px; background: #111827; display: flex; gap: 8px; }
+        #chat-input { flex: 1; background: #000; border: 1px solid #374151; color: white; padding: 10px; border-radius: 8px; outline: none; }
+        #chat-send { background: var(--accent); border: none; padding: 0 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-        .ex-row { padding: 12px 0; border-bottom: 1px solid #1f2937; display: flex; justify-content: space-between; align-items: center; }
-        .ex-info { display: flex; flex-direction: column; max-width: 60%; }
-        .ex-name { font-weight: bold; font-size: 0.95rem; }
-        .ex-note-pt { font-size: 0.75rem; color: var(--success); font-style: italic; margin-top: 4px; display: none; }
-        .ex-note-pt.visible { display: block; }
-        
-        .ex-start-weight { font-size: 0.75rem; font-style: italic; margin-top: 2px; font-weight: bold; color: var(--accent); }
-
-        .ex-weight { color: var(--accent); font-weight: 900; font-size: 1.2rem; margin-right: 10px; }
-        .upgrade-btn { background: #1f2937; border: 1px solid var(--accent); color: var(--accent); padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
-        .upgrade-btn.sent { background: var(--success); border-color: var(--success); color: white; }
-
-        /* FIX DISCLAIMER FOOTER */
+        /* FOOTER & DISCLAIMERS */
         .footer-container { text-align: center; padding: 30px 15px; margin-top: 40px; border-top: 1px solid #1f2937; background: #050505; width: 100%; box-sizing: border-box; }
         .powered-by { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.75rem; color: #6b7280; margin-bottom: 25px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; }
         .ronin-logo-small { width: 45px; height: auto; opacity: 0.9; }
@@ -95,6 +104,26 @@
         .lang-block { margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #111827; }
         .lang-block:last-child { border-bottom: none; }
         .lang-label { color: var(--accent); font-weight: bold; margin-right: 5px; }
+
+        #zoom-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; justify-content: center; align-items: center; }
+        #workout-view, #board-view { display: none; }
+        .back-btn { background: #1f2937; color: white; border: none; padding: 10px 20px; border-radius: 20px; margin-bottom: 20px; font-weight: bold; cursor: pointer; }
+        .accordion { background: var(--card); border: 1px solid #1f2937; border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
+        .acc-header { padding: 15px 20px; cursor: pointer; font-weight: bold; text-transform: uppercase; display: flex; justify-content: space-between; }
+        .acc-content { display: none; padding: 0 20px 15px; background: #080c14; }
+        .active .acc-content { display: block; }
+        .active .acc-header { color: var(--accent); background: #1f2937; }
+        .ex-row { padding: 12px 0; border-bottom: 1px solid #1f2937; display: flex; justify-content: space-between; align-items: center; }
+        .ex-info { display: flex; flex-direction: column; max-width: 60%; }
+        .ex-name { font-weight: bold; font-size: 0.95rem; }
+        .ex-weight { color: var(--accent); font-weight: 900; font-size: 1.2rem; margin-right: 10px; }
+        .upgrade-btn { background: #1f2937; border: 1px solid var(--accent); color: var(--accent); padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
+        .upgrade-btn.sent { background: var(--success); border-color: var(--success); color: white; }
+        .ex-start-weight { font-size: 0.75rem; font-style: italic; margin-top: 2px; font-weight: bold; color: var(--accent); }
+        .ex-note-pt { font-size: 0.75rem; color: var(--success); font-style: italic; margin-top: 4px; display: none; }
+        .ex-note-pt.visible { display: block; }
+        .board-card { background: #0a0a0a; border: 1px solid #1f2937; border-radius: 20px; padding: 25px; margin-top: 10px; }
+        .board-text { white-space: pre-wrap; font-size: 1.1rem; line-height: 1.6; color: #e5e7eb; }
     </style>
 </head>
 <body>
@@ -147,16 +176,37 @@
     </div>
 </div>
 
+<div id="chat-bubble">
+    <img src="https://i.postimg.cc/gk0GSwcm/Bot-Avatar.jpg" alt="Bot">
+</div>
+
+<div id="chat-window">
+    <div id="chat-header">
+        <span>WAREHOUSE COACH AI</span>
+        <span onclick="toggleChat()" style="cursor:pointer; font-size: 1.5rem;">×</span>
+    </div>
+    <div id="chat-messages">
+        <div class="msg msg-bot">
+            Bok! Ciao! Hello! <br>
+            Welcome! I am the W-bot! I can help you with your fitness path, nutrition and gym info. Feel free to ask!
+        </div>
+    </div>
+    <div id="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Scrivi qui..." onkeypress="if(event.key==='Enter') sendToBot()">
+        <button id="chat-send" onclick="sendToBot()">OK</button>
+    </div>
+</div>
+
 <div class="footer-container">
     <div class="powered-by">
         <span>Powered by</span>
         <img src="https://i.postimg.cc/6Q1gJjvY/Roninlogooriginal.png" class="ronin-logo-small">
     </div>
     <div class="privacy-footer">
-        <div class="lang-block"><span class="lang-label">HR:</span> Vaša privatnost è važna. Ovi podaci služe samo za praćenje vašeg napretka u treningu i nisu vidljivi trećim stranama niti se koriste u marketinške svrhe.</div>
-        <div class="lang-block"><span class="lang-label">IT:</span> La tua privacy è importante. Questi dati vengono utilizzati esclusivamente per monitorare i tuoi progressi e non sono visibili a terzi né utilizzati per scopi di marketing.</div>
-        <div class="lang-block"><span class="lang-label">EN:</span> Your privacy is important. This data is used only to track your training progress and is not visible to third parties or used for marketing purposes.</div>
-        <div class="lang-block"><span class="lang-label">JP:</span> あなたのプライバシーは重要です。このデータはトレーニングの進捗を追跡するためにのみ使用され、第三者には公開されず、マーケティング目的でも使用されません。</div>
+        <div class="lang-block"><span class="lang-label">HR:</span> Vaša privatnost è važna. Ovi podaci služe samo za praćenje vašeg napretka u treningu.</div>
+        <div class="lang-block"><span class="lang-label">IT:</span> La tua privacy è importante. Questi dati vengono utilizzati esclusivamente per monitorare i tuoi progressi.</div>
+        <div class="lang-block"><span class="lang-label">EN:</span> Your privacy is important. This data is used only to track your training progress.</div>
+        <div class="lang-block"><span class="lang-label">JP:</span> あなたのプライバシーは重要です。このデータはトレーニングの進捗を追跡するためにのみ使用されます。</div>
     </div>
 </div>
 
@@ -165,11 +215,90 @@
     const exercisesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=0&single=true&output=csv';
     const badgesLibUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=660633997&single=true&output=csv';
     const baseWorkoutsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=362105029&single=true&output=csv';
-    
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbwbp1xvnxkY803VzUZVED4yszHLtA836gPGryUL19GROBuzDrGl6H7uDbek28VG6fiN/exec';
 
     let athletesData = {}, workoutData = {}, badgesLibrary = [], baseWorkouts = [], currentTab = null;
 
+    // --- LOGICA CHAT (NUOVA) ---
+    const bubble = document.getElementById('chat-bubble');
+    const chatWin = document.getElementById('chat-window');
+    let isDragging = false;
+    let dragThreshold = 0;
+
+    bubble.onpointerdown = function(e) {
+        dragThreshold = 0;
+        const startX = e.clientX - bubble.offsetLeft;
+        const startY = e.clientY - bubble.offsetTop;
+        function onPointerMove(e) {
+            dragThreshold++;
+            if (dragThreshold > 5) { 
+                isDragging = true;
+                let x = e.clientX - startX;
+                let y = e.clientY - startY;
+                bubble.style.left = x + 'px';
+                bubble.style.top = y + 'px';
+                bubble.style.right = 'auto'; bubble.style.bottom = 'auto';
+            }
+        }
+        function onPointerUp() {
+            if (dragThreshold <= 5) toggleChat();
+            document.removeEventListener('pointermove', onPointerMove);
+            document.removeEventListener('pointerup', onPointerUp);
+            setTimeout(() => { isDragging = false; }, 100);
+        }
+        document.addEventListener('pointermove', onPointerMove);
+        document.addEventListener('pointerup', onPointerUp);
+    };
+
+    function toggleChat() {
+        chatWin.style.display = (chatWin.style.display === 'flex') ? 'none' : 'flex';
+        if(chatWin.style.display === 'flex') {
+            chatWin.style.left = Math.max(10, bubble.offsetLeft - 250) + 'px';
+            chatWin.style.top = (bubble.offsetTop - 460) + 'px';
+        }
+    }
+
+    async function sendToBot() {
+        const input = document.getElementById('chat-input');
+        const text = input.value.trim();
+        if (!text) return;
+
+        appendMsg('user', text);
+        input.value = '';
+
+        const tempMsgId = 'bot-temp-' + Date.now();
+        const chatMessages = document.getElementById('chat-messages');
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'msg msg-bot';
+        msgDiv.id = tempMsgId;
+        msgDiv.innerText = "Sto pensando...";
+        chatMessages.appendChild(msgDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        try {
+            const response = await fetch(scriptUrl, {
+                method: 'POST',
+                body: JSON.stringify({ domanda: text })
+            });
+            const rispostaDalloScript = await response.text();
+            const tempElement = document.getElementById(tempMsgId);
+            if (tempElement) tempElement.innerText = rispostaDalloScript;
+        } catch (e) {
+            const tempElement = document.getElementById(tempMsgId);
+            if (tempElement) tempElement.innerText = "Errore di connessione.";
+        }
+    }
+
+    function appendMsg(role, text) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `msg msg-${role}`;
+        msgDiv.innerText = text;
+        const container = document.getElementById('chat-messages');
+        container.appendChild(msgDiv);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    // --- LOGICA APP CORE (INVARIATA) ---
     function parseCSV(text) {
         const rows = []; let row = []; let col = ""; let inQuotes = false;
         for (let i = 0; i < text.length; i++) {
@@ -193,26 +322,21 @@
                 fetch(badgesLibUrl + '&t=' + t).then(r => r.text()),
                 fetch(baseWorkoutsUrl + '&t=' + t).then(r => r.text())
             ]);
-
             parseCSV(aResp).slice(1).forEach(cols => {
                 if(cols.length < 3) return;
                 athletesData[cols[0]] = { photo: cols[1], gender: cols[2].toUpperCase(), badges: cols[3] ? cols[3].split(',').map(b => b.trim()).filter(l => l.length > 5) : [] };
             });
-
             parseCSV(eResp).slice(1).forEach(cols => {
                 if(cols.length < 6) return;
                 const name = cols[0], area = cols[1], ex = cols[2], load = cols[3];
                 const up = cols[5] ? cols[5].toUpperCase() === 'TRUE' : false;
                 const startWeight = cols[6] || ""; 
-
                 if(!workoutData[name]) workoutData[name] = {};
                 if(!workoutData[name][area]) workoutData[name][area] = [];
                 workoutData[name][area].push({ex, load, up, startWeight});
             });
-
             badgesLibrary = parseCSV(bResp).slice(1).map(cols => ({ title: cols[0], link: cols[1], note: cols[2] })).filter(b => b.link);
             baseWorkouts = parseCSV(wResp).slice(1).map(cols => ({ title: cols[0], desc: cols[1], link: cols[2] })).filter(w => w.title && w.link);
-
             renderHome();
         } catch (e) { console.error("Load Error", e); }
     }
@@ -265,11 +389,7 @@
         for(const area in data) {
             const acc = document.createElement('div'); acc.className = 'accordion';
             let exHtml = data[area].map(e => {
-                let startHtml = "";
-                if(e.startWeight && e.startWeight.trim() !== "") {
-                    startHtml = `<span class="ex-start-weight">You started with ${e.startWeight}</span>`;
-                }
-
+                let startHtml = (e.startWeight && e.startWeight.trim() !== "") ? `<span class="ex-start-weight">You started with ${e.startWeight}</span>` : "";
                 return `
                 <div class="ex-row">
                     <div class="ex-info">
