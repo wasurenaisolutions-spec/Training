@@ -90,7 +90,7 @@
         #chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #050505; }
         .msg { padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; line-height: 1.4; max-width: 80%; word-wrap: break-word; }
         .msg-user { background: var(--men); align-self: flex-end; color: white; }
-        .msg-bot { background: #1f2937; align-self: flex-start; border-left: 3px solid var(--accent); }
+        .msg-bot { background: #1f2937; align-self: flex-start; border-left: 3px solid var(--accent); color: white; }
         
         #chat-input-area { padding: 12px; background: #111827; display: flex; gap: 8px; }
         #chat-input { flex: 1; background: #000; border: 1px solid #374151; color: white; padding: 10px; border-radius: 8px; outline: none; }
@@ -219,7 +219,7 @@
 
     let athletesData = {}, workoutData = {}, badgesLibrary = [], baseWorkouts = [], currentTab = null;
 
-    // --- LOGICA CHAT (NUOVA) ---
+    // --- LOGICA CHAT ---
     const bubble = document.getElementById('chat-bubble');
     const chatWin = document.getElementById('chat-window');
     let isDragging = false;
@@ -281,8 +281,16 @@
                 body: JSON.stringify({ domanda: text })
             });
             const rispostaDalloScript = await response.text();
+            
             const tempElement = document.getElementById(tempMsgId);
-            if (tempElement) tempElement.innerText = rispostaDalloScript;
+            if (tempElement) {
+                // Se lo script ritorna l'oggetto di successo per errore, mostriamo un fallback
+                if(rispostaDalloScript.includes("status")) {
+                    tempElement.innerText = "Spiacente, c'è stato un errore nel caricamento della risposta.";
+                } else {
+                    tempElement.innerText = rispostaDalloScript;
+                }
+            }
         } catch (e) {
             const tempElement = document.getElementById(tempMsgId);
             if (tempElement) tempElement.innerText = "Errore di connessione.";
@@ -298,7 +306,7 @@
         container.scrollTop = container.scrollHeight;
     }
 
-    // --- LOGICA APP CORE (INVARIATA) ---
+    // --- LOGICA APP CORE ---
     function parseCSV(text) {
         const rows = []; let row = []; let col = ""; let inQuotes = false;
         for (let i = 0; i < text.length; i++) {
