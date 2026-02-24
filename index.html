@@ -322,35 +322,63 @@
     }
 
 async function loadData() {
+    async function loadData() {
     try {
         const response = await fetch(scriptUrl, {
             method: 'POST',
             body: JSON.stringify({ action: "getData" })
         });
         const data = await response.json();
+        
+        // Reset dei dati locali
+        athletesData = {};
+        workoutData = {};
 
-        // Ora usiamo i dati che arrivano dallo script invece dei CSV
-        data.athletes.slice(1).forEach(cols => {
-            if(cols.length < 3) return;
-            athletesData[cols[0]] = { photo: cols[1], gender: cols[2].toUpperCase(), badges: cols[3] ? cols[3].split(',').map(b => b.trim()).filter(l => l.length > 5) : [] };
-        });
+        // 1. MAPPATURA ATLETI
+        if (data.athletes && data.athletes.length > 1) {
+            data.athletes.slice(1).forEach(cols => {
+                const name = cols[0] ? cols[0].toString().trim() : null;
+                if (!name) return;
+                athletesData[name] = { 
+                    photo: cols[1] || '', 
+                    gender: (cols[2] || '').toString().toUpperCase().trim(), 
+                    badges: cols[3] ? cols[3].toString().split(',').map(b => b.trim()).filter(l => l.length > 5) : [] 
+                };
+            });
+        }
 
-        data.exercises.slice(1).forEach(cols => {
-            if(cols.length < 6) return;
-            const name = cols[0], area = cols[1], ex = cols[2], load = cols[3];
-            const up = cols[5] === true || cols[5] === "TRUE";
-            const startWeight = cols[6] || ""; 
-            if(!workoutData[name]) workoutData[name] = {};
-            if(!workoutData[name][area]) workoutData[name][area] = [];
-            workoutData[name][area].push({ex, load, up, startWeight});
-        });
+        // 2. MAPPATURA ESERCIZI
+        if (data.exercises && data.exercises.length > 1) {
+            data.exercises.slice(1).forEach(cols => {
+                const name = cols[0] ? cols[0].toString().trim() : null;
+                const exName = cols[2] ? cols[2].toString().trim() : null;
+                if (!name || !exName) return;
 
-        badgesLibrary = data.badges.slice(1).map(cols => ({ title: cols[0], link: cols[1], note: cols[2] })).filter(b => b.link);
-        baseWorkouts = data.workouts.slice(1).map(cols => ({ title: cols[0], desc: cols[1], link: cols[2] })).filter(w => w.title && w.link);
+                const area = cols[1] || 'Altro';
+                const load = cols[3] || '';
+                // Gestisce sia il booleano vero di Excel che la stringa "TRUE"
+                const up = cols[5] === true || cols[5].toString().toUpperCase() === "TRUE";
+                const startWeight = cols[6] || ""; 
+                
+                if (!workoutData[name]) workoutData[name] = {};
+                if (!workoutData[name][area]) workoutData[name][area] = [];
+                workoutData[name][area].push({ ex: exName, load: load, up: up, startWeight: startWeight });
+            });
+        }
+
+        // 3. MAPPATURA BADGES & WORKOUTS
+        badgesLibrary = (data.badges || []).slice(1).map(cols => ({ 
+            title: cols[0], link: cols[1], note: cols[2] 
+        })).filter(b => b.link);
+
+        baseWorkouts = (data.workouts || []).slice(1).map(cols => ({ 
+            title: cols[0], desc: cols[1], link: cols[2] 
+        })).filter(w => w.title && w.link);
 
         renderHome();
+        console.log("App caricata con successo!");
     } catch (e) { 
-        console.error("Errore caricamento centralizzato:", e); 
+        console.error("Errore critico caricamento:", e); 
     }
 }
 
