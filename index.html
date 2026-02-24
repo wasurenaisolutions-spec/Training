@@ -258,7 +258,7 @@
         }
     }
 
-async function sendToBot() {
+    async function sendToBot() {
         const input = document.getElementById('chat-input');
         const text = input.value.trim();
         if (!text) return;
@@ -280,31 +280,7 @@ async function sendToBot() {
                 method: 'POST',
                 body: JSON.stringify({ domanda: text })
             });
-            
-            // LEGGIAMO LA RISPOSTA
-            const rawData = await response.text();
-            let finalMsg = "";
-
-            try {
-                // Proviamo a vedere se è un JSON (quello con le parentesi {"risposta":...})
-                const parsed = JSON.parse(rawData);
-                // Se è un oggetto, prendiamo solo il testo dentro "risposta"
-                finalMsg = parsed.risposta || parsed.error || rawData;
-            } catch(e) {
-                // Se non è un JSON, lo prendiamo come testo semplice (come ieri)
-                finalMsg = rawData;
-            }
-            
-            const tempElement = document.getElementById(tempMsgId);
-            if (tempElement) {
-                // Puliamo il testo da eventuali rimasugli di virgolette e mostriamo
-                tempElement.innerText = finalMsg.toString();
-            }
-        } catch (e) {
-            const tempElement = document.getElementById(tempMsgId);
-            if (tempElement) tempElement.innerText = "Errore di connessione.";
-        }
-    }
+            const rispostaDalloScript = await response.text();
             
             const tempElement = document.getElementById(tempMsgId);
             if (tempElement) {
