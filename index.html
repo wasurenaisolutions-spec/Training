@@ -258,7 +258,7 @@
         }
     }
 
-    async function sendToBot() {
+async function sendToBot() {
         const input = document.getElementById('chat-input');
         const text = input.value.trim();
         if (!text) return;
@@ -280,17 +280,31 @@
                 method: 'POST',
                 body: JSON.stringify({ domanda: text })
             });
-            const rispostaDalloScript = await response.text();
-            // Questo pezzetto rimuove le parentesi e la scritta "risposta" se presenti
-let pulita = rispostaDalloScript;
-if (pulita.includes('{"risposta":')) {
-    try {
-        const obj = JSON.parse(pulita);
-        pulita = obj.risposta;
-    } catch(e) {
-        pulita = pulita.replace(/\{"risposta":"|"\}/g, "");
+            
+            // LEGGIAMO LA RISPOSTA
+            const rawData = await response.text();
+            let finalMsg = "";
+
+            try {
+                // Proviamo a vedere se è un JSON (quello con le parentesi {"risposta":...})
+                const parsed = JSON.parse(rawData);
+                // Se è un oggetto, prendiamo solo il testo dentro "risposta"
+                finalMsg = parsed.risposta || parsed.error || rawData;
+            } catch(e) {
+                // Se non è un JSON, lo prendiamo come testo semplice (come ieri)
+                finalMsg = rawData;
+            }
+            
+            const tempElement = document.getElementById(tempMsgId);
+            if (tempElement) {
+                // Puliamo il testo da eventuali rimasugli di virgolette e mostriamo
+                tempElement.innerText = finalMsg.toString();
+            }
+        } catch (e) {
+            const tempElement = document.getElementById(tempMsgId);
+            if (tempElement) tempElement.innerText = "Errore di connessione.";
+        }
     }
-}
             
             const tempElement = document.getElementById(tempMsgId);
             if (tempElement) {
