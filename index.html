@@ -321,33 +321,38 @@
         return rows;
     }
 
-    async function loadData() {
-        try {
-            const t = Date.now();
-            const [aResp, eResp, bResp, wResp] = await Promise.all([
-                fetch(athletesUrl + '&t=' + t).then(r => r.text()),
-                fetch(exercisesUrl + '&t=' + t).then(r => r.text()),
-                fetch(badgesLibUrl + '&t=' + t).then(r => r.text()),
-                fetch(baseWorkoutsUrl + '&t=' + t).then(r => r.text())
-            ]);
-            parseCSV(aResp).slice(1).forEach(cols => {
-                if(cols.length < 3) return;
-                athletesData[cols[0]] = { photo: cols[1], gender: cols[2].toUpperCase(), badges: cols[3] ? cols[3].split(',').map(b => b.trim()).filter(l => l.length > 5) : [] };
-            });
-            parseCSV(eResp).slice(1).forEach(cols => {
-                if(cols.length < 6) return;
-                const name = cols[0], area = cols[1], ex = cols[2], load = cols[3];
-                const up = cols[5] ? cols[5].toUpperCase() === 'TRUE' : false;
-                const startWeight = cols[6] || ""; 
-                if(!workoutData[name]) workoutData[name] = {};
-                if(!workoutData[name][area]) workoutData[name][area] = [];
-                workoutData[name][area].push({ex, load, up, startWeight});
-            });
-            badgesLibrary = parseCSV(bResp).slice(1).map(cols => ({ title: cols[0], link: cols[1], note: cols[2] })).filter(b => b.link);
-            baseWorkouts = parseCSV(wResp).slice(1).map(cols => ({ title: cols[0], desc: cols[1], link: cols[2] })).filter(w => w.title && w.link);
-            renderHome();
-        } catch (e) { console.error("Load Error", e); }
+async function loadData() {
+    try {
+        const response = await fetch(scriptUrl, {
+            method: 'POST',
+            body: JSON.stringify({ action: "getData" })
+        });
+        const data = await response.json();
+
+        // Ora usiamo i dati che arrivano dallo script invece dei CSV
+        data.athletes.slice(1).forEach(cols => {
+            if(cols.length < 3) return;
+            athletesData[cols[0]] = { photo: cols[1], gender: cols[2].toUpperCase(), badges: cols[3] ? cols[3].split(',').map(b => b.trim()).filter(l => l.length > 5) : [] };
+        });
+
+        data.exercises.slice(1).forEach(cols => {
+            if(cols.length < 6) return;
+            const name = cols[0], area = cols[1], ex = cols[2], load = cols[3];
+            const up = cols[5] === true || cols[5] === "TRUE";
+            const startWeight = cols[6] || ""; 
+            if(!workoutData[name]) workoutData[name] = {};
+            if(!workoutData[name][area]) workoutData[name][area] = [];
+            workoutData[name][area].push({ex, load, up, startWeight});
+        });
+
+        badgesLibrary = data.badges.slice(1).map(cols => ({ title: cols[0], link: cols[1], note: cols[2] })).filter(b => b.link);
+        baseWorkouts = data.workouts.slice(1).map(cols => ({ title: cols[0], desc: cols[1], link: cols[2] })).filter(w => w.title && w.link);
+
+        renderHome();
+    } catch (e) { 
+        console.error("Errore caricamento centralizzato:", e); 
     }
+}
 
     function switchTab(type) {
         currentTab = type;
