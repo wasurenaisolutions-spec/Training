@@ -258,11 +258,7 @@
         }
     }
 
-async function sendToBot() {
-        // --- TEST DI FUNZIONAMENTO ---
-        alert("Tasto cliccato correttamente!"); 
-        // -----------------------------
-
+    async function sendToBot() {
         const input = document.getElementById('chat-input');
         const text = input.value.trim();
         if (!text) return;
@@ -284,22 +280,30 @@ async function sendToBot() {
                 method: 'POST',
                 body: JSON.stringify({ domanda: text })
             });
-
-            const rawText = await response.text();
-            const tempElement = document.getElementById(tempMsgId);
+            const rispostaDalloScript = await response.text();
             
+            const tempElement = document.getElementById(tempMsgId);
             if (tempElement) {
-                try {
-                    const data = JSON.parse(rawText);
-                    tempElement.innerText = data.risposta || rawText;
-                } catch (e) {
-                    tempElement.innerText = rawText;
+                // Se lo script ritorna l'oggetto di successo per errore, mostriamo un fallback
+                if(rispostaDalloScript.includes("status")) {
+                    tempElement.innerText = "Spiacente, c'è stato un errore nel caricamento della risposta.";
+                } else {
+                    tempElement.innerText = rispostaDalloScript;
                 }
             }
         } catch (e) {
             const tempElement = document.getElementById(tempMsgId);
             if (tempElement) tempElement.innerText = "Errore di connessione.";
         }
+    }
+
+    function appendMsg(role, text) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `msg msg-${role}`;
+        msgDiv.innerText = text;
+        const container = document.getElementById('chat-messages');
+        container.appendChild(msgDiv);
+        container.scrollTop = container.scrollHeight;
     }
 
     // --- LOGICA APP CORE ---
