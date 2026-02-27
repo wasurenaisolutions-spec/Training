@@ -259,52 +259,41 @@
     }
 
     async function sendToBot() {
-        const input = document.getElementById('chat-input');
-        const text = input.value.trim();
-        if (!text) return;
+    const input = document.getElementById('chat-input');
+    const text = input.value.trim();
+    if (!text) return;
 
-        appendMsg('user', text);
-        input.value = '';
+    appendMsg('user', text);
+    input.value = '';
 
-        const tempMsgId = 'bot-temp-' + Date.now();
-        const chatMessages = document.getElementById('chat-messages');
-        const msgDiv = document.createElement('div');
-        msgDiv.className = 'msg msg-bot';
-        msgDiv.id = tempMsgId;
-        msgDiv.innerText = "Sto pensando...";
-        chatMessages.appendChild(msgDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+    const tempMsgId = 'bot-temp-' + Date.now();
+    const chatMessages = document.getElementById('chat-messages');
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'msg msg-bot';
+    msgDiv.id = tempMsgId;
+    msgDiv.innerText = "Sto pensando...";
+    chatMessages.appendChild(msgDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 
-        try {
-            const response = await fetch(scriptUrl, {
-                method: 'POST',
-                body: JSON.stringify({ domanda: text })
-            });
-            const rispostaDalloScript = await response.text();
-            
-            const tempElement = document.getElementById(tempMsgId);
-            if (tempElement) {
-                // Se lo script ritorna l'oggetto di successo per errore, mostriamo un fallback
-                if(rispostaDalloScript.includes("status")) {
-                    tempElement.innerText = "Spiacente, c'è stato un errore nel caricamento della risposta.";
-                } else {
-                    tempElement.innerText = rispostaDalloScript;
-                }
-            }
-        } catch (e) {
-            const tempElement = document.getElementById(tempMsgId);
-            if (tempElement) tempElement.innerText = "Errore di connessione.";
+    try {
+        const response = await fetch(scriptUrl, {
+            method: 'POST',
+            body: JSON.stringify({ domanda: text })
+        });
+        
+        // MODIFICA QUI: Leggiamo come JSON
+        const data = await response.json();
+        
+        const tempElement = document.getElementById(tempMsgId);
+        if (tempElement) {
+            // Estraiamo solo la proprietà "risposta"
+            tempElement.innerText = data.risposta || "Nessuna risposta ricevuta.";
         }
+    } catch (e) {
+        const tempElement = document.getElementById(tempMsgId);
+        if (tempElement) tempElement.innerText = "Errore di connessione.";
     }
-
-    function appendMsg(role, text) {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `msg msg-${role}`;
-        msgDiv.innerText = text;
-        const container = document.getElementById('chat-messages');
-        container.appendChild(msgDiv);
-        container.scrollTop = container.scrollHeight;
-    }
+}
 
     // --- LOGICA APP CORE ---
     function parseCSV(text) {
