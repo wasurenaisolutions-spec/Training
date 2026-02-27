@@ -260,18 +260,21 @@
 
 async function sendToBot() {
     const input = document.getElementById('chat-input');
+    const chatMessages = document.getElementById('chat-messages');
     const text = input.value.trim();
+    
     if (!text) return;
 
+    // 1. Mostra messaggio utente
     appendMsg('user', text);
     input.value = '';
 
-    const tempMsgId = 'bot-temp-' + Date.now();
-    const chatMessages = document.getElementById('chat-messages');
+    // 2. Crea segnaposto per il bot
+    const tempMsgId = 'bot-' + Date.now();
     const msgDiv = document.createElement('div');
     msgDiv.className = 'msg msg-bot';
     msgDiv.id = tempMsgId;
-    msgDiv.innerText = "Sto pensando...";
+    msgDiv.innerText = "...";
     chatMessages.appendChild(msgDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
@@ -281,22 +284,12 @@ async function sendToBot() {
             body: JSON.stringify({ domanda: text })
         });
         
-        const rawResponse = await response.text();
-        const tempElement = document.getElementById(tempMsgId);
-        
-        try {
-            // Proviamo a vedere se è un JSON (il nuovo formato)
-            const data = JSON.parse(rawResponse);
-            if (tempElement) tempElement.innerText = data.risposta || data.error || "Errore dati";
-        } catch (e) {
-            // Se non è JSON, lo scriviamo come testo semplice (vecchio formato)
-            if (tempElement) tempElement.innerText = rawResponse;
-        }
+        const data = await response.json();
+        document.getElementById(tempMsgId).innerText = data.risposta;
         
     } catch (e) {
-        const tempElement = document.getElementById(tempMsgId);
-        if (tempElement) tempElement.innerText = "Errore di connessione.";
-        console.error("Chat Error:", e);
+        console.error("Errore:", e);
+        document.getElementById(tempMsgId).innerText = "Errore di connessione. Riprova.";
     }
 }
 
