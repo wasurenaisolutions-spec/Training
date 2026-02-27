@@ -259,6 +259,10 @@
     }
 
 async function sendToBot() {
+        // --- TEST DI FUNZIONAMENTO ---
+        alert("Tasto cliccato correttamente!"); 
+        // -----------------------------
+
         const input = document.getElementById('chat-input');
         const text = input.value.trim();
         if (!text) return;
@@ -280,20 +284,16 @@ async function sendToBot() {
                 method: 'POST',
                 body: JSON.stringify({ domanda: text })
             });
-            
-            // LEGGIAMO LA RISPOSTA
-            const rispostaGrezza = await response.text();
+
+            const rawText = await response.text();
             const tempElement = document.getElementById(tempMsgId);
             
             if (tempElement) {
                 try {
-                    // Proviamo a vedere se è un JSON (per togliere le graffe)
-                    const data = JSON.parse(rispostaGrezza);
-                    // Se dentro c'è "risposta", usiamo quella, altrimenti mostriamo tutto pulito
-                    tempElement.innerText = data.risposta || rispostaGrezza;
+                    const data = JSON.parse(rawText);
+                    tempElement.innerText = data.risposta || rawText;
                 } catch (e) {
-                    // Se non è un JSON, era già testo semplice, lo scriviamo così
-                    tempElement.innerText = rispostaGrezza;
+                    tempElement.innerText = rawText;
                 }
             }
         } catch (e) {
