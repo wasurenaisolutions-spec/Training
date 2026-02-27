@@ -258,8 +258,7 @@
         }
     }
 
-// --- LOGICA CHAT (CORRETTA PER JSON) ---
-    async function sendToBot() {
+async function sendToBot() {
         const input = document.getElementById('chat-input');
         const text = input.value.trim();
         if (!text) return;
@@ -282,15 +281,20 @@
                 body: JSON.stringify({ domanda: text })
             });
             
-            const rawText = await response.text();
+            // LEGGIAMO LA RISPOSTA
+            const rispostaGrezza = await response.text();
             const tempElement = document.getElementById(tempMsgId);
             
-            try {
-                const data = JSON.parse(rawText);
-                tempElement.innerText = data.risposta || "Nessuna risposta.";
-            } catch(e) {
-                // Se non è JSON, mostra il testo puro
-                tempElement.innerText = rawText;
+            if (tempElement) {
+                try {
+                    // Proviamo a vedere se è un JSON (per togliere le graffe)
+                    const data = JSON.parse(rispostaGrezza);
+                    // Se dentro c'è "risposta", usiamo quella, altrimenti mostriamo tutto pulito
+                    tempElement.innerText = data.risposta || rispostaGrezza;
+                } catch (e) {
+                    // Se non è un JSON, era già testo semplice, lo scriviamo così
+                    tempElement.innerText = rispostaGrezza;
+                }
             }
         } catch (e) {
             const tempElement = document.getElementById(tempMsgId);
