@@ -258,7 +258,7 @@
         }
     }
 
-    async function sendToBot() {
+async function sendToBot() {
     const input = document.getElementById('chat-input');
     const text = input.value.trim();
     if (!text) return;
@@ -281,17 +281,22 @@
             body: JSON.stringify({ domanda: text })
         });
         
-        // MODIFICA QUI: Leggiamo come JSON
-        const data = await response.json();
-        
+        const rawResponse = await response.text();
         const tempElement = document.getElementById(tempMsgId);
-        if (tempElement) {
-            // Estraiamo solo la proprietà "risposta"
-            tempElement.innerText = data.risposta || "Nessuna risposta ricevuta.";
+        
+        try {
+            // Proviamo a vedere se è un JSON (il nuovo formato)
+            const data = JSON.parse(rawResponse);
+            if (tempElement) tempElement.innerText = data.risposta || data.error || "Errore dati";
+        } catch (e) {
+            // Se non è JSON, lo scriviamo come testo semplice (vecchio formato)
+            if (tempElement) tempElement.innerText = rawResponse;
         }
+        
     } catch (e) {
         const tempElement = document.getElementById(tempMsgId);
         if (tempElement) tempElement.innerText = "Errore di connessione.";
+        console.error("Chat Error:", e);
     }
 }
 
