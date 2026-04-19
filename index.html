@@ -19,7 +19,7 @@
         :root { 
             --accent: #facc15; --bg: #000000; --card: #111827; --text: #ffffff; 
             --success: #22c55e; --men: #3b82f6; --women: #a855f7; --reward: #facc15;
-            --workout: #ef4444;
+            --workout: #ef4444; --academy: #facc15;
         }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; flex-direction: column; min-height: 100vh; }
         .container { max-width: 500px; margin: 0 auto; flex: 1; width: 100%; }
@@ -43,6 +43,7 @@
         .tab-btn.active[data-type="F"] { border-color: var(--women); color: var(--women); background: #581c8733; }
         .tab-btn.active[data-type="R"] { border-color: var(--reward); color: var(--reward); background: #facc1522; }
         .tab-btn.active[data-type="W"] { border-color: var(--workout); color: var(--workout); background: #ef444422; }
+        .tab-btn.active[data-type="A"] { border-color: var(--academy); color: var(--academy); background: #facc1522; }
 
         .client-card { 
             background: var(--card); padding: 18px; border-radius: 15px; 
@@ -53,6 +54,7 @@
         .client-card.border-F { border-left: 5px solid var(--women); }
         .client-card.border-R { border-left: 5px solid var(--reward); cursor: default; }
         .client-card.border-W { border-left: 5px solid var(--workout); }
+        .client-card.border-A { border-left: 5px solid var(--academy); }
         
         .profile-img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
         .client-name { font-weight: 900; font-size: 1.2rem; text-transform: uppercase; flex-grow: 1; }
@@ -142,10 +144,11 @@
             <button class="tab-btn" data-type="F" onclick="switchTab('F')">WOMEN</button>
         </div>
         
-        <h2 id="main-title">Rewards & Workouts</h2>
+        <h2 id="main-title">Rewards, Workouts & Academy</h2>
         <div class="tabs">
             <button class="tab-btn" data-type="R" onclick="switchTab('R')">BADGES</button>
             <button class="tab-btn" data-type="W" onclick="switchTab('W')">WORKOUTS</button>
+            <button class="tab-btn" data-type="A" onclick="switchTab('A')">ACADEMY</button>
         </div>
 
         <div id="empty-msg" style="text-align: center; color: #6b7280; margin-top: 40px; font-style: italic; font-size: 0.9rem;">Select a category to view the list</div>
@@ -215,9 +218,12 @@
     const exercisesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=0&single=true&output=csv';
     const badgesLibUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=660633997&single=true&output=csv';
     const baseWorkoutsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=362105029&single=true&output=csv';
+    // --- INSERIRE QUI IL LINK CSV DEL FOGLIO ACADEMY ---
+    const academyUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=1523784741&single=true&output=csv';
+    
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbwxxPRTrHtTfgPY_eOvEZIQVHMQuEqagJNJS_L0RT_FooxTPWNBUUBVKNW_1y5Kl_Ql/exec';
 
-    let athletesData = {}, workoutData = {}, badgesLibrary = [], baseWorkouts = [], currentTab = null;
+    let athletesData = {}, workoutData = {}, badgesLibrary = [], baseWorkouts = [], academyData = [], currentTab = null;
 
     // --- LOGICA CHAT ---
     const bubble = document.getElementById('chat-bubble');
@@ -284,7 +290,6 @@
             
             const tempElement = document.getElementById(tempMsgId);
             if (tempElement) {
-                // Se lo script ritorna l'oggetto di successo per errore, mostriamo un fallback
                 if(rispostaDalloScript.includes("status")) {
                     tempElement.innerText = "Spiacente, c'è stato un errore nel caricamento della risposta.";
                 } else {
@@ -324,11 +329,12 @@
     async function loadData() {
         try {
             const t = Date.now();
-            const [aResp, eResp, bResp, wResp] = await Promise.all([
+            const [aResp, eResp, bResp, wResp, acResp] = await Promise.all([
                 fetch(athletesUrl + '&t=' + t).then(r => r.text()),
                 fetch(exercisesUrl + '&t=' + t).then(r => r.text()),
                 fetch(badgesLibUrl + '&t=' + t).then(r => r.text()),
-                fetch(baseWorkoutsUrl + '&t=' + t).then(r => r.text())
+                fetch(baseWorkoutsUrl + '&t=' + t).then(r => r.text()),
+                fetch(academyUrl + '&t=' + t).then(r => r.text())
             ]);
             parseCSV(aResp).slice(1).forEach(cols => {
                 if(cols.length < 3) return;
@@ -345,6 +351,15 @@
             });
             badgesLibrary = parseCSV(bResp).slice(1).map(cols => ({ title: cols[0], link: cols[1], note: cols[2] })).filter(b => b.link);
             baseWorkouts = parseCSV(wResp).slice(1).map(cols => ({ title: cols[0], desc: cols[1], link: cols[2] })).filter(w => w.title && w.link);
+            
+            // Parsing Academy
+            academyData = parseCSV(acResp).slice(1).map(cols => ({
+                title: cols[0],
+                desc: cols[1],
+                img: cols[2],
+                link: cols[3]
+            })).filter(a => a.title);
+
             renderHome();
         } catch (e) { console.error("Load Error", e); }
     }
@@ -371,6 +386,19 @@
                 const card = document.createElement('div'); card.className = `client-card border-W`;
                 card.onclick = (e) => { if(e.target.tagName !== 'IMG') showBoard(index); else zoom(w.link); };
                 card.innerHTML = `<img src="${w.link}" class="badge-img-large"><div class="client-name">${w.title}</div>`;
+                list.appendChild(card);
+            });
+        } else if (currentTab === 'A') {
+            academyData.forEach(item => {
+                const card = document.createElement('div'); 
+                card.className = `client-card border-A`;
+                card.onclick = () => { if(item.link) window.open(item.link, '_blank'); };
+                card.innerHTML = `
+                    <img src="${item.img}" class="badge-img-large">
+                    <div style="display:flex; flex-direction:column; flex-grow:1;">
+                        <div class="client-name" style="font-size:1.1rem;">${item.title}</div>
+                        <div class="badge-desc" style="margin-top:4px;">${item.desc}</div>
+                    </div>`;
                 list.appendChild(card);
             });
         } else {
