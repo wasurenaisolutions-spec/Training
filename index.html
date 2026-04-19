@@ -6,50 +6,31 @@
     <title>Warehouse Ronin APP</title>
     
     <link rel="apple-touch-icon" href="https://i.postimg.cc/pd0Dsxp2/APP_LOGO.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="https://i.postimg.cc/pd0Dsxp2/APP_LOGO.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/pd0Dsxp2/APP_LOGO.png">
     <link rel="icon" type="image/png" href="https://i.postimg.cc/pd0Dsxp2/APP_LOGO.png">
     
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="Warehouse">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
 
     <style>
         :root { 
             --accent: #facc15; --bg: #000000; --card: #111827; --text: #ffffff; 
             --success: #22c55e; --men: #3b82f6; --women: #a855f7; --reward: #facc15;
-            --workout: #ef4444; --academy: #facc15;
+            --workout: #ef4444; --academy: #22c55e;
         }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; flex-direction: column; min-height: 100vh; }
         .container { max-width: 500px; margin: 0 auto; flex: 1; width: 100%; }
-        
         .header { text-align: center; padding: 20px 0; margin-bottom: 15px; }
         .logo { max-width: 180px; filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3)); }
-        
-        #main-title { 
-            font-size: 1.1rem; font-weight: 800; font-style: italic; 
-            text-transform: uppercase; text-align: left; 
-            margin: 20px 0 10px 5px; color: var(--text); letter-spacing: 1px;
-        }
-
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; padding: 0 5px; }
-        .tab-btn { 
-            flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #1f2937;
-            background: #111827; color: #6b7280; font-weight: 900; 
-            text-transform: uppercase; cursor: pointer; transition: 0.3s;
-        }
+        #main-title { font-size: 1.1rem; font-weight: 800; font-style: italic; text-transform: uppercase; text-align: left; margin: 20px 0 10px 5px; color: var(--text); letter-spacing: 1px; }
+        .tabs { display: flex; gap: 8px; margin-bottom: 20px; padding: 0 5px; flex-wrap: wrap; }
+        .tab-btn { flex: 1; min-width: 80px; padding: 12px; border-radius: 10px; border: 1px solid #1f2937; background: #111827; color: #6b7280; font-weight: 900; text-transform: uppercase; cursor: pointer; transition: 0.3s; font-size: 0.7rem; }
         .tab-btn.active[data-type="M"] { border-color: var(--men); color: var(--men); background: #1e3a8a33; }
         .tab-btn.active[data-type="F"] { border-color: var(--women); color: var(--women); background: #581c8733; }
         .tab-btn.active[data-type="R"] { border-color: var(--reward); color: var(--reward); background: #facc1522; }
         .tab-btn.active[data-type="W"] { border-color: var(--workout); color: var(--workout); background: #ef444422; }
-        .tab-btn.active[data-type="A"] { border-color: var(--academy); color: var(--academy); background: #facc1522; }
+        .tab-btn.active[data-type="A"] { border-color: var(--academy); color: var(--academy); background: #22c55e22; }
 
-        .client-card { 
-            background: var(--card); padding: 18px; border-radius: 15px; 
-            margin-bottom: 12px; border: 1px solid #1f2937; 
-            display: flex; align-items: center; gap: 12px; cursor: pointer; 
-        }
+        .client-card { background: var(--card); padding: 18px; border-radius: 15px; margin-bottom: 12px; border: 1px solid #1f2937; display: flex; align-items: center; gap: 12px; cursor: pointer; }
         .client-card.border-M { border-left: 5px solid var(--men); }
         .client-card.border-F { border-left: 5px solid var(--women); }
         .client-card.border-R { border-left: 5px solid var(--reward); cursor: default; }
@@ -58,55 +39,29 @@
         
         .profile-img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
         .client-name { font-weight: 900; font-size: 1.2rem; text-transform: uppercase; flex-grow: 1; }
-        
         .badge-desc { color: var(--text); font-style: italic; font-size: 0.85rem; flex-grow: 1; line-height: 1.3; }
         .badge-container { display: flex; gap: 6px; margin-left: auto; }
         .badge-img { width: 35px; height: 35px; object-fit: contain; cursor: zoom-in; }
         .badge-img-large { width: 60px; height: 60px; object-fit: contain; cursor: zoom-in; flex-shrink: 0; }
         
-        /* CHAT BOT STYLE */
-        #chat-bubble {
-            position: fixed; bottom: 30px; right: 20px;
-            width: 65px; height: 65px; background: var(--accent);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.8); z-index: 9999;
-            overflow: hidden; touch-action: none; border: 2px solid var(--accent);
-        }
-        #chat-bubble img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-
-        #chat-window {
-            display: none; position: fixed; bottom: 110px; right: 20px;
-            width: 320px; height: 450px; background: var(--card);
-            border: 1px solid #1f2937; border-radius: 15px;
-            flex-direction: column; z-index: 9998; overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.9);
-        }
-
-        #chat-header { 
-            background: #1f2937; padding: 12px; font-weight: 900; 
-            font-size: 0.75rem; color: var(--accent); text-transform: uppercase;
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid #374151;
-        }
-
+        /* CHAT BOT & MODALS STYLE */
+        #chat-bubble { position: fixed; bottom: 30px; right: 20px; width: 65px; height: 65px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.8); z-index: 9999; overflow: hidden; border: 2px solid var(--accent); }
+        #chat-bubble img { width: 100%; height: 100%; object-fit: cover; }
+        #chat-window { display: none; position: fixed; bottom: 110px; right: 20px; width: 320px; height: 450px; background: var(--card); border: 1px solid #1f2937; border-radius: 15px; flex-direction: column; z-index: 9998; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.9); }
+        #chat-header { background: #1f2937; padding: 12px; font-weight: 900; font-size: 0.75rem; color: var(--accent); text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
         #chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #050505; }
-        .msg { padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; line-height: 1.4; max-width: 80%; word-wrap: break-word; }
+        .msg { padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; line-height: 1.4; max-width: 80%; }
         .msg-user { background: var(--men); align-self: flex-end; color: white; }
         .msg-bot { background: #1f2937; align-self: flex-start; border-left: 3px solid var(--accent); color: white; }
-        
         #chat-input-area { padding: 12px; background: #111827; display: flex; gap: 8px; }
         #chat-input { flex: 1; background: #000; border: 1px solid #374151; color: white; padding: 10px; border-radius: 8px; outline: none; }
         #chat-send { background: var(--accent); border: none; padding: 0 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-        /* FOOTER & DISCLAIMERS */
-        .footer-container { text-align: center; padding: 30px 15px; margin-top: 40px; border-top: 1px solid #1f2937; background: #050505; width: 100%; box-sizing: border-box; }
-        .powered-by { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.75rem; color: #6b7280; margin-bottom: 25px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; }
-        .ronin-logo-small { width: 45px; height: auto; opacity: 0.9; }
-        .privacy-footer { font-size: 0.7rem; color: #9ca3af; line-height: 1.5; text-align: left; max-width: 450px; margin: 0 auto; }
-        .lang-block { margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #111827; }
-        .lang-block:last-child { border-bottom: none; }
-        .lang-label { color: var(--accent); font-weight: bold; margin-right: 5px; }
-
+        .footer-container { text-align: center; padding: 30px 15px; margin-top: 40px; border-top: 1px solid #1f2937; background: #050505; }
+        .powered-by { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.75rem; color: #6b7280; margin-bottom: 25px; text-transform: uppercase; font-weight: bold; }
+        .ronin-logo-small { width: 45px; height: auto; }
+        .privacy-footer { font-size: 0.7rem; color: #9ca3af; text-align: left; max-width: 450px; margin: 0 auto; }
+        
         #zoom-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; justify-content: center; align-items: center; }
         #workout-view, #board-view { display: none; }
         .back-btn { background: #1f2937; color: white; border: none; padding: 10px 20px; border-radius: 20px; margin-bottom: 20px; font-weight: bold; cursor: pointer; }
@@ -114,16 +69,9 @@
         .acc-header { padding: 15px 20px; cursor: pointer; font-weight: bold; text-transform: uppercase; display: flex; justify-content: space-between; }
         .acc-content { display: none; padding: 0 20px 15px; background: #080c14; }
         .active .acc-content { display: block; }
-        .active .acc-header { color: var(--accent); background: #1f2937; }
         .ex-row { padding: 12px 0; border-bottom: 1px solid #1f2937; display: flex; justify-content: space-between; align-items: center; }
-        .ex-info { display: flex; flex-direction: column; max-width: 60%; }
-        .ex-name { font-weight: bold; font-size: 0.95rem; }
-        .ex-weight { color: var(--accent); font-weight: 900; font-size: 1.2rem; margin-right: 10px; }
-        .upgrade-btn { background: #1f2937; border: 1px solid var(--accent); color: var(--accent); padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
-        .upgrade-btn.sent { background: var(--success); border-color: var(--success); color: white; }
-        .ex-start-weight { font-size: 0.75rem; font-style: italic; margin-top: 2px; font-weight: bold; color: var(--accent); }
-        .ex-note-pt { font-size: 0.75rem; color: var(--success); font-style: italic; margin-top: 4px; display: none; }
-        .ex-note-pt.visible { display: block; }
+        .ex-weight { color: var(--accent); font-weight: 900; font-size: 1.2rem; }
+        .upgrade-btn { background: #1f2937; border: 1px solid var(--accent); color: var(--accent); padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; }
         .board-card { background: #0a0a0a; border: 1px solid #1f2937; border-radius: 20px; padding: 25px; margin-top: 10px; }
         .board-text { white-space: pre-wrap; font-size: 1.1rem; line-height: 1.6; color: #e5e7eb; }
     </style>
@@ -144,14 +92,14 @@
             <button class="tab-btn" data-type="F" onclick="switchTab('F')">WOMEN</button>
         </div>
         
-        <h2 id="main-title">Rewards, Workouts & Academy</h2>
+        <h2 id="main-title">Rewards & Academy</h2>
         <div class="tabs">
             <button class="tab-btn" data-type="R" onclick="switchTab('R')">BADGES</button>
             <button class="tab-btn" data-type="W" onclick="switchTab('W')">WORKOUTS</button>
             <button class="tab-btn" data-type="A" onclick="switchTab('A')">ACADEMY</button>
         </div>
 
-        <div id="empty-msg" style="text-align: center; color: #6b7280; margin-top: 40px; font-style: italic; font-size: 0.9rem;">Select a category to view the list</div>
+        <div id="empty-msg" style="text-align: center; color: #6b7280; margin-top: 40px; font-style: italic;">Select a category</div>
         <div id="client-list"></div>
     </div>
 
@@ -159,10 +107,7 @@
         <button class="back-btn" onclick="showHome()">← BACK</button>
         <div id="detail-header" style="display:flex; align-items:center; gap:15px; margin-bottom:20px; border-bottom:1px solid #1f2937; padding-bottom:15px;">
             <img id="detail-img" src="" class="profile-img">
-            <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
-                <h2 id="detail-name" style="margin:0; text-transform:uppercase;"></h2>
-                <div id="detail-badges" class="badge-container"></div>
-            </div>
+            <h2 id="detail-name" style="margin:0; text-transform:uppercase;"></h2>
         </div>
         <div id="workout-content"></div>
     </div>
@@ -179,139 +124,35 @@
     </div>
 </div>
 
-<div id="chat-bubble">
-    <img src="https://i.postimg.cc/gk0GSwcm/Bot-Avatar.jpg" alt="Bot">
-</div>
-
+<div id="chat-bubble"><img src="https://i.postimg.cc/gk0GSwcm/Bot-Avatar.jpg"></div>
 <div id="chat-window">
-    <div id="chat-header">
-        <span>WAREHOUSE COACH AI</span>
-        <span onclick="toggleChat()" style="cursor:pointer; font-size: 1.5rem;">×</span>
-    </div>
-    <div id="chat-messages">
-        <div class="msg msg-bot">
-            Dobrodošli! Benvenuto! Welcome! <br>
-            We are the W-bots! We can help you with your fitness path, nutrition and gym info. Feel free to ask!
-        </div>
-    </div>
+    <div id="chat-header"><span>COACH AI</span><span onclick="toggleChat()" style="cursor:pointer; font-size: 1.5rem;">×</span></div>
+    <div id="chat-messages"></div>
     <div id="chat-input-area">
-        <input type="text" id="chat-input" placeholder="Scrivi qui..." onkeypress="if(event.key==='Enter') sendToBot()">
+        <input type="text" id="chat-input" placeholder="Chiedi..." onkeypress="if(event.key==='Enter') sendToBot()">
         <button id="chat-send" onclick="sendToBot()">OK</button>
     </div>
 </div>
 
 <div class="footer-container">
-    <div class="powered-by">
-        <span>Powered by</span>
-        <img src="https://i.postimg.cc/6Q1gJjvY/Roninlogooriginal.png" class="ronin-logo-small">
-    </div>
-    <div class="privacy-footer">
-        <div class="lang-block"><span class="lang-label">HR:</span> Vaša privatnost nam je važna. Privatna aplikacija namijenjena isključivo Warehouse grupi. Molimo vas da ne dijelite ovaj link. Ako želite ukloniti svoje fitness podatke iz aplikacije, obratite se našim osobnim trenerima (PT).</div>
-        <div class="lang-block"><span class="lang-label">IT:</span> La tua privacy è importante. App privata dedicata al gruppo Warehouse. Per favore non condividere questo link. Se vuoi rimuovere i tuoi dati fitness dalla app contatta i nostri PT.</div>
-        <div class="lang-block"><span class="lang-label">EN:</span> Your privacy is important to us. Private app dedicated to the Warehouse group. Please do not share this link. If you wish to remove your fitness data from the app, please contact our PTs.</div>
-        <div class="lang-block"><span class="lang-label">JP:</span> あなたのプライバシーは重要です。このデータはトレーニングの進捗を追跡するためにのみ使用されます。</div>
-    </div>
+    <div class="powered-by"><span>Powered by</span><img src="https://i.postimg.cc/6Q1gJjvY/Roninlogooriginal.png" class="ronin-logo-small"></div>
+    <div class="privacy-footer">App privata dedicata al gruppo Warehouse. Non condividere questo link.</div>
 </div>
 
 <script>
-    const athletesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=719192490&single=true&output=csv'; 
-    const exercisesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=0&single=true&output=csv';
-    const badgesLibUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=660633997&single=true&output=csv';
-    const baseWorkoutsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=362105029&single=true&output=csv';
-    // --- INSERIRE QUI IL LINK CSV DEL FOGLIO ACADEMY ---
-    const academyUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=1523784741&single=true&output=csv';
-    
+    // --- CONFIGURAZIONE ---
+    const sheetID = '1-f-t_QWf7O7R_Z_4L5v6O-nQ3_mS_F_S_z_L_R_Q_s_F_c'; // IL TUO ID FOGLIO
+    const academyGID = 'INSERISCI_QUI_IL_GID_ACADEMY'; // IL TUO GID ACADEMY (es: 12345678)
+
+    const athletesUrl = `https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=719192490&single=true&output=csv`;
+    const exercisesUrl = `https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=0&single=true&output=csv`;
+    const badgesLibUrl = `https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=660633997&single=true&output=csv`;
+    const baseWorkoutsUrl = `https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=362105029&single=true&output=csv`;
+    const academyUrl = `https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=1523784741&single=true&output=csv`;
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbwxxPRTrHtTfgPY_eOvEZIQVHMQuEqagJNJS_L0RT_FooxTPWNBUUBVKNW_1y5Kl_Ql/exec';
 
     let athletesData = {}, workoutData = {}, badgesLibrary = [], baseWorkouts = [], academyData = [], currentTab = null;
 
-    // --- LOGICA CHAT ---
-    const bubble = document.getElementById('chat-bubble');
-    const chatWin = document.getElementById('chat-window');
-    let isDragging = false;
-    let dragThreshold = 0;
-
-    bubble.onpointerdown = function(e) {
-        dragThreshold = 0;
-        const startX = e.clientX - bubble.offsetLeft;
-        const startY = e.clientY - bubble.offsetTop;
-        function onPointerMove(e) {
-            dragThreshold++;
-            if (dragThreshold > 5) { 
-                isDragging = true;
-                let x = e.clientX - startX;
-                let y = e.clientY - startY;
-                bubble.style.left = x + 'px';
-                bubble.style.top = y + 'px';
-                bubble.style.right = 'auto'; bubble.style.bottom = 'auto';
-            }
-        }
-        function onPointerUp() {
-            if (dragThreshold <= 5) toggleChat();
-            document.removeEventListener('pointermove', onPointerMove);
-            document.removeEventListener('pointerup', onPointerUp);
-            setTimeout(() => { isDragging = false; }, 100);
-        }
-        document.addEventListener('pointermove', onPointerMove);
-        document.addEventListener('pointerup', onPointerUp);
-    };
-
-    function toggleChat() {
-        chatWin.style.display = (chatWin.style.display === 'flex') ? 'none' : 'flex';
-        if(chatWin.style.display === 'flex') {
-            chatWin.style.left = Math.max(10, bubble.offsetLeft - 250) + 'px';
-            chatWin.style.top = (bubble.offsetTop - 460) + 'px';
-        }
-    }
-
-    async function sendToBot() {
-        const input = document.getElementById('chat-input');
-        const text = input.value.trim();
-        if (!text) return;
-
-        appendMsg('user', text);
-        input.value = '';
-
-        const tempMsgId = 'bot-temp-' + Date.now();
-        const chatMessages = document.getElementById('chat-messages');
-        const msgDiv = document.createElement('div');
-        msgDiv.className = 'msg msg-bot';
-        msgDiv.id = tempMsgId;
-        msgDiv.innerText = "Sto pensando...";
-        chatMessages.appendChild(msgDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-
-        try {
-            const response = await fetch(scriptUrl, {
-                method: 'POST',
-                body: JSON.stringify({ domanda: text })
-            });
-            const rispostaDalloScript = await response.text();
-            
-            const tempElement = document.getElementById(tempMsgId);
-            if (tempElement) {
-                if(rispostaDalloScript.includes("status")) {
-                    tempElement.innerText = "Spiacente, c'è stato un errore nel caricamento della risposta.";
-                } else {
-                    tempElement.innerText = rispostaDalloScript;
-                }
-            }
-        } catch (e) {
-            const tempElement = document.getElementById(tempMsgId);
-            if (tempElement) tempElement.innerText = "Errore di connessione.";
-        }
-    }
-
-    function appendMsg(role, text) {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `msg msg-${role}`;
-        msgDiv.innerText = text;
-        const container = document.getElementById('chat-messages');
-        container.appendChild(msgDiv);
-        container.scrollTop = container.scrollHeight;
-    }
-
-    // --- LOGICA APP CORE ---
     function parseCSV(text) {
         const rows = []; let row = []; let col = ""; let inQuotes = false;
         for (let i = 0; i < text.length; i++) {
@@ -336,31 +177,23 @@
                 fetch(baseWorkoutsUrl + '&t=' + t).then(r => r.text()),
                 fetch(academyUrl + '&t=' + t).then(r => r.text())
             ]);
+
             parseCSV(aResp).slice(1).forEach(cols => {
                 if(cols.length < 3) return;
-                athletesData[cols[0]] = { photo: cols[1], gender: cols[2].toUpperCase(), badges: cols[3] ? cols[3].split(',').map(b => b.trim()).filter(l => l.length > 5) : [] };
+                athletesData[cols[0]] = { photo: cols[1], gender: cols[2].toUpperCase(), badges: cols[3] ? cols[3].split(',').map(b => b.trim()) : [] };
             });
+
             parseCSV(eResp).slice(1).forEach(cols => {
-                if(cols.length < 6) return;
-                const name = cols[0], area = cols[1], ex = cols[2], load = cols[3];
-                const up = cols[5] ? cols[5].toUpperCase() === 'TRUE' : false;
-                const startWeight = cols[6] || ""; 
+                const name = cols[0], area = cols[1], ex = cols[2], load = cols[3], up = cols[5] === 'TRUE', start = cols[6] || "";
                 if(!workoutData[name]) workoutData[name] = {};
                 if(!workoutData[name][area]) workoutData[name][area] = [];
-                workoutData[name][area].push({ex, load, up, startWeight});
+                workoutData[name][area].push({ex, load, up, start});
             });
-            badgesLibrary = parseCSV(bResp).slice(1).map(cols => ({ title: cols[0], link: cols[1], note: cols[2] })).filter(b => b.link);
-            baseWorkouts = parseCSV(wResp).slice(1).map(cols => ({ title: cols[0], desc: cols[1], link: cols[2] })).filter(w => w.title && w.link);
-            
-            // Parsing Academy
-            academyData = parseCSV(acResp).slice(1).map(cols => ({
-                title: cols[0],
-                desc: cols[1],
-                img: cols[2],
-                link: cols[3]
-            })).filter(a => a.title);
 
-            renderHome();
+            badgesLibrary = parseCSV(bResp).slice(1).map(cols => ({ title: cols[0], link: cols[1], note: cols[2] }));
+            baseWorkouts = parseCSV(wResp).slice(1).map(cols => ({ title: cols[0], desc: cols[1], link: cols[2] }));
+            academyData = parseCSV(acResp).slice(1).map(cols => ({ title: cols[0], desc: cols[1], link: cols[2] })).filter(x => x.title);
+
         } catch (e) { console.error("Load Error", e); }
     }
 
@@ -384,103 +217,58 @@
         } else if (currentTab === 'W') {
             baseWorkouts.forEach((w, index) => {
                 const card = document.createElement('div'); card.className = `client-card border-W`;
-                card.onclick = (e) => { if(e.target.tagName !== 'IMG') showBoard(index); else zoom(w.link); };
+                card.onclick = () => showBoard(w);
                 card.innerHTML = `<img src="${w.link}" class="badge-img-large"><div class="client-name">${w.title}</div>`;
                 list.appendChild(card);
             });
         } else if (currentTab === 'A') {
-            academyData.forEach(item => {
-                const card = document.createElement('div'); 
-                card.className = `client-card border-A`;
-                card.onclick = () => { if(item.link) window.open(item.link, '_blank'); };
-                card.innerHTML = `
-                    <img src="${item.img}" class="badge-img-large">
-                    <div style="display:flex; flex-direction:column; flex-grow:1;">
-                        <div class="client-name" style="font-size:1.1rem;">${item.title}</div>
-                        <div class="badge-desc" style="margin-top:4px;">${item.desc}</div>
-                    </div>`;
+            academyData.forEach(ac => {
+                const card = document.createElement('div'); card.className = `client-card border-A`;
+                card.onclick = () => showBoard(ac);
+                card.innerHTML = `<img src="${ac.link}" class="badge-img-large"><div class="client-name">${ac.title}</div>`;
                 list.appendChild(card);
             });
         } else {
             Object.keys(athletesData).forEach(name => {
                 if(athletesData[name].gender === currentTab) {
-                    const bHtml = (athletesData[name].badges || []).map(url => `<img src="${url}" class="badge-img" onclick="event.stopPropagation(); zoom('${url}')">`).join('');
                     const card = document.createElement('div'); card.className = `client-card border-${currentTab}`;
                     card.onclick = () => showWorkout(name);
-                    card.innerHTML = `<img src="${athletesData[name].photo || 'https://www.w3schools.com/howto/img_avatar.png'}" class="profile-img"><div class="client-name">${name}</div><div class="badge-container">${bHtml}</div>`;
+                    card.innerHTML = `<img src="${athletesData[name].photo}" class="profile-img"><div class="client-name">${name}</div>`;
                     list.appendChild(card);
                 }
             });
         }
     }
 
+    function showBoard(data) {
+        toggleViews('board-view');
+        document.getElementById('board-title').innerText = data.title;
+        document.getElementById('board-img').src = data.link;
+        document.getElementById('board-content').innerText = data.desc;
+    }
+
     function showWorkout(name) {
         toggleViews('workout-view');
         document.getElementById('detail-name').innerText = name;
-        document.getElementById('detail-img').src = athletesData[name].photo || 'https://www.w3schools.com/howto/img_avatar.png';
-        document.getElementById('detail-badges').innerHTML = (athletesData[name].badges || []).map(url => `<img src="${url}" class="badge-img" onclick="zoom('${url}')">`).join('');
+        document.getElementById('detail-img').src = athletesData[name].photo;
         const content = document.getElementById('workout-content');
         content.innerHTML = '';
         const data = workoutData[name] || {};
         for(const area in data) {
             const acc = document.createElement('div'); acc.className = 'accordion';
-            let exHtml = data[area].map(e => {
-                let startHtml = (e.startWeight && e.startWeight.trim() !== "") ? `<span class="ex-start-weight">You started with ${e.startWeight}</span>` : "";
-                return `
-                <div class="ex-row">
-                    <div class="ex-info">
-                        <span class="ex-name">${e.ex}</span>
-                        ${startHtml}
-                        <span class="ex-note-pt ${e.up ? 'visible' : ''}">Request Sent to the PT</span>
-                    </div>
-                    <div style="display:flex; align-items:center;">
-                        <span class="ex-weight">${e.load}</span>
-                        <button class="upgrade-btn ${e.up?'sent':''}" onclick="requestUpgrade(this,'${name}','${e.ex.replace(/'/g,"\\'")}')">${e.up?'✓':'UP'}</button>
-                    </div>
-                </div>`;
-            }).join('');
+            let exHtml = data[area].map(e => `<div class="ex-row"><span>${e.ex}</span><span class="ex-weight">${e.load}</span></div>`).join('');
             acc.innerHTML = `<div class="acc-header" onclick="this.parentElement.classList.toggle('active')">${area} <span>+</span></div><div class="acc-content">${exHtml}</div>`;
             content.appendChild(acc);
         }
     }
 
-    function showBoard(index) {
-        toggleViews('board-view');
-        const w = baseWorkouts[index];
-        document.getElementById('board-title').innerText = w.title;
-        document.getElementById('board-img').src = w.link;
-        document.getElementById('board-content').innerText = w.desc;
+    function toggleViews(id) {
+        ['home-view', 'workout-view', 'board-view'].forEach(v => document.getElementById(v).style.display = (v === id ? 'block' : 'none'));
     }
-
-    function toggleViews(viewId) {
-        ['home-view', 'workout-view', 'board-view'].forEach(id => {
-            document.getElementById(id).style.display = (id === viewId) ? 'block' : 'none';
-        });
-    }
-
     function showHome() { toggleViews('home-view'); }
     function zoom(url) { document.getElementById('zoom-img').src = url; document.getElementById('zoom-overlay').style.display = 'flex'; }
+    function toggleChat() { const cw = document.getElementById('chat-window'); cw.style.display = cw.style.display === 'flex' ? 'none' : 'flex'; }
     
-    async function requestUpgrade(btn, client, exercise) {
-        if(btn.classList.contains('sent')) return;
-        if (!confirm("You are requesting for an upgrade, are you sure?")) return;
-        const infoDiv = btn.closest('.ex-row').querySelector('.ex-note-pt');
-        btn.innerText = "...";
-        try {
-            await fetch(scriptUrl, { 
-                method: 'POST', 
-                mode: 'no-cors', 
-                body: JSON.stringify({ cliente: client, esercizio: exercise }) 
-            });
-            btn.innerText = "✓"; 
-            btn.classList.add('sent'); 
-            infoDiv.classList.add('visible');
-        } catch (e) { 
-            console.error("Errore invio:", e);
-            btn.innerText = "UP"; 
-        }
-    }
-
     loadData();
 </script>
 </body>
