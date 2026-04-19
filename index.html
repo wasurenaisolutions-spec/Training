@@ -19,7 +19,7 @@
         :root { 
             --accent: #facc15; --bg: #000000; --card: #111827; --text: #ffffff; 
             --success: #22c55e; --men: #3b82f6; --women: #a855f7; --reward: #facc15;
-            --workout: #ef4444;
+            --workout: #ef4444; --academy: #f59e0b;
         }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; flex-direction: column; min-height: 100vh; }
         .container { max-width: 500px; margin: 0 auto; flex: 1; width: 100%; }
@@ -38,11 +38,13 @@
             flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #1f2937;
             background: #111827; color: #6b7280; font-weight: 900; 
             text-transform: uppercase; cursor: pointer; transition: 0.3s;
+            font-size: 0.7rem;
         }
         .tab-btn.active[data-type="M"] { border-color: var(--men); color: var(--men); background: #1e3a8a33; }
         .tab-btn.active[data-type="F"] { border-color: var(--women); color: var(--women); background: #581c8733; }
         .tab-btn.active[data-type="R"] { border-color: var(--reward); color: var(--reward); background: #facc1522; }
         .tab-btn.active[data-type="W"] { border-color: var(--workout); color: var(--workout); background: #ef444422; }
+        .tab-btn.active[data-type="A"] { border-color: var(--academy); color: var(--academy); background: #f59e0b22; }
 
         .client-card { 
             background: var(--card); padding: 18px; border-radius: 15px; 
@@ -53,6 +55,7 @@
         .client-card.border-F { border-left: 5px solid var(--women); }
         .client-card.border-R { border-left: 5px solid var(--reward); cursor: default; }
         .client-card.border-W { border-left: 5px solid var(--workout); }
+        .client-card.border-A { border-left: 5px solid var(--academy); }
         
         .profile-img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
         .client-name { font-weight: 900; font-size: 1.2rem; text-transform: uppercase; flex-grow: 1; }
@@ -142,10 +145,11 @@
             <button class="tab-btn" data-type="F" onclick="switchTab('F')">WOMEN</button>
         </div>
         
-        <h2 id="main-title">Rewards & Workouts</h2>
+        <h2 id="main-title">Rewards, Workouts & Info</h2>
         <div class="tabs">
             <button class="tab-btn" data-type="R" onclick="switchTab('R')">BADGES</button>
             <button class="tab-btn" data-type="W" onclick="switchTab('W')">WORKOUTS</button>
+            <button class="tab-btn" data-type="A" onclick="switchTab('A')">ACADEMY</button>
         </div>
 
         <div id="empty-msg" style="text-align: center; color: #6b7280; margin-top: 40px; font-style: italic; font-size: 0.9rem;">Select a category to view the list</div>
@@ -215,9 +219,10 @@
     const exercisesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=0&single=true&output=csv';
     const badgesLibUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=660633997&single=true&output=csv';
     const baseWorkoutsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=362105029&single=true&output=csv';
+    const academyUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=1384752528&single=true&output=csv';
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbwxxPRTrHtTfgPY_eOvEZIQVHMQuEqagJNJS_L0RT_FooxTPWNBUUBVKNW_1y5Kl_Ql/exec';
 
-    let athletesData = {}, workoutData = {}, badgesLibrary = [], baseWorkouts = [], currentTab = null;
+    let athletesData = {}, workoutData = {}, badgesLibrary = [], baseWorkouts = [], academyData = [], currentTab = null;
 
     // --- LOGICA CHAT ---
     const bubble = document.getElementById('chat-bubble');
@@ -284,7 +289,6 @@
             
             const tempElement = document.getElementById(tempMsgId);
             if (tempElement) {
-                // Se lo script ritorna l'oggetto di successo per errore, mostriamo un fallback
                 if(rispostaDalloScript.includes("status")) {
                     tempElement.innerText = "Spiacente, c'è stato un errore nel caricamento della risposta.";
                 } else {
@@ -324,11 +328,12 @@
     async function loadData() {
         try {
             const t = Date.now();
-            const [aResp, eResp, bResp, wResp] = await Promise.all([
+            const [aResp, eResp, bResp, wResp, acResp] = await Promise.all([
                 fetch(athletesUrl + '&t=' + t).then(r => r.text()),
                 fetch(exercisesUrl + '&t=' + t).then(r => r.text()),
                 fetch(badgesLibUrl + '&t=' + t).then(r => r.text()),
-                fetch(baseWorkoutsUrl + '&t=' + t).then(r => r.text())
+                fetch(baseWorkoutsUrl + '&t=' + t).then(r => r.text()),
+                fetch(academyUrl + '&t=' + t).then(r => r.text())
             ]);
             parseCSV(aResp).slice(1).forEach(cols => {
                 if(cols.length < 3) return;
@@ -345,6 +350,8 @@
             });
             badgesLibrary = parseCSV(bResp).slice(1).map(cols => ({ title: cols[0], link: cols[1], note: cols[2] })).filter(b => b.link);
             baseWorkouts = parseCSV(wResp).slice(1).map(cols => ({ title: cols[0], desc: cols[1], link: cols[2] })).filter(w => w.title && w.link);
+            academyData = parseCSV(acResp).slice(1).map(cols => ({ title: cols[0], desc: cols[1], link: cols[2] })).filter(a => a.title);
+            
             renderHome();
         } catch (e) { console.error("Load Error", e); }
     }
@@ -369,8 +376,15 @@
         } else if (currentTab === 'W') {
             baseWorkouts.forEach((w, index) => {
                 const card = document.createElement('div'); card.className = `client-card border-W`;
-                card.onclick = (e) => { if(e.target.tagName !== 'IMG') showBoard(index); else zoom(w.link); };
+                card.onclick = (e) => { if(e.target.tagName !== 'IMG') showBoard(index, 'W'); else zoom(w.link); };
                 card.innerHTML = `<img src="${w.link}" class="badge-img-large"><div class="client-name">${w.title}</div>`;
+                list.appendChild(card);
+            });
+        } else if (currentTab === 'A') {
+            academyData.forEach((a, index) => {
+                const card = document.createElement('div'); card.className = `client-card border-A`;
+                card.onclick = (e) => { if(e.target.tagName !== 'IMG') showBoard(index, 'A'); else zoom(a.link); };
+                card.innerHTML = `<img src="${a.link || 'https://i.postimg.cc/pd0Dsxp2/APP_LOGO.png'}" class="badge-img-large"><div class="client-name">${a.title}</div>`;
                 list.appendChild(card);
             });
         } else {
@@ -416,12 +430,12 @@
         }
     }
 
-    function showBoard(index) {
+    function showBoard(index, type) {
         toggleViews('board-view');
-        const w = baseWorkouts[index];
-        document.getElementById('board-title').innerText = w.title;
-        document.getElementById('board-img').src = w.link;
-        document.getElementById('board-content').innerText = w.desc;
+        const item = (type === 'W') ? baseWorkouts[index] : academyData[index];
+        document.getElementById('board-title').innerText = item.title;
+        document.getElementById('board-img').src = item.link || 'https://i.postimg.cc/pd0Dsxp2/APP_LOGO.png';
+        document.getElementById('board-content').innerText = item.desc;
     }
 
     function toggleViews(viewId) {
@@ -431,7 +445,7 @@
     }
 
     function showHome() { toggleViews('home-view'); }
-    function zoom(url) { document.getElementById('zoom-img').src = url; document.getElementById('zoom-overlay').style.display = 'flex'; }
+    function zoom(url) { if(!url) return; document.getElementById('zoom-img').src = url; document.getElementById('zoom-overlay').style.display = 'flex'; }
     
     async function requestUpgrade(btn, client, exercise) {
         if(btn.classList.contains('sent')) return;
