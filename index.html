@@ -19,84 +19,47 @@
         :root { 
             --accent: #facc15; --bg: #000000; --card: #111827; --text: #ffffff; 
             --success: #22c55e; --men: #3b82f6; --women: #a855f7; --reward: #facc15;
-            --workout: #ef4444;
+            --workout: #ef4444; --academy: #10b981;
         }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; flex-direction: column; min-height: 100vh; }
         .container { max-width: 500px; margin: 0 auto; flex: 1; width: 100%; }
-        
         .header { text-align: center; padding: 20px 0; margin-bottom: 15px; }
         .logo { max-width: 180px; filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3)); }
-        
-        #main-title { 
-            font-size: 1.1rem; font-weight: 800; font-style: italic; 
-            text-transform: uppercase; text-align: left; 
-            margin: 20px 0 10px 5px; color: var(--text); letter-spacing: 1px;
-        }
-
+        #main-title { font-size: 1.1rem; font-weight: 800; font-style: italic; text-transform: uppercase; text-align: left; margin: 20px 0 10px 5px; color: var(--text); letter-spacing: 1px; }
         .tabs { display: flex; gap: 10px; margin-bottom: 20px; padding: 0 5px; }
-        .tab-btn { 
-            flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #1f2937;
-            background: #111827; color: #6b7280; font-weight: 900; 
-            text-transform: uppercase; cursor: pointer; transition: 0.3s;
-        }
+        .tab-btn { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #1f2937; background: #111827; color: #6b7280; font-weight: 900; text-transform: uppercase; cursor: pointer; transition: 0.3s; font-size: 0.7rem; }
         .tab-btn.active[data-type="M"] { border-color: var(--men); color: var(--men); background: #1e3a8a33; }
         .tab-btn.active[data-type="F"] { border-color: var(--women); color: var(--women); background: #581c8733; }
         .tab-btn.active[data-type="R"] { border-color: var(--reward); color: var(--reward); background: #facc1522; }
         .tab-btn.active[data-type="W"] { border-color: var(--workout); color: var(--workout); background: #ef444422; }
+        .tab-btn.active[data-type="A"] { border-color: var(--academy); color: var(--academy); background: #10b98122; }
 
-        .client-card { 
-            background: var(--card); padding: 18px; border-radius: 15px; 
-            margin-bottom: 12px; border: 1px solid #1f2937; 
-            display: flex; align-items: center; gap: 12px; cursor: pointer; 
-        }
+        .client-card { background: var(--card); padding: 18px; border-radius: 15px; margin-bottom: 12px; border: 1px solid #1f2937; display: flex; align-items: center; gap: 12px; cursor: pointer; }
         .client-card.border-M { border-left: 5px solid var(--men); }
         .client-card.border-F { border-left: 5px solid var(--women); }
         .client-card.border-R { border-left: 5px solid var(--reward); cursor: default; }
         .client-card.border-W { border-left: 5px solid var(--workout); }
+        .client-card.border-A { border-left: 5px solid var(--academy); }
         
         .profile-img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
         .client-name { font-weight: 900; font-size: 1.2rem; text-transform: uppercase; flex-grow: 1; }
-        
         .badge-desc { color: var(--text); font-style: italic; font-size: 0.85rem; flex-grow: 1; line-height: 1.3; }
         .badge-container { display: flex; gap: 6px; margin-left: auto; }
         .badge-img { width: 35px; height: 35px; object-fit: contain; cursor: zoom-in; }
         .badge-img-large { width: 60px; height: 60px; object-fit: contain; cursor: zoom-in; flex-shrink: 0; }
         
-        /* CHAT BOT STYLE */
-        #chat-bubble {
-            position: fixed; bottom: 30px; right: 20px;
-            width: 65px; height: 65px; background: var(--accent);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.8); z-index: 9999;
-            overflow: hidden; touch-action: none; border: 2px solid var(--accent);
-        }
+        #chat-bubble { position: fixed; bottom: 30px; right: 20px; width: 65px; height: 65px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.8); z-index: 9999; overflow: hidden; touch-action: none; border: 2px solid var(--accent); }
         #chat-bubble img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-
-        #chat-window {
-            display: none; position: fixed; bottom: 110px; right: 20px;
-            width: 320px; height: 450px; background: var(--card);
-            border: 1px solid #1f2937; border-radius: 15px;
-            flex-direction: column; z-index: 9998; overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.9);
-        }
-
-        #chat-header { 
-            background: #1f2937; padding: 12px; font-weight: 900; 
-            font-size: 0.75rem; color: var(--accent); text-transform: uppercase;
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid #374151;
-        }
-
+        #chat-window { display: none; position: fixed; bottom: 110px; right: 20px; width: 320px; height: 450px; background: var(--card); border: 1px solid #1f2937; border-radius: 15px; flex-direction: column; z-index: 9998; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.9); }
+        #chat-header { background: #1f2937; padding: 12px; font-weight: 900; font-size: 0.75rem; color: var(--accent); text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #374151; }
         #chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #050505; }
         .msg { padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; line-height: 1.4; max-width: 80%; word-wrap: break-word; }
         .msg-user { background: var(--men); align-self: flex-end; color: white; }
         .msg-bot { background: #1f2937; align-self: flex-start; border-left: 3px solid var(--accent); color: white; }
-        
         #chat-input-area { padding: 12px; background: #111827; display: flex; gap: 8px; }
         #chat-input { flex: 1; background: #000; border: 1px solid #374151; color: white; padding: 10px; border-radius: 8px; outline: none; }
         #chat-send { background: var(--accent); border: none; padding: 0 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-        /* FOOTER & DISCLAIMERS */
         .footer-container { text-align: center; padding: 30px 15px; margin-top: 40px; border-top: 1px solid #1f2937; background: #050505; width: 100%; box-sizing: border-box; }
         .powered-by { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.75rem; color: #6b7280; margin-bottom: 25px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; }
         .ronin-logo-small { width: 45px; height: auto; opacity: 0.9; }
@@ -142,8 +105,9 @@
             <button class="tab-btn" data-type="F" onclick="switchTab('F')">WOMEN</button>
         </div>
         
-        <h2 id="main-title">Rewards & Workouts</h2>
+        <h2 id="main-title">Academy, Rewards & Workouts</h2>
         <div class="tabs">
+            <button class="tab-btn" data-type="A" onclick="switchTab('A')">ACADEMY</button>
             <button class="tab-btn" data-type="R" onclick="switchTab('R')">BADGES</button>
             <button class="tab-btn" data-type="W" onclick="switchTab('W')">WORKOUTS</button>
         </div>
@@ -176,21 +140,10 @@
     </div>
 </div>
 
-<div id="chat-bubble">
-    <img src="https://i.postimg.cc/gk0GSwcm/Bot-Avatar.jpg" alt="Bot">
-</div>
-
+<div id="chat-bubble"><img src="https://i.postimg.cc/gk0GSwcm/Bot-Avatar.jpg" alt="Bot"></div>
 <div id="chat-window">
-    <div id="chat-header">
-        <span>WAREHOUSE COACH AI</span>
-        <span onclick="toggleChat()" style="cursor:pointer; font-size: 1.5rem;">×</span>
-    </div>
-    <div id="chat-messages">
-        <div class="msg msg-bot">
-            Dobrodošli! Benvenuto! Welcome! <br>
-            We are the W-bots! We can help you with your fitness path, nutrition and gym info. Feel free to ask!
-        </div>
-    </div>
+    <div id="chat-header"><span>WAREHOUSE COACH AI</span><span onclick="toggleChat()" style="cursor:pointer; font-size: 1.5rem;">×</span></div>
+    <div id="chat-messages"><div class="msg msg-bot">Dobrodošli! Benvenuto! Welcome! <br>We are the W-bots! Feel free to ask!</div></div>
     <div id="chat-input-area">
         <input type="text" id="chat-input" placeholder="Scrivi qui..." onkeypress="if(event.key==='Enter') sendToBot()">
         <button id="chat-send" onclick="sendToBot()">OK</button>
@@ -198,10 +151,7 @@
 </div>
 
 <div class="footer-container">
-    <div class="powered-by">
-        <span>Powered by</span>
-        <img src="https://i.postimg.cc/6Q1gJjvY/Roninlogooriginal.png" class="ronin-logo-small">
-    </div>
+    <div class="powered-by"><span>Powered by</span><img src="https://i.postimg.cc/6Q1gJjvY/Roninlogooriginal.png" class="ronin-logo-small"></div>
     <div class="privacy-footer">
         <div class="lang-block"><span class="lang-label">HR:</span> Vaša privatnost nam je važna. Privatna aplikacija namijenjena isključivo Warehouse grupi. Molimo vas da ne dijelite ovaj link. Ako želite ukloniti svoje fitness podatke iz aplikacije, obratite se našim osobnim trenerima (PT).</div>
         <div class="lang-block"><span class="lang-label">IT:</span> La tua privacy è importante. App privata dedicata al gruppo Warehouse. Per favore non condividere questo link. Se vuoi rimuovere i tuoi dati fitness dalla app contatta i nostri PT.</div>
@@ -215,28 +165,24 @@
     const exercisesUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=0&single=true&output=csv';
     const badgesLibUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=660633997&single=true&output=csv';
     const baseWorkoutsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=362105029&single=true&output=csv';
+    const academyUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?gid=1523784741&single=true&output=csv';
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbwxxPRTrHtTfgPY_eOvEZIQVHMQuEqagJNJS_L0RT_FooxTPWNBUUBVKNW_1y5Kl_Ql/exec';
 
-    let athletesData = {}, workoutData = {}, badgesLibrary = [], baseWorkouts = [], currentTab = null;
+    let athletesData = {}, workoutData = {}, badgesLibrary = [], baseWorkouts = [], academyData = [], currentTab = null;
 
-    // --- LOGICA CHAT ---
+    // CHAT LOGIC (Tua versione originale)
     const bubble = document.getElementById('chat-bubble');
     const chatWin = document.getElementById('chat-window');
-    let isDragging = false;
-    let dragThreshold = 0;
-
+    let isDragging = false, dragThreshold = 0;
     bubble.onpointerdown = function(e) {
         dragThreshold = 0;
-        const startX = e.clientX - bubble.offsetLeft;
-        const startY = e.clientY - bubble.offsetTop;
+        const startX = e.clientX - bubble.offsetLeft, startY = e.clientY - bubble.offsetTop;
         function onPointerMove(e) {
             dragThreshold++;
-            if (dragThreshold > 5) { 
+            if (dragThreshold > 5) {
                 isDragging = true;
-                let x = e.clientX - startX;
-                let y = e.clientY - startY;
-                bubble.style.left = x + 'px';
-                bubble.style.top = y + 'px';
+                bubble.style.left = (e.clientX - startX) + 'px';
+                bubble.style.top = (e.clientY - startY) + 'px';
                 bubble.style.right = 'auto'; bubble.style.bottom = 'auto';
             }
         }
@@ -249,66 +195,37 @@
         document.addEventListener('pointermove', onPointerMove);
         document.addEventListener('pointerup', onPointerUp);
     };
-
-    function toggleChat() {
+    function toggleChat() { 
         chatWin.style.display = (chatWin.style.display === 'flex') ? 'none' : 'flex';
         if(chatWin.style.display === 'flex') {
             chatWin.style.left = Math.max(10, bubble.offsetLeft - 250) + 'px';
             chatWin.style.top = (bubble.offsetTop - 460) + 'px';
         }
     }
-
     async function sendToBot() {
-        const input = document.getElementById('chat-input');
-        const text = input.value.trim();
+        const input = document.getElementById('chat-input'), text = input.value.trim();
         if (!text) return;
-
-        appendMsg('user', text);
-        input.value = '';
-
-        const tempMsgId = 'bot-temp-' + Date.now();
+        appendMsg('user', text); input.value = '';
+        const tempId = 'bot-' + Date.now();
         const chatMessages = document.getElementById('chat-messages');
         const msgDiv = document.createElement('div');
-        msgDiv.className = 'msg msg-bot';
-        msgDiv.id = tempMsgId;
-        msgDiv.innerText = "Sto pensando...";
-        chatMessages.appendChild(msgDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-
+        msgDiv.className = 'msg msg-bot'; msgDiv.id = tempId; msgDiv.innerText = "Sto pensando...";
+        chatMessages.appendChild(msgDiv); chatMessages.scrollTop = chatMessages.scrollHeight;
         try {
-            const response = await fetch(scriptUrl, {
-                method: 'POST',
-                body: JSON.stringify({ domanda: text })
-            });
-            const rispostaDalloScript = await response.text();
-            
-            const tempElement = document.getElementById(tempMsgId);
-            if (tempElement) {
-                // Se lo script ritorna l'oggetto di successo per errore, mostriamo un fallback
-                if(rispostaDalloScript.includes("status")) {
-                    tempElement.innerText = "Spiacente, c'è stato un errore nel caricamento della risposta.";
-                } else {
-                    tempElement.innerText = rispostaDalloScript;
-                }
-            }
-        } catch (e) {
-            const tempElement = document.getElementById(tempMsgId);
-            if (tempElement) tempElement.innerText = "Errore di connessione.";
-        }
+            const resp = await fetch(scriptUrl, { method: 'POST', body: JSON.stringify({ domanda: text }) });
+            const reply = await resp.text();
+            const tempElement = document.getElementById(tempId);
+            if (tempElement) tempElement.innerText = reply.includes("status") ? "Errore risposta." : reply;
+        } catch (e) { document.getElementById(tempId).innerText = "Errore connessione."; }
     }
-
     function appendMsg(role, text) {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `msg msg-${role}`;
-        msgDiv.innerText = text;
-        const container = document.getElementById('chat-messages');
-        container.appendChild(msgDiv);
-        container.scrollTop = container.scrollHeight;
+        const d = document.createElement('div'); d.className = `msg msg-${role}`; d.innerText = text;
+        const c = document.getElementById('chat-messages'); c.appendChild(d); c.scrollTop = c.scrollHeight;
     }
 
-    // --- LOGICA APP CORE ---
+    // CORE LOGIC
     function parseCSV(text) {
-        const rows = []; let row = []; let col = ""; let inQuotes = false;
+        const rows = []; let row = [], col = "", inQuotes = false;
         for (let i = 0; i < text.length; i++) {
             let char = text[i];
             if (char === '"' && inQuotes && text[i+1] === '"') { col += '"'; i++; }
@@ -324,52 +241,57 @@
     async function loadData() {
         try {
             const t = Date.now();
-            const [aResp, eResp, bResp, wResp] = await Promise.all([
+            const [aR, eR, bR, wR, acR] = await Promise.all([
                 fetch(athletesUrl + '&t=' + t).then(r => r.text()),
                 fetch(exercisesUrl + '&t=' + t).then(r => r.text()),
                 fetch(badgesLibUrl + '&t=' + t).then(r => r.text()),
-                fetch(baseWorkoutsUrl + '&t=' + t).then(r => r.text())
+                fetch(baseWorkoutsUrl + '&t=' + t).then(r => r.text()),
+                fetch(academyUrl + '&t=' + t).then(r => r.text())
             ]);
-            parseCSV(aResp).slice(1).forEach(cols => {
+            parseCSV(aR).slice(1).forEach(cols => {
                 if(cols.length < 3) return;
                 athletesData[cols[0]] = { photo: cols[1], gender: cols[2].toUpperCase(), badges: cols[3] ? cols[3].split(',').map(b => b.trim()).filter(l => l.length > 5) : [] };
             });
-            parseCSV(eResp).slice(1).forEach(cols => {
+            parseCSV(eR).slice(1).forEach(cols => {
                 if(cols.length < 6) return;
-                const name = cols[0], area = cols[1], ex = cols[2], load = cols[3];
-                const up = cols[5] ? cols[5].toUpperCase() === 'TRUE' : false;
-                const startWeight = cols[6] || ""; 
+                const name = cols[0], area = cols[1], ex = cols[2], load = cols[3], up = cols[5] && cols[5].toUpperCase() === 'TRUE', start = cols[6] || "";
                 if(!workoutData[name]) workoutData[name] = {};
                 if(!workoutData[name][area]) workoutData[name][area] = [];
-                workoutData[name][area].push({ex, load, up, startWeight});
+                workoutData[name][area].push({ex, load, up, startWeight: start});
             });
-            badgesLibrary = parseCSV(bResp).slice(1).map(cols => ({ title: cols[0], link: cols[1], note: cols[2] })).filter(b => b.link);
-            baseWorkouts = parseCSV(wResp).slice(1).map(cols => ({ title: cols[0], desc: cols[1], link: cols[2] })).filter(w => w.title && w.link);
+            badgesLibrary = parseCSV(bR).slice(1).map(c => ({ title: c[0], link: c[1], note: c[2] })).filter(b => b.link);
+            baseWorkouts = parseCSV(wR).slice(1).map(c => ({ title: c[0], desc: c[1], link: c[2] })).filter(w => w.title);
+            academyData = parseCSV(acR).slice(1).map(c => ({ title: c[0], desc: c[1], img: c[2], link: c[3] })).filter(a => a.title);
             renderHome();
-        } catch (e) { console.error("Load Error", e); }
+        } catch (e) { console.error(e); }
     }
 
     function switchTab(type) {
         currentTab = type;
         document.getElementById('empty-msg').style.display = 'none';
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelector(`.tab-btn[data-type="${type}"]`).classList.add('active');
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.type === type));
         renderHome();
     }
 
     function renderHome() {
-        const list = document.getElementById('client-list');
-        list.innerHTML = '';
-        if (currentTab === 'R') {
+        const list = document.getElementById('client-list'); list.innerHTML = '';
+        if (currentTab === 'A') {
+            academyData.forEach(a => {
+                const card = document.createElement('div'); card.className = 'client-card border-A';
+                card.onclick = () => window.open(a.link, '_blank');
+                card.innerHTML = `<img src="${a.img}" class="badge-img-large"><div style="flex:1"><div class="client-name" style="font-size:1rem">${a.title}</div><div class="badge-desc">${a.desc}</div></div>`;
+                list.appendChild(card);
+            });
+        } else if (currentTab === 'R') {
             badgesLibrary.forEach(b => {
-                const card = document.createElement('div'); card.className = `client-card border-R`;
+                const card = document.createElement('div'); card.className = 'client-card border-R';
                 card.innerHTML = `<img src="${b.link}" class="badge-img-large" onclick="zoom('${b.link}')"><div class="badge-desc">${b.note || ''}</div>`;
                 list.appendChild(card);
             });
         } else if (currentTab === 'W') {
-            baseWorkouts.forEach((w, index) => {
-                const card = document.createElement('div'); card.className = `client-card border-W`;
-                card.onclick = (e) => { if(e.target.tagName !== 'IMG') showBoard(index); else zoom(w.link); };
+            baseWorkouts.forEach((w, i) => {
+                const card = document.createElement('div'); card.className = 'client-card border-W';
+                card.onclick = (e) => e.target.tagName !== 'IMG' ? showBoard(i) : zoom(w.link);
                 card.innerHTML = `<img src="${w.link}" class="badge-img-large"><div class="client-name">${w.title}</div>`;
                 list.appendChild(card);
             });
@@ -391,66 +313,38 @@
         document.getElementById('detail-name').innerText = name;
         document.getElementById('detail-img').src = athletesData[name].photo || 'https://www.w3schools.com/howto/img_avatar.png';
         document.getElementById('detail-badges').innerHTML = (athletesData[name].badges || []).map(url => `<img src="${url}" class="badge-img" onclick="zoom('${url}')">`).join('');
-        const content = document.getElementById('workout-content');
-        content.innerHTML = '';
+        const content = document.getElementById('workout-content'); content.innerHTML = '';
         const data = workoutData[name] || {};
         for(const area in data) {
             const acc = document.createElement('div'); acc.className = 'accordion';
-            let exHtml = data[area].map(e => {
-                let startHtml = (e.startWeight && e.startWeight.trim() !== "") ? `<span class="ex-start-weight">You started with ${e.startWeight}</span>` : "";
-                return `
+            let exHtml = data[area].map(e => `
                 <div class="ex-row">
                     <div class="ex-info">
                         <span class="ex-name">${e.ex}</span>
-                        ${startHtml}
+                        ${e.startWeight ? `<span class="ex-start-weight">You started with ${e.startWeight}</span>` : ''}
                         <span class="ex-note-pt ${e.up ? 'visible' : ''}">Request Sent to the PT</span>
                     </div>
                     <div style="display:flex; align-items:center;">
                         <span class="ex-weight">${e.load}</span>
                         <button class="upgrade-btn ${e.up?'sent':''}" onclick="requestUpgrade(this,'${name}','${e.ex.replace(/'/g,"\\'")}')">${e.up?'✓':'UP'}</button>
                     </div>
-                </div>`;
-            }).join('');
+                </div>`).join('');
             acc.innerHTML = `<div class="acc-header" onclick="this.parentElement.classList.toggle('active')">${area} <span>+</span></div><div class="acc-content">${exHtml}</div>`;
             content.appendChild(acc);
         }
     }
 
-    function showBoard(index) {
-        toggleViews('board-view');
-        const w = baseWorkouts[index];
-        document.getElementById('board-title').innerText = w.title;
-        document.getElementById('board-img').src = w.link;
-        document.getElementById('board-content').innerText = w.desc;
-    }
-
-    function toggleViews(viewId) {
-        ['home-view', 'workout-view', 'board-view'].forEach(id => {
-            document.getElementById(id).style.display = (id === viewId) ? 'block' : 'none';
-        });
-    }
-
+    function showBoard(i) { toggleViews('board-view'); document.getElementById('board-title').innerText = baseWorkouts[i].title; document.getElementById('board-img').src = baseWorkouts[i].link; document.getElementById('board-content').innerText = baseWorkouts[i].desc; }
+    function toggleViews(id) { ['home-view', 'workout-view', 'board-view'].forEach(v => document.getElementById(v).style.display = v === id ? 'block' : 'none'); }
     function showHome() { toggleViews('home-view'); }
     function zoom(url) { document.getElementById('zoom-img').src = url; document.getElementById('zoom-overlay').style.display = 'flex'; }
-    
     async function requestUpgrade(btn, client, exercise) {
-        if(btn.classList.contains('sent')) return;
-        if (!confirm("You are requesting for an upgrade, are you sure?")) return;
-        const infoDiv = btn.closest('.ex-row').querySelector('.ex-note-pt');
+        if(btn.classList.contains('sent') || !confirm("You are requesting for an upgrade, are you sure?")) return;
         btn.innerText = "...";
         try {
-            await fetch(scriptUrl, { 
-                method: 'POST', 
-                mode: 'no-cors', 
-                body: JSON.stringify({ cliente: client, esercizio: exercise }) 
-            });
-            btn.innerText = "✓"; 
-            btn.classList.add('sent'); 
-            infoDiv.classList.add('visible');
-        } catch (e) { 
-            console.error("Errore invio:", e);
-            btn.innerText = "UP"; 
-        }
+            await fetch(scriptUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ cliente: client, esercizio: exercise }) });
+            btn.innerText = "✓"; btn.classList.add('sent'); btn.closest('.ex-row').querySelector('.ex-note-pt').classList.add('visible');
+        } catch (e) { btn.innerText = "UP"; }
     }
 
     loadData();
