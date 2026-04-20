@@ -155,7 +155,6 @@
 </div>
 
 <script>
-    // --- CONFIGURAZIONE GID ---
     const BASE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSzWCvPzB5Gir_rDlyY_DpE0wkSAmk404HCgYC4sSVVH6G2p0fsRg48G6ZpkxYXPz4f1-6y33k2upqs/pub?output=csv';
     const athletesUrl = BASE_URL + '&gid=719192490';
     const exercisesUrl = BASE_URL + '&gid=0';
@@ -191,11 +190,17 @@
                 fetch(academyUrl + '&t=' + t).then(r => r.text()).catch(() => "")
             ]);
 
+            athletesData = {}; // Reset
             parseCSV(aResp).slice(1).forEach(cols => {
                 if(cols.length < 3) return;
-                athletesData[cols[0]] = { photo: cols[1], gender: cols[2].toUpperCase(), badges: cols[3] ? cols[3].split(',').map(b => b.trim()).filter(l => l.length > 5) : [] };
+                athletesData[cols[0]] = { 
+                    photo: cols[1], 
+                    gender: cols[2].toUpperCase(), 
+                    badges: cols[3] ? cols[3].split(',').map(b => b.trim()).filter(l => l.length > 5) : [] 
+                };
             });
 
+            workoutData = {}; // Reset
             parseCSV(eResp).slice(1).forEach(cols => {
                 if(cols.length < 6) return;
                 const name = cols[0], area = cols[1], ex = cols[2], load = cols[3];
@@ -208,23 +213,19 @@
             badgesLibrary = parseCSV(bResp).slice(1).map(cols => ({ title: cols[0], link: cols[1], note: cols[2] })).filter(b => b.link);
             baseWorkouts = parseCSV(wResp).slice(1).map(cols => ({ title: cols[0], desc: cols[1], link: cols[2] })).filter(w => w.title);
             
-            // LOGICA ACADEMY SISTEMATA PER LE TUE COLONNE
             if(acResp) {
                 academyData = parseCSV(acResp).slice(1).map(cols => ({ 
-                    title: cols[0], // A
-                    desc: cols[1],  // B
-                    img: cols[2],   // C
-                    link: cols[3]   // D
+                    title: cols[0], desc: cols[1], img: cols[2], link: cols[3] 
                 })).filter(a => a.title);
             }
-
             renderHome();
-        } catch (e) { console.error("Load Error", e); }
+        } catch (e) { console.error("Errore caricamento dati:", e); }
     }
 
     function switchTab(type) {
         currentTab = type;
-        document.getElementById('empty-msg').style.display = 'none';
+        const msg = document.getElementById('empty-msg');
+        if(msg) msg.style.display = 'none';
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelector(`.tab-btn[data-type="${type}"]`).classList.add('active');
         renderHome();
@@ -233,14 +234,14 @@
     function renderHome() {
         const list = document.getElementById('client-list');
         list.innerHTML = '';
-        
+        if (!currentTab) return;
+
         if (currentTab === 'A') {
             academyData.forEach(a => {
-                const card = document.createElement('div'); 
+                const card = document.createElement('div');
                 card.className = `client-card border-A`;
                 card.onclick = () => { if(a.link) window.open(a.link, '_blank'); };
-                card.innerHTML = `
-                    <img src="${a.img || 'https://i.postimg.cc/pd0Dsxp2/APP_LOGO.png'}" class="badge-img-large">
+                card.innerHTML = `<img src="${a.img || 'https://i.postimg.cc/pd0Dsxp2/APP_LOGO.png'}" class="badge-img-large">
                     <div style="flex-grow:1">
                         <div class="client-name" style="font-size:1rem">${a.title}</div>
                         <div class="badge-desc" style="margin-bottom:8px">${a.desc || ''}</div>
@@ -267,7 +268,7 @@
                     const bHtml = (athletesData[name].badges || []).map(url => `<img src="${url}" class="badge-img" onclick="event.stopPropagation(); zoom('${url}')">`).join('');
                     const card = document.createElement('div'); card.className = `client-card border-${currentTab}`;
                     card.onclick = () => showWorkout(name);
-                    card.innerHTML = `<img src="${athletesData[name].photo || 'https://www.w3schools.com/howto/img_avatar.png'}" class="profile-img"><div class="client-name">${name}</div><div class="badge-container">${bHtml}</div>`;
+                    card.innerHTML = `<img src="${athletesData[name].photo || ''}" class="profile-img"><div class="client-name">${name}</div><div class="badge-container">${bHtml}</div>`;
                     list.appendChild(card);
                 }
             });
@@ -309,27 +310,26 @@
     }
 
     function toggleViews(id) {
-        ['home-view', 'workout-view', 'board-view'].forEach(v => document.getElementById(v).style.display = (v === id) ? 'block' : 'none');
+        ['home-view', 'workout-view', 'board-view'].forEach(v => {
+            document.getElementById(v).style.display = (v === id) ? 'block' : 'none';
+        });
     }
 
     function showHome() { toggleViews('home-view'); }
     function zoom(url) { document.getElementById('zoom-img').src = url; document.getElementById('zoom-overlay').style.display = 'flex'; }
-
-    const bubble = document.getElementById('chat-bubble');
-    const chatWin = document.getElementById('chat-window');
-    bubble.onclick = toggleChat;
     function toggleChat() { chatWin.style.display = (chatWin.style.display === 'flex') ? 'none' : 'flex'; }
+
     async function sendToBot() {
         const input = document.getElementById('chat-input');
         const text = input.value.trim();
         if(!text) return;
         appendMsg('user', text); input.value = '';
         try {
-            const res = await fetch(scriptUrl, { method:'POST', body: JSON.stringify({domanda: text}) });
-            const reply = await res.text();
-            appendMsg('bot', reply);
+            const res = await fetch(scriptUrl, { method:'POST', mode: 'no-cors', body: JSON.stringify({domanda: text}) });
+            appendMsg('bot', "Messaggio inviato al coach.");
         } catch(e) { appendMsg('bot', "Errore connessione."); }
     }
+
     function appendMsg(role, text) {
         const d = document.createElement('div'); d.className = `msg msg-${role}`; d.innerText = text;
         const c = document.getElementById('chat-messages'); c.appendChild(d); c.scrollTop = c.scrollHeight;
@@ -337,7 +337,7 @@
 
     async function requestUpgrade(btn, client, ex) {
         if(btn.classList.contains('sent')) return;
-        if(!confirm("Richiedere un aumento peso per questo esercizio?")) return;
+        if(!confirm("Richiedere un aumento peso?")) return;
         btn.innerText = "...";
         try {
             await fetch(scriptUrl, { method:'POST', mode:'no-cors', body: JSON.stringify({cliente: client, esercizio: ex}) });
@@ -345,78 +345,9 @@
         } catch(e) { btn.innerText = "UP"; }
     }
 
-    // --- FUNZIONI VIEW ---
-    function showWorkout(name) {
-        toggleViews('workout-view');
-        document.getElementById('detail-name').innerText = name;
-        document.getElementById('detail-img').src = athletesData[name].photo || '';
-        document.getElementById('detail-badges').innerHTML = (athletesData[name].badges || []).map(url => `<img src="${url}" class="badge-img" onclick="zoom('${url}')">`).join('');
-        const content = document.getElementById('workout-content');
-        content.innerHTML = '';
-        const data = workoutData[name] || {};
-        for(const area in data) {
-            const acc = document.createElement('div'); acc.className = 'accordion';
-            let exHtml = data[area].map(e => `
-                <div class="ex-row">
-                    <div style="display:flex; flex-direction:column; max-width:65%;">
-                        <span style="font-weight:bold;">${e.ex}</span>
-                        ${e.startWeight ? `<span style="font-size:0.7rem; color:var(--accent)">Start: ${e.startWeight}</span>`:''}
-                    </div>
-                    <div style="display:flex; align-items:center;">
-                        <span class="ex-weight">${e.load}</span>
-                        <button class="upgrade-btn ${e.up?'sent':''}" onclick="requestUpgrade(this,'${name}','${e.ex.replace(/'/g,"\\'")}')">${e.up?'✓':'UP'}</button>
-                    </div>
-                </div>`).join('');
-            acc.innerHTML = `<div class="acc-header" onclick="this.parentElement.classList.toggle('active')">${area} <span>+</span></div><div class="acc-content">${exHtml}</div>`;
-            content.appendChild(acc);
-        }
-    }
-
-    function showBoard(i) {
-        toggleViews('board-view');
-        const w = baseWorkouts[i];
-        document.getElementById('board-title').innerText = w.title;
-        document.getElementById('board-img').src = w.link;
-        document.getElementById('board-content').innerText = w.desc;
-    }
-
-    function toggleViews(id) {
-        ['home-view', 'workout-view', 'board-view'].forEach(v => document.getElementById(v).style.display = (v === id) ? 'block' : 'none');
-    }
-
-    function showHome() { toggleViews('home-view'); }
-    function zoom(url) { document.getElementById('zoom-img').src = url; document.getElementById('zoom-overlay').style.display = 'flex'; }
-
-    // --- CHAT LOGIC ---
     const bubble = document.getElementById('chat-bubble');
     const chatWin = document.getElementById('chat-window');
     bubble.onclick = toggleChat;
-    function toggleChat() { chatWin.style.display = (chatWin.style.display === 'flex') ? 'none' : 'flex'; }
-    async function sendToBot() {
-        const input = document.getElementById('chat-input');
-        const text = input.value.trim();
-        if(!text) return;
-        appendMsg('user', text); input.value = '';
-        try {
-            const res = await fetch(scriptUrl, { method:'POST', body: JSON.stringify({domanda: text}) });
-            const reply = await res.text();
-            appendMsg('bot', reply);
-        } catch(e) { appendMsg('bot', "Errore connessione."); }
-    }
-    function appendMsg(role, text) {
-        const d = document.createElement('div'); d.className = `msg msg-${role}`; d.innerText = text;
-        const c = document.getElementById('chat-messages'); c.appendChild(d); c.scrollTop = c.scrollHeight;
-    }
-
-    async function requestUpgrade(btn, client, ex) {
-        if(btn.classList.contains('sent')) return;
-        if(!confirm("Richiedere un aumento peso per questo esercizio?")) return;
-        btn.innerText = "...";
-        try {
-            await fetch(scriptUrl, { method:'POST', mode:'no-cors', body: JSON.stringify({cliente: client, esercizio: ex}) });
-            btn.innerText = "✓"; btn.classList.add('sent');
-        } catch(e) { btn.innerText = "UP"; }
-    }
 
     loadData();
 </script>
