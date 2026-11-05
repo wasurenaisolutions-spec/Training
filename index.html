@@ -44,6 +44,16 @@
         .tab-btn.active[data-type="R"] { border-color: var(--reward); color: var(--reward); background: #facc1522; }
         .tab-btn.active[data-type="W"] { border-color: var(--workout); color: var(--workout); background: #ef444422; }
 
+        /* BARRA DI RICERCA */
+        .search-container { margin: 0 5px 15px 5px; display: none; }
+        .search-bar { 
+            width: 100%; padding: 12px 15px; border-radius: 10px; 
+            border: 1px solid #1f2937; background: #111827; color: #ffffff; 
+            font-size: 0.9rem; outline: none; box-sizing: border-box; transition: 0.3s;
+        }
+        .search-bar:focus { border-color: var(--accent); }
+        .search-bar::placeholder { color: #6b7280; }
+
         .client-card { 
             background: var(--card); padding: 18px; border-radius: 15px; 
             margin-bottom: 12px; border: 1px solid #1f2937; 
@@ -146,6 +156,11 @@
         <div class="tabs">
             <button class="tab-btn" data-type="R" onclick="switchTab('R')">BADGES</button>
             <button class="tab-btn" data-type="W" onclick="switchTab('W')">WORKOUTS</button>
+        </div>
+
+        <!-- CAMPO DI RICERCA ATLETI -->
+        <div id="search-container" class="search-container">
+            <input type="text" id="search-input" class="search-bar" placeholder="Cerca atleta..." oninput="renderHome()">
         </div>
 
         <div id="empty-msg" style="text-align: center; color: #6b7280; margin-top: 40px; font-style: italic; font-size: 0.9rem;">Select a category to view the list</div>
@@ -284,7 +299,6 @@
             
             const tempElement = document.getElementById(tempMsgId);
             if (tempElement) {
-                // Se lo script ritorna l'oggetto di successo per errore, mostriamo un fallback
                 if(rispostaDalloScript.includes("status")) {
                     tempElement.innerText = "Spiacente, c'è stato un errore nel caricamento della risposta.";
                 } else {
@@ -354,12 +368,26 @@
         document.getElementById('empty-msg').style.display = 'none';
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelector(`.tab-btn[data-type="${type}"]`).classList.add('active');
+        
+        // Pulisce e mostra/nasconde la barra di ricerca solo per le tab atleti (M e F)
+        const searchInput = document.getElementById('search-input');
+        const searchContainer = document.getElementById('search-container');
+        searchInput.value = '';
+        if (type === 'M' || type === 'F') {
+            searchContainer.style.display = 'block';
+        } else {
+            searchContainer.style.display = 'none';
+        }
+
         renderHome();
     }
 
     function renderHome() {
         const list = document.getElementById('client-list');
         list.innerHTML = '';
+
+        const query = document.getElementById('search-input').value.toLowerCase().trim();
+
         if (currentTab === 'R') {
             badgesLibrary.forEach(b => {
                 const card = document.createElement('div'); card.className = `client-card border-R`;
@@ -376,11 +404,14 @@
         } else {
             Object.keys(athletesData).forEach(name => {
                 if(athletesData[name].gender === currentTab) {
-                    const bHtml = (athletesData[name].badges || []).map(url => `<img src="${url}" class="badge-img" onclick="event.stopPropagation(); zoom('${url}')">`).join('');
-                    const card = document.createElement('div'); card.className = `client-card border-${currentTab}`;
-                    card.onclick = () => showWorkout(name);
-                    card.innerHTML = `<img src="${athletesData[name].photo || 'https://www.w3schools.com/howto/img_avatar.png'}" class="profile-img"><div class="client-name">${name}</div><div class="badge-container">${bHtml}</div>`;
-                    list.appendChild(card);
+                    // Filtra per il nome dell'atleta
+                    if(query === "" || name.toLowerCase().includes(query)) {
+                        const bHtml = (athletesData[name].badges || []).map(url => `<img src="${url}" class="badge-img" onclick="event.stopPropagation(); zoom('${url}')">`).join('');
+                        const card = document.createElement('div'); card.className = `client-card border-${currentTab}`;
+                        card.onclick = () => showWorkout(name);
+                        card.innerHTML = `<img src="${athletesData[name].photo || 'https://www.w3schools.com/howto/img_avatar.png'}" class="profile-img"><div class="client-name">${name}</div><div class="badge-container">${bHtml}</div>`;
+                        list.appendChild(card);
+                    }
                 }
             });
         }
